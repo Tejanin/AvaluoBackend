@@ -1,0 +1,6 @@
+@AvaluoAPI_HostAddress = http://localhost:5142
+
+GET {{AvaluoAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

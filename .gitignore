@@ -1,0 +1,78 @@
+# Archivos de configuración y sistema
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.pidb
+*.log
+*.ncrunch*
+*.localhistory/
+*.orig
+*.tmp
+*~
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Binarios y compilación
+bin/
+obj/
+out/
+Debug/
+Release/
+TestResults/
+*.dbmdl
+*.pdb
+*.ilk
+*.obj
+*.exe
+*.dll
+*.o
+*.log
+*.cache
+
+# Archivos de configuración de dependencias
+project.lock.json
+project.assets.json
+**/Properties/launchSettings.json
+
+# Archivos de paquetes NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+NuGet.Config
+NuGetScratch/
+artifacts/
+
+# SDK y herramientas de .NET
+global.json
+.env
+.env.development
+.env.production
+.env.local
+*.dotnet_tool.json
+.dotnet-tools/
+
+# Configuración de Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Carpetas de publicación
+publish/
+dist/
+
+# Archivos generados por EF Core Migrations
+Migrations/
+*.mdf
+*.ldf
+
+# Archivos de configuración de usuario
+appsettings.Development.json
+secrets.json
+
+# Docker
+docker-compose.override.yml
