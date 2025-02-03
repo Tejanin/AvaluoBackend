@@ -9,8 +9,8 @@ namespace Avaluo.Infrastructure.Data.Models
     public class Competencia
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
+        public string Nombre { get; set; } = null!;
+        public string Descripcion { get; set; } = null!;
         public int IdTipo { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public DateTime? UltimaEdicion { get; set; }

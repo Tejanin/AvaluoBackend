@@ -895,7 +895,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR MetodoEvaluacionSequence");
                 entity.Property(e => e.Descripcion).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
-                entity.Property(e => e.UltimaEdicion).HasDefaultValueSql("GETDATE()");
+                entity.Property(e => e.UltimaEdicion).IsRequired(false);
                 entity.HasMany(d => d.SOEvaluaciones)
                     .WithOne(p => p.MetodoEvaluacion)
                     .HasForeignKey(d => d.IdMetodoEvaluacion)
