@@ -17,6 +17,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
+        void SaveChanges();
         Task RollbackTransactionAsync();
     }
 }
