@@ -1,6 +1,9 @@
 using Avaluo.Infrastructure.Data;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Domain.Services.UsuariosService;
+using AvaluoAPI.Infrastructure.Data.Contexts;
+using AvaluoAPI.Utilities;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -44,10 +47,13 @@ builder.Services.AddDbContext<AvaluoDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddSingleton<DapperContext>();
 
 // UoW
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// AvaluoMapper
+builder.Services.AddMappingConfiguration();
 
 // Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
@@ -71,6 +77,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 // Authorization
 builder.Services.AddAuthorization();
+
 
 // CORS
 builder.Services.AddCors(options =>

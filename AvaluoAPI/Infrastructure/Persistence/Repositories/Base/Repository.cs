@@ -74,7 +74,7 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
 
         public async Task Update(TEntity entity)
         {
-            _context.Set<TEntity>().Update(entity);
+             _context.Set<TEntity>().Update(entity);
 
         }
 

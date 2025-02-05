@@ -1,6 +1,8 @@
 ﻿using Avaluo.Infrastructure.Data;
+using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +14,15 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AvaluoDbContext _context;
-        public UnitOfWork(AvaluoDbContext context)
+        private readonly DapperContext _dapperContext;
+        private IDbContextTransaction _transaction;
+
+        public UnitOfWork(AvaluoDbContext context, DapperContext dapperContext)
         {
+            _dapperContext = dapperContext;
             _context = context;
             TiposInformes = new TipoInformeRepository(_context);
-            Usuarios = new UsuarioRepository(_context);
+            Usuarios = new UsuarioRepository(_context, _dapperContext);
 
         }
 
@@ -26,29 +32,52 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public ITipoInformeRepository TiposInformes { get; private set; }
 
         // methods
-        public Task BeginTransactionAsync()
+        public async Task BeginTransactionAsync()
         {
-            throw new NotImplementedException();
+            if (_transaction != null)
+                throw new InvalidOperationException("Transaction already started.");
+
+            _transaction = await _context.Database.BeginTransactionAsync();
         }
 
-        public Task CommitTransactionAsync()
+        // Commit Transaction: Realiza el commit de la transacción
+        public async Task CommitTransactionAsync()
         {
-            throw new NotImplementedException();
+            if (_transaction == null)
+                throw new InvalidOperationException("Transaction not started.");
+
+            await _context.SaveChangesAsync(); // Guarda los cambios en la base de datos.
+            await _transaction.CommitAsync();  // Realiza el commit de la transacción.
         }
 
+        // Rollback Transaction: Revertir los cambios en caso de error
+        public async Task RollbackTransactionAsync()
+        {
+            if (_transaction == null)
+                throw new InvalidOperationException("Transaction not started.");
+
+            await _transaction.RollbackAsync(); // Revierte los cambios de la transacción.
+        }
+
+        // Save Changes: Guardar cambios en la base de datos
+        public async Task<int> SaveChangesAsync()
+        {
+            if (_transaction == null)
+                throw new InvalidOperationException("Transaction not started.");
+
+            return await _context.SaveChangesAsync(); // Guarda los cambios en EF Core.
+        }
+
+        // Dispose: Libera los recursos
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _transaction?.Dispose();
+            _context.Dispose();
         }
 
-        public Task RollbackTransactionAsync()
+        public void SaveChanges()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<int> SaveChangesAsync()
-        {
-            throw new NotImplementedException();
+            _context.SaveChanges();
         }
     }
 }
