@@ -1,5 +1,6 @@
 using Avaluo.Infrastructure.Data;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
+using AvaluoAPI.Domain.Services.TipoCompetenciaService;
 using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Utilities;
@@ -57,6 +58,7 @@ builder.Services.AddMappingConfiguration();
 
 // Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
