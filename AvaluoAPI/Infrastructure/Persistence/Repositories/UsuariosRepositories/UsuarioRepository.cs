@@ -5,6 +5,7 @@ using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
 {
@@ -29,6 +30,11 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
             _context.Set<Usuario>().Update(user);
 
 
+        }
+
+        public async Task<bool> EmailExists(string email)
+        {
+            return await _context.Set<Usuario>().AnyAsync(u => u.Email == email);   
         }
 
         public async Task<IEnumerable<UsuarioViewModel>> GetAllUsuarios(int? estado, int? area, int? rol)

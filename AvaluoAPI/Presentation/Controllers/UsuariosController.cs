@@ -10,10 +10,10 @@ namespace AvaluoAPI.Presentation.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly IUsuarioService _userService;
-        public UsuariosController(IUsuarioService userService)
+        private readonly IUsuarioService _usuarioService;
+        public UsuariosController(IUsuarioService usuarioService)
         {
-            _userService = userService;
+            _usuarioService = usuarioService;
         }
         // GET: api/<UsersController>
         [HttpGet]
@@ -33,9 +33,13 @@ namespace AvaluoAPI.Presentation.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] UsuarioDTO usuarioDTO)
         {
-            
-            _userService.Register(usuarioDTO);
-            return Created();
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _usuarioService.Register(usuarioDTO);
+            return CreatedAtAction(nameof(Post), new { id = usuarioDTO.Id }, usuarioDTO);
         }
 
         // PUT api/<UsersController>/5
