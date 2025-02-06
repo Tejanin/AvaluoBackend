@@ -6,6 +6,7 @@ using AvaluoAPI.Presentation.ViewModels;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace AvaluoAPI.Domain.Services.TipoInformeService
@@ -25,7 +26,7 @@ namespace AvaluoAPI.Domain.Services.TipoInformeService
         {
             var tipoInforme = await _unitOfWork.TiposInformes.GetByIdAsync(id);
             if (tipoInforme == null)
-                throw new Exception("Tipo de Informe no encontrado.");
+                throw new KeyNotFoundException("Tipo de Informe no encontrado.");
 
             return _mapper.Map<TipoInformeViewModel>(tipoInforme);
         }
@@ -38,57 +39,30 @@ namespace AvaluoAPI.Domain.Services.TipoInformeService
 
         public async Task Register(TipoInformeDTO tipoInformeDTO)
         {
-            await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-                var tipoInforme = _mapper.Map<TipoInforme>(tipoInformeDTO);
-                await _unitOfWork.TiposInformes.AddAsync(tipoInforme);
-                await _unitOfWork.CommitTransactionAsync();
-            }
-            catch
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            var tipoInforme = _mapper.Map<TipoInforme>(tipoInformeDTO);
+            await _unitOfWork.TiposInformes.AddAsync(tipoInforme);
+            _unitOfWork.SaveChanges(); 
         }
 
         public async Task Update(int id, TipoInformeDTO tipoInformeDTO)
         {
-            await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-                var tipoInforme = await _unitOfWork.TiposInformes.GetByIdAsync(id);
-                if (tipoInforme == null)
-                    throw new Exception("Tipo de Informe no encontrado.");
+            var tipoInforme = await _unitOfWork.TiposInformes.GetByIdAsync(id);
+            if (tipoInforme == null)
+                throw new KeyNotFoundException("Tipo de Informe no encontrado.");
 
-                tipoInforme.Descripcion = tipoInformeDTO.Descripcion;
-                await _unitOfWork.TiposInformes.Update(tipoInforme);
-                await _unitOfWork.CommitTransactionAsync();
-            }
-            catch
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            tipoInforme.Descripcion = tipoInformeDTO.Descripcion;
+            await _unitOfWork.TiposInformes.Update(tipoInforme);
+            _unitOfWork.SaveChanges(); 
         }
 
         public async Task Delete(int id)
         {
-            await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-                var tipoInforme = await _unitOfWork.TiposInformes.GetByIdAsync(id);
-                if (tipoInforme == null)
-                    throw new Exception("Tipo de Informe no encontrado.");
+            var tipoInforme = await _unitOfWork.TiposInformes.GetByIdAsync(id);
+            if (tipoInforme == null)
+                throw new KeyNotFoundException("Tipo de Informe no encontrado.");
 
-                _unitOfWork.TiposInformes.Delete(tipoInforme);
-                await _unitOfWork.CommitTransactionAsync();
-            }
-            catch
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            _unitOfWork.TiposInformes.Delete(tipoInforme);
+            _unitOfWork.SaveChanges(); 
         }
     }
 }
