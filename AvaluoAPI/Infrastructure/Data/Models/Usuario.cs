@@ -24,8 +24,8 @@ namespace Avaluo.Infrastructure.Data.Models
         public int IdEstado { get; set; }
         public int? IdArea { get; set; }
         public int? IdRol { get; set; }
-        public virtual Area Area { get; set; } = null!;
-        public virtual Rol Rol { get; set; } = null!;
+        public virtual Area? Area { get; set; } 
+        public virtual Rol? Rol { get; set; } 
         public virtual Competencia? SO { get; set; }
         public virtual Estado Estado { get; set; } = null!;
         public virtual ICollection<Contacto> Contactos { get; set; } = null!;
