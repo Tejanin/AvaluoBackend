@@ -4,6 +4,7 @@ using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using AvaluoAPI.Utilities;
 using MapsterMapper;
+using System.ComponentModel.DataAnnotations;
 
 namespace AvaluoAPI.Domain.Services.UsuariosService
 {
@@ -41,12 +42,17 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             throw new NotImplementedException();
         }
 
-        public void Register(UsuarioDTO userDTO)
+        public async Task Register(UsuarioDTO userDTO)
         {   
-                userDTO.Password = Hasher.Hash(userDTO.Password, userDTO.Salt);
-                var user = _mapper.Map<Usuario>(userDTO);
-                _unitOfWork.Usuarios.Add(user);
-                _unitOfWork.SaveChanges();
+            userDTO.Password = Hasher.Hash(userDTO.Password, userDTO.Salt);
+            var user = _mapper.Map<Usuario>(userDTO);
+            if (await _unitOfWork.Usuarios.EmailExists(userDTO.Email))
+            {
+               throw new ValidationException("Existe otro usuario con ese email");
+            }
+
+            _unitOfWork.Usuarios.Add(user);
+            _unitOfWork.SaveChanges();
         }
 
         public Task Update(UsuarioDTO user)
