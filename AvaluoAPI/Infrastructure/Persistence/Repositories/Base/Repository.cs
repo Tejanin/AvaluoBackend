@@ -117,18 +117,20 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
         {
             IQueryable<TProperty> query = _context.Set<TProperty>();
 
+            // Apply the where condition if expression is not null
             if (expression != null)
             {
                 query = query.Where(expression);
             }
+
+            // Include related entities
             foreach (var includeProperty in includeProperties)
             {
                 query = query.Include(includeProperty);
             }
 
-
-
-            return await query.FirstOrDefaultAsync();
+            // Ensure eager loading by using Include and ThenInclude if needed
+            return await query.AsNoTracking().FirstOrDefaultAsync();
         }
 
         public void Add(TEntity entity)
