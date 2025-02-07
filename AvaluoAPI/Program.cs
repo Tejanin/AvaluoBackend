@@ -1,10 +1,12 @@
 using Avaluo.Infrastructure.Data;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
+using AvaluoAPI.Application.Middlewares;
 using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Utilities;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -74,7 +76,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 }
 );
-
+builder.Services.AddSingleton<IJwtService, JwtService>();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "X-Permissions";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
 // Authorization
 builder.Services.AddAuthorization();
 
@@ -104,6 +113,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Middlewares
+//app.UseMiddleware<ExceptionMiddleware>();
+app.UseAuthMiddleware();
 
 app.UseHttpsRedirection();
 
