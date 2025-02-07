@@ -39,7 +39,6 @@ namespace AvaluoAPI.Domain.Services.TipoCompetenciaService
         public async Task Register(TipoCompetenciaDTO tipoCompetenciaDTO)
         {
             var tipoCompetencia = _mapper.Map<TipoCompetencia>(tipoCompetenciaDTO);
-            tipoCompetencia.FechaCreacion = DateTime.Now;
             tipoCompetencia.UltimaEdicion = DateTime.Now;
 
             await _unitOfWork.TiposCompetencias.AddAsync(tipoCompetencia);
