@@ -1,11 +1,11 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
-using AvaluoAPI.Presentation.DTOs;
 using AvaluoAPI.Presentation.DTOs.TipoCompetenciaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace AvaluoAPI.Domain.Services.TipoCompetenciaService
@@ -25,7 +25,7 @@ namespace AvaluoAPI.Domain.Services.TipoCompetenciaService
         {
             var tipoCompetencia = await _unitOfWork.TiposCompetencias.GetByIdAsync(id);
             if (tipoCompetencia == null)
-                throw new Exception("Tipo de competencia no encontrado.");
+                throw new KeyNotFoundException("Tipo de competencia no encontrado.");
 
             return _mapper.Map<TipoCompetenciaViewModel>(tipoCompetencia);
         }
@@ -38,62 +38,35 @@ namespace AvaluoAPI.Domain.Services.TipoCompetenciaService
 
         public async Task Register(TipoCompetenciaDTO tipoCompetenciaDTO)
         {
-            await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-                var tipoCompetencia = _mapper.Map<TipoCompetencia>(tipoCompetenciaDTO);
-                tipoCompetencia.FechaCreacion = DateTime.Now;
-                tipoCompetencia.UltimaEdicion = DateTime.Now;
+            var tipoCompetencia = _mapper.Map<TipoCompetencia>(tipoCompetenciaDTO);
+            tipoCompetencia.FechaCreacion = DateTime.Now;
+            tipoCompetencia.UltimaEdicion = DateTime.Now;
 
-                await _unitOfWork.TiposCompetencias.AddAsync(tipoCompetencia);
-                await _unitOfWork.CommitTransactionAsync();
-            }
-            catch
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            await _unitOfWork.TiposCompetencias.AddAsync(tipoCompetencia);
+            _unitOfWork.SaveChanges();
         }
 
         public async Task Update(int id, TipoCompetenciaDTO tipoCompetenciaDTO)
         {
-            await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-                var tipoCompetencia = await _unitOfWork.TiposCompetencias.GetByIdAsync(id);
-                if (tipoCompetencia == null)
-                    throw new Exception("Tipo de competencia no encontrado.");
+            var tipoCompetencia = await _unitOfWork.TiposCompetencias.GetByIdAsync(id);
+            if (tipoCompetencia == null)
+                throw new KeyNotFoundException("Tipo de competencia no encontrado.");
 
-                tipoCompetencia.Nombre = tipoCompetenciaDTO.Nombre;
-                tipoCompetencia.UltimaEdicion = DateTime.Now;
+            tipoCompetencia.Nombre = tipoCompetenciaDTO.Nombre;
+            tipoCompetencia.UltimaEdicion = DateTime.Now;
 
-                await _unitOfWork.TiposCompetencias.Update(tipoCompetencia);
-                await _unitOfWork.CommitTransactionAsync();
-            }
-            catch
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            await _unitOfWork.TiposCompetencias.Update(tipoCompetencia);
+            _unitOfWork.SaveChanges();
         }
 
         public async Task Delete(int id)
         {
-            await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-                var tipoCompetencia = await _unitOfWork.TiposCompetencias.GetByIdAsync(id);
-                if (tipoCompetencia == null)
-                    throw new Exception("Tipo de competencia no encontrado.");
+            var tipoCompetencia = await _unitOfWork.TiposCompetencias.GetByIdAsync(id);
+            if (tipoCompetencia == null)
+                throw new KeyNotFoundException("Tipo de competencia no encontrado.");
 
-                _unitOfWork.TiposCompetencias.Delete(tipoCompetencia);
-                await _unitOfWork.CommitTransactionAsync();
-            }
-            catch
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            _unitOfWork.TiposCompetencias.Delete(tipoCompetencia);
+            _unitOfWork.SaveChanges();
         }
     }
 }
