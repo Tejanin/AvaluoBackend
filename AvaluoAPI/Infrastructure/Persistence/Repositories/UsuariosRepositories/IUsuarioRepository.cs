@@ -8,7 +8,11 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
     {
         Task<IEnumerable<UsuarioViewModel>> GetAllUsuarios(int? estado, int? area, int? rol);
         void Desactivate(int id);
-
+        
+        Task<Usuario> GetUsuarioWithRol(string username);
+        Task<UsuarioViewModel> GetUsuarioById(int id);
+        void Activate(int id);
+        Task<bool> Exists(int id);
         Task<bool> EmailExists(string email);
     }
 }

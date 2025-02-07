@@ -16,7 +16,10 @@ namespace AvaluoAPI.Utilities
             // Configuración personalizada para Usuario -> UsuarioDto
             config.NewConfig<UsuarioDTO, Usuario>()
                 .Map(dest => dest.HashedPassword, src => src.Password);
-                
+
+            // Configuración personalizada para Usuario -> UsuarioDto
+           
+
 
             // Agregar Mapster a la inyección de dependencias
             services.AddSingleton(config);

@@ -1,13 +1,25 @@
 using Avaluo.Infrastructure.Data;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
+
 using AvaluoAPI.Domain.Services.TipoInformeService;
+
+
+using AvaluoAPI.Domain.Services.TipoCompetenciaService;
+
+using AvaluoAPI.Application.Middlewares;
+
+
 using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Middlewares;
 using AvaluoAPI.Utilities;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using Microsoft.AspNetCore.Mvc;
+
+using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -22,7 +34,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    options.SuppressModelStateInvalidFilter = true; // Validación auto de ModelState desactivada
+    options.SuppressModelStateInvalidFilter = true; // Validaciï¿½n auto de ModelState desactivada
 });
 
 
@@ -76,7 +88,11 @@ builder.Services.AddMappingConfiguration();
 
 // Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
 builder.Services.AddScoped<ITipoInformeService, TipoInformeService>();
+
+builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
+
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -94,7 +110,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 }
 );
-
+builder.Services.AddSingleton<IJwtService, JwtService>();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "X-Permissions";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
 // Authorization
 builder.Services.AddAuthorization();
 
@@ -126,8 +149,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // Middlewares
-app.UseMiddleware<ExceptionMiddleware>();
-
+//app.UseMiddleware<ExceptionMiddleware>();
+app.UseAuthMiddleware();
 
 app.UseHttpsRedirection();
 
