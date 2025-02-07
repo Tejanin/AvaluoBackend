@@ -1,26 +1,51 @@
 using Avaluo.Infrastructure.Data;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 
+using AvaluoAPI.Domain.Services.TipoInformeService;
+
+
 using AvaluoAPI.Domain.Services.TipoCompetenciaService;
 
 using AvaluoAPI.Application.Middlewares;
 
+
 using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Infrastructure.Data.Contexts;
+using AvaluoAPI.Middlewares;
 using AvaluoAPI.Utilities;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+// builder.Services.AddControllers();
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true; // Validaci�n auto de ModelState desactivada
+});
+
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilterDTO>(); // Filtro para que las validaciones de los DTO traiga el misnmo formato que el middleware
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null; // Forzar PascalCase en las respuestas JSON.
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -63,7 +88,11 @@ builder.Services.AddMappingConfiguration();
 
 // Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+builder.Services.AddScoped<ITipoInformeService, TipoInformeService>();
+
 builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
+
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
