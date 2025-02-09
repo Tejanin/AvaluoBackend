@@ -1,8 +1,14 @@
-﻿using Avaluo.Infrastructure.Data;
+
 using Avaluo.Infrastructure.Data.Models;
 using AvaluoAPI.Infrastructure.Data.Contexts;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.EstadosRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
+
+using AvaluoAPI.Infrastructure.Persistence.Repositories.TiposCompetenciasRepositories;
+
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoMetodoEvaluacionRepositories;
+
 using AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -25,6 +31,8 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             _context = context;
             TiposInformes = new TipoInformeRepository(_context);
             TiposCompetencias = new TipoCompetenciaRepository(_context);
+            Competencias = new CompetenciaRepository(_context, _dapperContext);
+            Estados = new EstadoRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
 
@@ -35,6 +43,8 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public IUsuarioRepository Usuarios { get; private set; }
         public ITipoInformeRepository TiposInformes { get; private set; }
         public ITipoCompetenciaRepository TiposCompetencias { get; private set; }
+        public ICompetenciaRepository Competencias { get; private set; }
+        public IEstadoRepository Estados { get; private set; }
 
         public IMetodoEvaluacionRepository MetodoEvaluacion { get; private set; }
 
