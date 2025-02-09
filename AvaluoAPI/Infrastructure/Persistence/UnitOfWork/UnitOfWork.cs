@@ -1,5 +1,6 @@
 ﻿using Avaluo.Infrastructure.Data;
 using AvaluoAPI.Infrastructure.Data.Contexts;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -32,6 +33,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public IUsuarioRepository Usuarios { get; private set; }
         public ITipoInformeRepository TiposInformes { get; private set; }
         public ITipoCompetenciaRepository TiposCompetencias { get; private set; }
+        public IEdificioRespository Edificio { get; private set; }
 
         // methods
         public async Task BeginTransactionAsync()

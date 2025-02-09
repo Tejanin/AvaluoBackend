@@ -1,5 +1,4 @@
-﻿using AvaluoAPI.Presentation.DTOs;
-using AvaluoAPI.Presentation.DTOs.UserDTOs;
+﻿using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;

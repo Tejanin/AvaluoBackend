@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
+﻿using AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         IUsuarioRepository Usuarios { get; }
         ITipoInformeRepository TiposInformes { get; }
         ITipoCompetenciaRepository TiposCompetencias { get; }
+        IEdificioRespository Edificio { get; }
 
 
         Task<int> SaveChangesAsync();
