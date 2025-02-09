@@ -1,30 +1,22 @@
 using Avaluo.Infrastructure.Data;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
-
-using AvaluoAPI.Domain.Services.TipoInformeService;
-
-
-using AvaluoAPI.Domain.Services.TipoCompetenciaService;
-
 using AvaluoAPI.Application.Middlewares;
-
-
-using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Middlewares;
 using AvaluoAPI.Utilities;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
 using Microsoft.AspNetCore.Mvc;
-
 using Microsoft.AspNetCore.Authorization;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using AvaluoAPI.Domain.Services.UsuariosService;
+using AvaluoAPI.Domain.Services.CompetenciasService;
+using AvaluoAPI.Domain.Services.TipoInformeService;
+using AvaluoAPI.Domain.Services.TipoCompetenciaService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +84,8 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITipoInformeService, TipoInformeService>();
 
 builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
+
+builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
 
 // JWT
