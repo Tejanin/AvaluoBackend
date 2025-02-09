@@ -1,6 +1,11 @@
 using Avaluo.Infrastructure.Data;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Application.Middlewares;
+using AvaluoAPI.Domain.Services.MetodoEvaluacionService;
+using AvaluoAPI.Domain.Services.TipoInformeService;
+using AvaluoAPI.Domain.Services.TipoCompetenciaService;
+using AvaluoAPI.Application.Middlewares;
+using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Middlewares;
 using AvaluoAPI.Utilities;
@@ -80,6 +85,9 @@ builder.Services.AddMappingConfiguration();
 
 // Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+
+builder.Services.AddScoped<IMetodoEvaluacionService, MetodoEvaluacionService>();
 
 builder.Services.AddScoped<ITipoInformeService, TipoInformeService>();
 
