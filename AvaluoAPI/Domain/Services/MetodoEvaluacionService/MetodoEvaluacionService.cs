@@ -44,6 +44,13 @@ namespace AvaluoAPI.Domain.Services.MetodoEvaluacionService
         public async Task Register(MetodoEvaluacionDTO metodoEvaluacionDTO)
         {
             var metodoEvaluacion = _mapper.Map<MetodoEvaluacion>(metodoEvaluacionDTO);
+            var metodoEvaluacionExist = await _unitOfWork.MetodoEvaluacion.GetAllAsync();
+            foreach (var metodos in metodoEvaluacionExist)
+            {
+                if (metodos.Descripcion == metodoEvaluacionDTO.Descripcion)
+                    throw new ArgumentException("Ya existe un Metodo de Evaluacion con esa descripcion.");
+            }
+
             await _unitOfWork.MetodoEvaluacion.AddAsync(metodoEvaluacion);
             _unitOfWork.SaveChanges();
         }
@@ -51,8 +58,14 @@ namespace AvaluoAPI.Domain.Services.MetodoEvaluacionService
         public async Task Update(int id, MetodoEvaluacionDTO metodoEvaluacionDTO)
         {
             var metodoEvaluacion = await _unitOfWork.MetodoEvaluacion.GetByIdAsync(id);
+            var metodoEvaluacionExist = await _unitOfWork.MetodoEvaluacion.GetAllAsync();
             if (metodoEvaluacion == null)
                 throw new KeyNotFoundException("Metodo de Evaluacion no encontrado.");
+            foreach (var metodos in metodoEvaluacionExist)
+            {
+                if (metodos.Descripcion == metodoEvaluacionDTO.Descripcion)
+                    throw new ArgumentException("Ya existe un Metodo de Evaluacion con esa descripcion.");
+            }
 
             metodoEvaluacion.Descripcion = metodoEvaluacionDTO.Descripcion;
             await _unitOfWork.MetodoEvaluacion.Update(metodoEvaluacion);
