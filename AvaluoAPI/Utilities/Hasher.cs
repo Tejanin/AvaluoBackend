@@ -8,7 +8,7 @@
         }
         public static bool Verify(string password,string salt, string hashedPassword)
         {
-            return BCrypt.Net.BCrypt.EnhancedVerify(hashedPassword + salt, password);
+            return BCrypt.Net.BCrypt.EnhancedVerify(password + salt, hashedPassword);
         }
 
     }

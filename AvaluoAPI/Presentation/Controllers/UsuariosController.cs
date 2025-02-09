@@ -1,5 +1,6 @@
 ﻿using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
+using AvaluoAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -10,44 +11,95 @@ namespace AvaluoAPI.Presentation.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly IUsuarioService _userService;
-        public UsuariosController(IUsuarioService userService)
+        private readonly IUsuarioService _usuarioService;
+        private readonly IJwtService _jwtService;
+        public UsuariosController(IUsuarioService usuarioService, IJwtService jwtService)
         {
-            _userService = userService;
+            _usuarioService = usuarioService;
+            _jwtService = jwtService;
         }
-        // GET: api/<UsersController>
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult> Get(int? estado, int? area, int? rol)
         {
-            return new string[] { "value1", "value2" };
+            return Ok(await _usuarioService.GetAll(estado,area,rol));
         }
 
-        // GET api/<UsersController>/5
+        
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            return "value";
+            return Ok(await _usuarioService.GetById(id));
         }
 
-        // POST api/<UsersController>
+        
         [HttpPost]
-        public ActionResult Post([FromBody] UsuarioDTO usuarioDTO)
+        public async Task<ActionResult> Post([FromBody] UsuarioDTO usuarioDTO)
         {
-            
-            _userService.Register(usuarioDTO);
-            return Created();
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _usuarioService.Register(usuarioDTO);
+            return CreatedAtAction(nameof(Post), new { id = usuarioDTO.Id }, usuarioDTO);
         }
 
-        // PUT api/<UsersController>/5
+        
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<UsersController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] LoginDTO loginDTO)
         {
+            return Ok(await _usuarioService.Login(loginDTO));
         }
+
+        [HttpPost("logout")]
+        public async Task<ActionResult> Logout()
+        {
+            return Ok("logout");
+        }
+
+        [HttpPut("desactivate/{id}")]
+        public async Task<ActionResult> Desactivate(int id)
+        {
+            await _usuarioService.Desactivate(id);
+            return Accepted("usuario desactivado");
+        }
+
+        [HttpPut("activate/{id}")]
+        public async Task<ActionResult> Activate(int id)
+        {
+            await _usuarioService.Activate(id);
+            return Accepted("usuario activado");
+        }
+
+        [HttpGet("test-permissions")]
+        public IActionResult TestPermissions()
+        {
+            // Debug: Ver todos los headers
+            var headers = Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString());
+
+            // Debug: Ver todas las cookies
+            var cookies = Request.Cookies.ToDictionary(c => c.Key, c => c.Value);
+
+            var jwt = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var permissionCookie = Request.Cookies["X-Permissions"];
+
+            return Ok(new
+            {
+                Headers = headers,
+                Cookies = cookies,
+                HasJwt = !string.IsNullOrEmpty(jwt),
+                HasPermissionCookie = !string.IsNullOrEmpty(permissionCookie),
+                RawJwt = jwt,
+                RawPermissionCookie = permissionCookie
+            });
+        }
+
+
     }
 }

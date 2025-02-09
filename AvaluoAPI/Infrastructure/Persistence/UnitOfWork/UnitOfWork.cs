@@ -24,6 +24,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             _dapperContext = dapperContext;
             _context = context;
             TiposInformes = new TipoInformeRepository(_context);
+            TiposCompetencias = new TipoCompetenciaRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
 
@@ -33,6 +34,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
 
         public IUsuarioRepository Usuarios { get; private set; }
         public ITipoInformeRepository TiposInformes { get; private set; }
+        public ITipoCompetenciaRepository TiposCompetencias { get; private set; }
 
         public IMetodoEvaluacionRepository MetodoEvaluacion { get; private set; }
 
