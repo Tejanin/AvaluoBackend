@@ -11,7 +11,5 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositor
         {
             
         }
-
-
     }
 }

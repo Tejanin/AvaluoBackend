@@ -1,6 +1,8 @@
 ﻿using Avaluo.Infrastructure.Data;
+using Avaluo.Infrastructure.Data.Models;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoMetodoEvaluacionRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -24,6 +26,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             TiposInformes = new TipoInformeRepository(_context);
             TiposCompetencias = new TipoCompetenciaRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
+            MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
 
         }
 
@@ -32,6 +35,8 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public IUsuarioRepository Usuarios { get; private set; }
         public ITipoInformeRepository TiposInformes { get; private set; }
         public ITipoCompetenciaRepository TiposCompetencias { get; private set; }
+
+        public IMetodoEvaluacionRepository MetodoEvaluacion { get; private set; }
 
         // methods
         public async Task BeginTransactionAsync()

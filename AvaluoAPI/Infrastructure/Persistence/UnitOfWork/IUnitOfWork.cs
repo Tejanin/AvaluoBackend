@@ -1,4 +1,5 @@
 ﻿using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoMetodoEvaluacionRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
     public interface IUnitOfWork: IDisposable
     {
         IUsuarioRepository Usuarios { get; }
+        IMetodoEvaluacionRepository MetodoEvaluacion { get; }
         ITipoInformeRepository TiposInformes { get; }
         ITipoCompetenciaRepository TiposCompetencias { get; }
 
