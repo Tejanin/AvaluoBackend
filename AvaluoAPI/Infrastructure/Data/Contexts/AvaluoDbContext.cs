@@ -771,14 +771,20 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_Competencia");
                 entity.ToTable("competencia");
+
                 entity.HasIndex(e => e.Nombre, "Unique_Nombre").IsUnique();
+                entity.HasIndex(e => e.Acron, "Unique_Acron").IsUnique(); // Índice único para los acrónimos (SO1, SO2, etc.)
                 entity.HasIndex(e => e.IdTipo, "Id_Tipo");
                 entity.HasIndex(e => e.IdEstado, "Id_Estado");
+
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR CompetenciaSequence");
                 entity.Property(e => e.IdTipo).HasColumnName("Id_Tipo");
                 entity.Property(e => e.IdEstado).HasColumnName("Id_Estado");
                 entity.Property(e => e.Nombre).IsRequired();
-                entity.Property(e => e.Descripcion).IsRequired();
+                entity.Property(e => e.Acron).IsRequired().HasMaxLength(10); // Limite de caracteres para acrónimo
+                entity.Property(e => e.Titulo).IsRequired();
+                entity.Property(e => e.DescripcionES).IsRequired();
+                entity.Property(e => e.DescripcionEN).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
 
                 entity.HasOne(d => d.TipoCompetencia)
@@ -815,8 +821,9 @@ namespace Avaluo.Infrastructure.Data
 
                 entity.HasMany(d => d.Profesores)
                     .WithOne(p => p.SO)
-                    .HasForeignKey(d =>d.IdSO);
+                    .HasForeignKey(d => d.IdSO);
             });
+
 
             // AsignaturaCarrera
             modelBuilder.Entity<AsignaturaCarrera>(entity =>
