@@ -99,3 +99,4 @@ INSERT INTO Competencia (Nombre, Acron, Titulo, Descripcion_ES, Descripcion_EN, 
  'Capacidad para adquirir y aplicar nuevos conocimientos según sea necesario, utilizando estrategias de aprendizaje apropiadas.', 
  'Ability to acquire and apply new knowledge as needed, using appropriate learning strategies.', 
  1, 9);
+ go
