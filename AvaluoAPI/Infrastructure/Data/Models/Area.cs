@@ -10,7 +10,7 @@ namespace Avaluo.Infrastructure.Data.Models
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }
-        public int IdCoordinador { get; set; }
+        public int? IdCoordinador { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public DateTime? UltimaEdicion { get; set; }
         public virtual Usuario Coordinador { get; set; }
