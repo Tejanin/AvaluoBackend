@@ -263,7 +263,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.HasKey(e => e.Id).HasName("PK_Area");
 
                 entity.ToTable("areas");
-
+                entity.HasIndex(e => e.IdCoordinador, "Unique_Coordinador").IsUnique();
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR AreaSequence");
                 entity.Property(e => e.Descripcion).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -273,7 +273,8 @@ namespace Avaluo.Infrastructure.Data
                     .WithOne()
                     .HasForeignKey<Area>(d => d.IdCoordinador)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("areas_ibfk_1");
+                    .HasConstraintName("areas_ibfk_1")
+                    .IsRequired(false);
 
                 entity.HasMany(d => d.Usuarios)
                     .WithOne(p => p.Area)
@@ -648,6 +649,7 @@ namespace Avaluo.Infrastructure.Data
             // TipoCompetencia
             modelBuilder.Entity<TipoCompetencia>(entity =>
             {
+                entity.HasIndex(e => e.Nombre, "Unique_Nombre").IsUnique();
                 entity.HasKey(e => e.Id).HasName("PK_TipoCompetencia");
                 entity.ToTable("tipo_competencia");
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR TipoCompetenciaSequence");
@@ -665,6 +667,7 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_TipoInforme");
                 entity.ToTable("tipo_informe");
+                entity.HasIndex(e => e.Descripcion, "Unique_Descripcion").IsUnique();
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR TipoInformeSequence");
                 entity.Property(e => e.Descripcion).IsRequired();
                 entity.HasMany(d => d.Informes)
@@ -768,6 +771,7 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_Competencia");
                 entity.ToTable("competencia");
+                entity.HasIndex(e => e.Nombre, "Unique_Nombre").IsUnique();
                 entity.HasIndex(e => e.IdTipo, "Id_Tipo");
                 entity.HasIndex(e => e.IdEstado, "Id_Estado");
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR CompetenciaSequence");
@@ -892,6 +896,7 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_MetodoEvaluacion");
                 entity.ToTable("metodo_evaluacion");
+                entity.HasIndex(e => e.Descripcion, "Unique_Descripcion").IsUnique();
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR MetodoEvaluacionSequence");
                 entity.Property(e => e.Descripcion).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");

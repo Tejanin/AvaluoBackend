@@ -4,10 +4,7 @@ using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Presentation.ViewModels;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Mapster;
+
 
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasRepositories
 {
@@ -31,17 +28,17 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
             using var connection = _dapperContext.CreateConnection();
 
             var query = @"
-        SELECT 
-            c.Id, 
-            c.Nombre, 
-            c.Descripcion, 
-            c.FechaCreacion, 
-            c.UltimaEdicion,
-            tc.Nombre AS TipoCompetencia, 
-            e.Descripcion AS Estado
-        FROM competencia c
-        LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
-        LEFT JOIN estado e ON c.Id_Estado = e.Id";
+                SELECT 
+                    c.Id, 
+                    c.Nombre, 
+                    c.Descripcion, 
+                    c.FechaCreacion, 
+                    c.UltimaEdicion,
+                    tc.Nombre AS TipoCompetencia, 
+                    e.Descripcion AS Estado
+                FROM competencia c
+                LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
+                LEFT JOIN estado e ON c.Id_Estado = e.Id";
 
             var competencias = await connection.QueryAsync<CompetenciaViewModel>(query);
 
