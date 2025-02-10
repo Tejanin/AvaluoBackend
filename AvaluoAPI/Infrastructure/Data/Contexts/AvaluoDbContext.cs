@@ -239,9 +239,7 @@ namespace Avaluo.Infrastructure.Data
             modelBuilder.Entity<Asignatura>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_Asignatura");
-
                 entity.ToTable("asignaturas");
-
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR AsignaturaSequence");
                 entity.Property(e => e.Codigo).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(255);
@@ -255,13 +253,18 @@ namespace Avaluo.Infrastructure.Data
                     .HasForeignKey(d => d.IdEstado)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("asignaturas_ibfk_1");
+
+                entity.HasOne(d => d.Area)
+                    .WithMany(p => p.Asignaturas)
+                    .HasForeignKey(d => d.IdArea)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("asignaturas_ibfk_2");
             });
 
             // Area
             modelBuilder.Entity<Area>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_Area");
-
                 entity.ToTable("areas");
                 entity.HasIndex(e => e.IdCoordinador, "Unique_Coordinador").IsUnique();
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR AreaSequence");
@@ -269,6 +272,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
 
+                // Esta relación se mantiene Restrict
                 entity.HasOne(d => d.Coordinador)
                     .WithOne()
                     .HasForeignKey<Area>(d => d.IdCoordinador)
@@ -276,23 +280,30 @@ namespace Avaluo.Infrastructure.Data
                     .HasConstraintName("areas_ibfk_1")
                     .IsRequired(false);
 
+                // Estas relaciones cambian a Restrict para evitar ciclos
                 entity.HasMany(d => d.Usuarios)
                     .WithOne(p => p.Area)
                     .HasForeignKey(p => p.IdArea)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("areas_ibfk_2");
 
                 entity.HasMany(d => d.Carreras)
                     .WithOne(p => p.Area)
                     .HasForeignKey(p => p.IdArea)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("areas_ibfk_3");
 
                 entity.HasMany(d => d.Edificios)
                     .WithOne(p => p.Area)
                     .HasForeignKey(p => p.IdArea)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("areas_ibfk_4");
+
+                entity.HasMany(d => d.Asignaturas)
+                    .WithOne(p => p.Area)
+                    .HasForeignKey(p => p.IdArea)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("areas_ibfk_5");
             });
 
             // Carrera
