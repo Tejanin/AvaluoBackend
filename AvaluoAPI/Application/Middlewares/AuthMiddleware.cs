@@ -1,4 +1,4 @@
-﻿using AvaluoAPI.Utilities;
+﻿using AvaluoAPI.Utilities.JWT;
 
 namespace AvaluoAPI.Application.Middlewares
 {

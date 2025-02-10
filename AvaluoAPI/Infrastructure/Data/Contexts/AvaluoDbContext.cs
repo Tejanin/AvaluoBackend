@@ -239,9 +239,7 @@ namespace Avaluo.Infrastructure.Data
             modelBuilder.Entity<Asignatura>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_Asignatura");
-
                 entity.ToTable("asignaturas");
-
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR AsignaturaSequence");
                 entity.Property(e => e.Codigo).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(255);
@@ -255,43 +253,57 @@ namespace Avaluo.Infrastructure.Data
                     .HasForeignKey(d => d.IdEstado)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("asignaturas_ibfk_1");
+
+                entity.HasOne(d => d.Area)
+                    .WithMany(p => p.Asignaturas)
+                    .HasForeignKey(d => d.IdArea)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("asignaturas_ibfk_2");
             });
 
             // Area
             modelBuilder.Entity<Area>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_Area");
-
                 entity.ToTable("areas");
-
+                entity.HasIndex(e => e.IdCoordinador, "Unique_Coordinador").IsUnique();
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR AreaSequence");
                 entity.Property(e => e.Descripcion).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
 
+                // Esta relación se mantiene Restrict
                 entity.HasOne(d => d.Coordinador)
                     .WithOne()
                     .HasForeignKey<Area>(d => d.IdCoordinador)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("areas_ibfk_1");
+                    .HasConstraintName("areas_ibfk_1")
+                    .IsRequired(false);
 
+                // Estas relaciones cambian a Restrict para evitar ciclos
                 entity.HasMany(d => d.Usuarios)
                     .WithOne(p => p.Area)
                     .HasForeignKey(p => p.IdArea)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("areas_ibfk_2");
 
                 entity.HasMany(d => d.Carreras)
                     .WithOne(p => p.Area)
                     .HasForeignKey(p => p.IdArea)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("areas_ibfk_3");
 
                 entity.HasMany(d => d.Edificios)
                     .WithOne(p => p.Area)
                     .HasForeignKey(p => p.IdArea)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("areas_ibfk_4");
+
+                entity.HasMany(d => d.Asignaturas)
+                    .WithOne(p => p.Area)
+                    .HasForeignKey(p => p.IdArea)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("areas_ibfk_5");
             });
 
             // Carrera
@@ -648,6 +660,7 @@ namespace Avaluo.Infrastructure.Data
             // TipoCompetencia
             modelBuilder.Entity<TipoCompetencia>(entity =>
             {
+                entity.HasIndex(e => e.Nombre, "Unique_Nombre").IsUnique();
                 entity.HasKey(e => e.Id).HasName("PK_TipoCompetencia");
                 entity.ToTable("tipo_competencia");
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR TipoCompetenciaSequence");
@@ -665,6 +678,7 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_TipoInforme");
                 entity.ToTable("tipo_informe");
+                entity.HasIndex(e => e.Descripcion, "Unique_Descripcion").IsUnique();
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR TipoInformeSequence");
                 entity.Property(e => e.Descripcion).IsRequired();
                 entity.HasMany(d => d.Informes)
@@ -768,13 +782,20 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_Competencia");
                 entity.ToTable("competencia");
+
+                entity.HasIndex(e => e.Nombre, "Unique_Nombre").IsUnique();
+                entity.HasIndex(e => e.Acron, "Unique_Acron").IsUnique(); // Índice único para los acrónimos (SO1, SO2, etc.)
                 entity.HasIndex(e => e.IdTipo, "Id_Tipo");
                 entity.HasIndex(e => e.IdEstado, "Id_Estado");
+
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR CompetenciaSequence");
                 entity.Property(e => e.IdTipo).HasColumnName("Id_Tipo");
                 entity.Property(e => e.IdEstado).HasColumnName("Id_Estado");
                 entity.Property(e => e.Nombre).IsRequired();
-                entity.Property(e => e.Descripcion).IsRequired();
+                entity.Property(e => e.Acron).IsRequired().HasMaxLength(10); // Limite de caracteres para acrónimo
+                entity.Property(e => e.Titulo).IsRequired();
+                entity.Property(e => e.DescripcionES).IsRequired();
+                entity.Property(e => e.DescripcionEN).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
 
                 entity.HasOne(d => d.TipoCompetencia)
@@ -811,8 +832,9 @@ namespace Avaluo.Infrastructure.Data
 
                 entity.HasMany(d => d.Profesores)
                     .WithOne(p => p.SO)
-                    .HasForeignKey(d =>d.IdSO);
+                    .HasForeignKey(d => d.IdSO);
             });
+
 
             // AsignaturaCarrera
             modelBuilder.Entity<AsignaturaCarrera>(entity =>
@@ -892,6 +914,7 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_MetodoEvaluacion");
                 entity.ToTable("metodo_evaluacion");
+                entity.HasIndex(e => e.Descripcion, "Unique_Descripcion").IsUnique();
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR MetodoEvaluacionSequence");
                 entity.Property(e => e.Descripcion).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");

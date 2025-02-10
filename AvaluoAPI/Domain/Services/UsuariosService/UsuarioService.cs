@@ -4,6 +4,7 @@ using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using AvaluoAPI.Utilities;
+using AvaluoAPI.Utilities.JWT;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,6 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
     public class UsuarioService : IUsuarioService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly AvaluoDbContext _context;
         private readonly IMapper _mapper;
         private readonly IJwtService _jwtService;   
         public UsuarioService(IUnitOfWork unitOfWork,IMapper mapper, IJwtService jwtService, AvaluoDbContext context)
@@ -22,7 +22,6 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             _jwtService = jwtService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _context = context; 
         }
 
         public async Task Activate(int id)
