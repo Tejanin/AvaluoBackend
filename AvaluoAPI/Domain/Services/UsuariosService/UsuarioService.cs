@@ -4,6 +4,7 @@ using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using AvaluoAPI.Utilities;
+using AvaluoAPI.Utilities.JWT;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;

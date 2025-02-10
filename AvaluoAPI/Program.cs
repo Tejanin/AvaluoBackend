@@ -4,25 +4,19 @@ using AvaluoAPI.Application.Middlewares;
 using AvaluoAPI.Domain.Services.MetodoEvaluacionService;
 using AvaluoAPI.Domain.Services.TipoInformeService;
 using AvaluoAPI.Domain.Services.TipoCompetenciaService;
-using AvaluoAPI.Application.Middlewares;
 using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Middlewares;
 using AvaluoAPI.Utilities;
-using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using System.Text.Json.Serialization;
-using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Domain.Services.CompetenciasService;
-using AvaluoAPI.Domain.Services.TipoInformeService;
-using AvaluoAPI.Domain.Services.TipoCompetenciaService;
 using AvaluoAPI.Application.Handlers;
+using AvaluoAPI.Utilities.JWT;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -124,6 +118,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.Strict;
 });
+builder.Services.AddScoped<IClaimsFactory, ClaimsFactory>();
 // Authorization
 builder.Services.AddAuthorization();
 
