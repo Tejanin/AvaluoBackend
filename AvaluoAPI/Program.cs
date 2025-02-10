@@ -22,6 +22,7 @@ using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Domain.Services.CompetenciasService;
 using AvaluoAPI.Domain.Services.TipoInformeService;
 using AvaluoAPI.Domain.Services.TipoCompetenciaService;
+using AvaluoAPI.Application.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +96,9 @@ builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
 
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
+// FileHandler
+
+builder.Services.AddSingleton<FileHandler>();
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
