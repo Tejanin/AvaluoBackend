@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
-namespace AvaluoAPI.Utilities
+namespace AvaluoAPI.Utilities.JWT
 {
     public class TokenConfig
     {
@@ -30,13 +30,13 @@ namespace AvaluoAPI.Utilities
         public Dictionary<string, bool> Permisos { get; set; } = null!;
     }
     public interface IJwtService
-{
-    TokenConfig GenerateTokens(Usuario user, Rol rol);
-    bool ValidateToken(string token);
-    ClaimsPrincipal? GetClaimsPrincipal(string token);
-    UserPermissions? ValidatePermissionCookie(string permissionToken);
-    string? GetClaimValue(string token, string claimType);
-}
+    {
+        TokenConfig GenerateTokens(Usuario user, Rol rol, bool includeSOClaim = false);
+        bool ValidateToken(string token);
+        ClaimsPrincipal? GetClaimsPrincipal(string token);
+        UserPermissions? ValidatePermissionCookie(string permissionToken);
+        string? GetClaimValue(string token, string claimType);
+    }
 
     public class JwtService : IJwtService
     {
@@ -44,25 +44,24 @@ namespace AvaluoAPI.Utilities
         private readonly string _issuer;
         private readonly string _audience;
         private readonly IDataProtector _protector;
+        private readonly IClaimsFactory _claimsFactory;
 
-        public JwtService(IConfiguration configuration, IDataProtectionProvider dataProtectionProvider)
+        public JwtService(
+        IConfiguration configuration,
+        IDataProtectionProvider dataProtectionProvider,
+        IClaimsFactory claimsFactory)
         {
             _key = configuration["Jwt:Key"]!;
             _issuer = configuration["Jwt:Issuer"]!;
             _audience = configuration["Jwt:Audience"]!;
             _protector = dataProtectionProvider.CreateProtector("Permissions");
+            _claimsFactory = claimsFactory;
         }
 
-        public TokenConfig GenerateTokens(Usuario user, Rol rol)
+        public TokenConfig GenerateTokens(Usuario user, Rol rol, bool includeSOClaim = false)
         {
             // JWT con info no sensitiva
-            var jwtClaims = new[]
-            {
-                new Claim("Id", user.Id.ToString()),
-                new Claim("Email", user.Email),
-                new Claim("Name", user.Nombre),
-                new Claim("Lname", user.Apellido)
-             };
+            var jwtClaims = _claimsFactory.CreateClaims(user, includeSOClaim);
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

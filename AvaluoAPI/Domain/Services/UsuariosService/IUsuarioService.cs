@@ -1,7 +1,7 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
-using AvaluoAPI.Utilities;
+using AvaluoAPI.Utilities.JWT;
 
 namespace AvaluoAPI.Domain.Services.UsuariosService
 {

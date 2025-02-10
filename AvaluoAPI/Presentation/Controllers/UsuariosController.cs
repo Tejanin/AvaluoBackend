@@ -1,6 +1,6 @@
 ﻿using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
-using AvaluoAPI.Utilities;
+using AvaluoAPI.Utilities.JWT;
 using Microsoft.AspNetCore.Mvc;
 
 
