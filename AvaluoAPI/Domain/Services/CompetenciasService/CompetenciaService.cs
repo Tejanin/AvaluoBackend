@@ -32,10 +32,24 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             return competencia;
         }
 
-        public async Task<IEnumerable<CompetenciaViewModel>> GetAll()
-        {
-            return await _unitOfWork.Competencias.GetAllCompetencias(); 
+        public async Task<IEnumerable<CompetenciaViewModel>> GetAll( string? nombre = null, string? acron = null, string? titulo = null, int? idTipo = null, int? idEstado = null)
+            {
+            IEnumerable<CompetenciaViewModel> competencias;
+            if (string.IsNullOrEmpty(nombre) && string.IsNullOrEmpty(acron) && string.IsNullOrEmpty(titulo) && idTipo == null && idEstado == null)
+            {
+
+                competencias = await _unitOfWork.Competencias.GetAllCompetencias();
+            } else
+            {
+                competencias = await _unitOfWork.Competencias.GetCompetenciasByFilter(nombre, acron, titulo, idTipo, idEstado);
+            }
+            if (!competencias.Any())
+            {
+                throw new KeyNotFoundException("No se encontraron competencias con los filtros especificados.");
+            }
+            return competencias;
         }
+
 
         public async Task Register(CompetenciaDTO competenciaDTO)
         {

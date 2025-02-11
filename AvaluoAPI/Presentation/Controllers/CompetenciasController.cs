@@ -18,11 +18,17 @@ namespace AvaluoAPI.Presentation.Controllers
             _competenciaService = competenciaService;
         }
 
+
         // GET: api/Competencias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CompetenciaViewModel>>> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery] string? nombre,
+            [FromQuery] string? acron,
+            [FromQuery] string? titulo,
+            [FromQuery] int? idTipo,
+            [FromQuery] int? idEstado)
         {
-            var competencias = await _competenciaService.GetAll();
+            var competencias = await _competenciaService.GetAll(nombre, acron, titulo, idTipo, idEstado);
             return Ok(new { mensaje = "Competencias obtenidas exitosamente.", data = competencias });
         }
 

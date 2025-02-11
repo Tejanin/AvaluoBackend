@@ -1,6 +1,9 @@
-﻿using AvaluoAPI.Domain.Services.UsuariosService;
+﻿using AvaluoAPI.Application.Handlers;
+using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Utilities.JWT;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -9,16 +12,20 @@ namespace AvaluoAPI.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class UsuariosController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
         private readonly IJwtService _jwtService;
-        public UsuariosController(IUsuarioService usuarioService, IJwtService jwtService)
+        private readonly IEmailService _emailService;
+        public UsuariosController(IUsuarioService usuarioService, IJwtService jwtService, IEmailService emailService)
         {
+            _emailService = emailService;
             _usuarioService = usuarioService;
             _jwtService = jwtService;
         }
 
+        
         [HttpGet]
         public async Task<ActionResult> Get(int? estado, int? area, int? rol)
         {
@@ -47,20 +54,40 @@ namespace AvaluoAPI.Presentation.Controllers
 
         
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(int id, [FromBody] ModifyUsuarioDTO usuarioDTO)
         {
+            await _usuarioService.Update(id, usuarioDTO);
+            return Accepted("usuario actualizado");
         }
 
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] LoginDTO loginDTO)
         {
-            return Ok(await _usuarioService.Login(loginDTO));
+            var tokens = await _usuarioService.Login(loginDTO);
+
+            // Establecer la cookie
+            Response.Cookies.Append("X-Permissions", tokens.PermissionToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            });
+
+            // Solo devolver el JWT
+            return Ok(new { token = tokens.JwtToken });
         }
 
         [HttpPost("logout")]
         public async Task<ActionResult> Logout()
         {
-            return Ok("logout");
+            var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            if (token != null)
+            {
+                _jwtService.BlacklistToken(token);
+            }
+
+            Response.Cookies.Delete("X-Permissions");
+            return Ok(new { message = "Sesión cerrada exitosamente" });
         }
 
         [HttpPut("desactivate/{id}")]
@@ -100,6 +127,42 @@ namespace AvaluoAPI.Presentation.Controllers
             });
         }
 
+        [HttpPut("change-pfp/{id}")]
+        public async Task<ActionResult> ChangePfp(int id,  IFormFile file)
+        {
+            await _usuarioService.UpdatePfp(id, file);
+            return Accepted("Foto de perfil actualizada");
+        }
 
+        [HttpPut("change-cv/{id}")]
+        public async Task<ActionResult> ChangeCv(int id, IFormFile file)
+        {
+            await _usuarioService.UpdateCv(id, file);
+            return Accepted("Foto de perfil actualizada");
+        }
+
+        [HttpPost("request-password-change")]
+
+        public async Task<ActionResult> RequestPasswordChange([FromBody] string email)
+        {
+            return Ok();
+        }
+        [HttpPut("change-password/{id}")]
+        public async Task<ActionResult> ChangePassword(int id, [FromBody] string newPassword)
+        {
+            
+            await _usuarioService.ChangePassword(id, newPassword);
+            return Accepted("Contraseña actualizada");
+           
+        }
+
+        [HttpPut("change-password")]
+        public async Task<ActionResult> ChangePassword( [FromBody] string newPassword)
+        {
+
+            await _usuarioService.ChangePassword(newPassword);
+            return Accepted("Contraseña actualizada");
+
+        }
     }
 }

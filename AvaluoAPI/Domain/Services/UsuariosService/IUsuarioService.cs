@@ -9,8 +9,12 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
     {
         Task<TokenConfig> Login(LoginDTO user);
         Task Register(UsuarioDTO userDTO);
-        Task Update(UsuarioDTO user);
+        Task Update(int id,ModifyUsuarioDTO user);
         Task Desactivate(int id);
+        Task RequestPasswordChange();
+        Task ChangePassword(string newPassword);
+        Task UpdatePfp(int id, IFormFile file);
+        Task UpdateCv(int id, IFormFile file);
         Task ChangePassword(int id, string newPassword);
         Task Activate(int id);
         Task<UsuarioViewModel> GetById(int id);
