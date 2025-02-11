@@ -11,5 +11,10 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.EstadosRepositories
         public EstadoRepository(AvaluoDbContext dbContext) : base(dbContext)
         {
         }
+
+        public AvaluoDbContext? AvaluoDbContext
+        {
+            get { return _context as AvaluoDbContext; }
+        }
     }
 }
