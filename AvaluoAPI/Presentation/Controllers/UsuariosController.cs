@@ -9,6 +9,7 @@ namespace AvaluoAPI.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class UsuariosController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
@@ -47,8 +48,10 @@ namespace AvaluoAPI.Presentation.Controllers
 
         
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(int id, [FromBody] ModifyUsuarioDTO usuarioDTO)
         {
+            await _usuarioService.Update(id, usuarioDTO);
+            return Accepted("usuario actualizado");
         }
 
         [HttpPost("login")]
@@ -100,6 +103,18 @@ namespace AvaluoAPI.Presentation.Controllers
             });
         }
 
+        [HttpPut("change-pfp/{id}")]
+        public async Task<ActionResult> ChangePfp(int id,  IFormFile file)
+        {
+            await _usuarioService.UpdatePfp(id, file);
+            return Accepted("Foto de perfil actualizada");
+        }
 
+        [HttpPut("change-cv/{id}")]
+        public async Task<ActionResult> ChangeCv(int id, IFormFile file)
+        {
+            await _usuarioService.UpdateCv(id, file);
+            return Accepted("Foto de perfil actualizada");
+        }
     }
 }

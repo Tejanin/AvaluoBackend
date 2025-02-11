@@ -11,5 +11,10 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.TipoMetodoEvaluacion
         {
 
         }
+
+        public AvaluoDbContext? AvaluoDbContext
+        {
+            get { return _context as AvaluoDbContext; }
+        }
     }
 }

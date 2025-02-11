@@ -10,5 +10,10 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.TiposCompetenciasRep
         public TipoCompetenciaRepository(AvaluoDbContext dbContext) : base(dbContext)
         {   
         }
+
+        public AvaluoDbContext? AvaluoDbContext
+        {
+            get { return _context as AvaluoDbContext; }
+        }
     }
 }

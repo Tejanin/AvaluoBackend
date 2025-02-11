@@ -8,10 +8,18 @@ namespace AvaluoAPI.Application.Handlers
         private readonly long MaxSize = 1024 * 1024 * 10;
         private readonly string BasePath;
 
-        public FileHandler(IConfiguration configuration)
+        public FileHandler()
         {
-            BasePath = configuration.GetValue<string>("FileHandler:BasePath") ??
-                throw new ArgumentNullException("La ruta base debe estar configurada en appsettings");
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string baseFolder = "AvaluoFiles";
+
+            // Convertimos las backslashes a forward slashes para evitar problemas con JSON
+            BasePath = Path.Combine(desktopPath, baseFolder).Replace("\\", "/");
+
+            if (!Directory.Exists(BasePath))
+            {
+                Directory.CreateDirectory(BasePath);
+            }
         }
 
         public async Task<(bool exitoso, string mensaje, string ruta)> Upload(
@@ -41,7 +49,7 @@ namespace AvaluoAPI.Application.Handlers
                 await GuardarArchivo(archivo, rutaCompleta);
 
                 string rutaRelativa = Path.Combine(carpetaDestino, nombreArchivo);
-                return (true, "Archivo subido exitosamente", rutaRelativa);
+                return (true, "Archivo subido exitosamente", rutaCompleta);
             }
             catch (Exception ex)
             {

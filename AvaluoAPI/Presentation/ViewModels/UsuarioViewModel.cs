@@ -13,7 +13,8 @@
         public string? SO { get; set; }
         public string? CV { get; set; }
         public string? Foto { get; set; }
-        
+        public List<ContactoViewModel>? Contactos { get; set; }
+
 
 
     }
