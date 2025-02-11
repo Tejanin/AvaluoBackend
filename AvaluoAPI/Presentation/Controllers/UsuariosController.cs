@@ -128,13 +128,20 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok();
         }
         [HttpPut("change-password/{id}")]
-        public async Task<ActionResult> ChangePassword(int id, [FromBody] string newPassword)
+        public async Task<ActionResult> ChangePassword([FromBody]int id, [FromBody] string newPassword)
         {
             
             await _usuarioService.ChangePassword(id, newPassword);
             return Accepted("Contraseña actualizada");
            
+        }
 
+        [HttpPut("change-password")]
+        public async Task<ActionResult> ChangePassword( [FromBody] string newPassword)
+        {
+
+            await _usuarioService.ChangePassword(newPassword);
+            return Accepted("Contraseña actualizada");
 
         }
     }
