@@ -94,6 +94,9 @@ builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
 builder.Services.AddSingleton<FileHandler>();
 
+// EmailService
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

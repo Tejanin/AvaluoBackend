@@ -1,6 +1,8 @@
-﻿using AvaluoAPI.Domain.Services.UsuariosService;
+﻿using AvaluoAPI.Application.Handlers;
+using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Utilities.JWT;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -14,8 +16,10 @@ namespace AvaluoAPI.Presentation.Controllers
     {
         private readonly IUsuarioService _usuarioService;
         private readonly IJwtService _jwtService;
-        public UsuariosController(IUsuarioService usuarioService, IJwtService jwtService)
+        private readonly IEmailService _emailService;
+        public UsuariosController(IUsuarioService usuarioService, IJwtService jwtService, IEmailService emailService)
         {
+            _emailService = emailService;
             _usuarioService = usuarioService;
             _jwtService = jwtService;
         }
@@ -115,6 +119,23 @@ namespace AvaluoAPI.Presentation.Controllers
         {
             await _usuarioService.UpdateCv(id, file);
             return Accepted("Foto de perfil actualizada");
+        }
+
+        [HttpPost("request-password-change")]
+
+        public async Task<ActionResult> RequestPasswordChange([FromBody] string email)
+        {
+            return Ok();
+        }
+        [HttpPut("change-password/{id}")]
+        public async Task<ActionResult> ChangePassword(int id, [FromBody] string newPassword)
+        {
+            
+            await _usuarioService.ChangePassword(id, newPassword);
+            return Accepted("Contraseña actualizada");
+           
+
+
         }
     }
 }

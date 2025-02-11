@@ -106,31 +106,29 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
         {
             using var connection = _dapperContext.CreateConnection();
             var query = @"
-                        SELECT 
-                            u.Id,
-                            u.Username,
-                            u.Email,
-                            u.Nombre,
-                            u.Apellido,
-                            u.CV,
-                            u.Foto,
-                            e.Descripcion AS Estado,
-                            a.Descripcion AS Area,
-                            COALESCE(r.Descripcion, 'No asignado') AS Rol,
-                            COALESCE(c.Nombre, 'N/A') AS SO,
-                            con.Id AS ContactoId,        -- Aseguramos que este campo se llame ContactoId
-                            con.NumeroContacto
-                        FROM usuario u
-                        LEFT JOIN estado e ON u.IdEstado = e.Id
-                        LEFT JOIN areas a ON u.IdArea = a.Id
-                        LEFT JOIN roles r ON u.IdRol = r.Id
-                        LEFT JOIN competencia c ON u.IdSO = c.Id
-                        LEFT JOIN contacto con ON u.Id = con.Id_Usuario
-                        WHERE (@IdEstado IS NULL OR u.IdEstado = @IdEstado)
-                            AND (@IdArea IS NULL OR u.IdArea = @IdArea)
-                            AND (@IdRol IS NULL OR u.IdRol = @IdRol)";
-
-            var parametros = new { IdEstado = estado, IdArea = area, IdRol = rol };
+                            SELECT 
+                                u.Id,
+                                u.Username,
+                                u.Email,
+                                u.Nombre,
+                                u.Apellido,
+                                u.CV,
+                                u.Foto,
+                                e.Descripcion AS Estado,
+                                a.Descripcion AS Area,
+                                COALESCE(r.Descripcion, 'No asignado') AS Rol,
+                                COALESCE(c.Nombre, 'N/A') AS SO,
+                                con.Id,
+                                con.NumeroContacto
+                            FROM usuario u
+                            LEFT JOIN estado e ON u.IdEstado = e.Id
+                            LEFT JOIN areas a ON u.IdArea = a.Id
+                            LEFT JOIN roles r ON u.IdRol = r.Id
+                            LEFT JOIN competencia c ON u.IdSO = c.Id
+                            LEFT JOIN contacto con ON u.Id = con.Id_Usuario
+                            WHERE (@IdEstado IS NULL OR u.IdEstado = @IdEstado)
+                                AND (@IdArea IS NULL OR u.IdArea = @IdArea)
+                                AND (@IdRol IS NULL OR u.IdRol = @IdRol)";
 
             var usuariosDictionary = new Dictionary<int, UsuarioViewModel>();
 
@@ -145,25 +143,16 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
                         usuariosDictionary.Add(usuario.Id, usuarioEntry);
                     }
 
-                    if (contacto?.Id > 0) // Solo agregamos contactos válidos
+                    if (contacto != null)
                     {
                         usuarioEntry.Contactos.Add(contacto);
                     }
 
                     return usuarioEntry;
                 },
-                parametros,
-                splitOn: "ContactoId"
+                new { IdEstado = estado, IdArea = area, IdRol = rol },
+                splitOn: "Id"
             );
-
-            // Limpiamos la lista de contactos si está vacía
-            foreach (var usuario in usuariosDictionary.Values)
-            {
-                if (!usuario.Contactos.Any(c => c.Id > 0))
-                {
-                    usuario.Contactos = null;
-                }
-            }
 
             return usuariosDictionary.Values;
         }
