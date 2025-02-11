@@ -2,6 +2,7 @@
 using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Utilities.JWT;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace AvaluoAPI.Presentation.Controllers
             _jwtService = jwtService;
         }
 
+        
         [HttpGet]
         public async Task<ActionResult> Get(int? estado, int? area, int? rol)
         {
@@ -61,13 +63,31 @@ namespace AvaluoAPI.Presentation.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] LoginDTO loginDTO)
         {
-            return Ok(await _usuarioService.Login(loginDTO));
+            var tokens = await _usuarioService.Login(loginDTO);
+
+            // Establecer la cookie
+            Response.Cookies.Append("X-Permissions", tokens.PermissionToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            });
+
+            // Solo devolver el JWT
+            return Ok(new { token = tokens.JwtToken });
         }
 
         [HttpPost("logout")]
         public async Task<ActionResult> Logout()
         {
-            return Ok("logout");
+            var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            if (token != null)
+            {
+                _jwtService.BlacklistToken(token);
+            }
+
+            Response.Cookies.Delete("X-Permissions");
+            return Ok(new { message = "Sesión cerrada exitosamente" });
         }
 
         [HttpPut("desactivate/{id}")]
@@ -128,7 +148,7 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok();
         }
         [HttpPut("change-password/{id}")]
-        public async Task<ActionResult> ChangePassword([FromBody]int id, [FromBody] string newPassword)
+        public async Task<ActionResult> ChangePassword(int id, [FromBody] string newPassword)
         {
             
             await _usuarioService.ChangePassword(id, newPassword);
