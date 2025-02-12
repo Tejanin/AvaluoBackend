@@ -25,6 +25,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using AvaluoAPI.Domain.Services.EdificioService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +93,8 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITipoInformeService, TipoInformeService>();
 
 builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
+
+builder.Services.AddScoped<IEdificioService,  EdificioService>();
 
 
 // JWT

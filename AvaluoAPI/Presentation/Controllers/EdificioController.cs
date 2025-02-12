@@ -1,7 +1,5 @@
 ﻿using AvaluoAPI.Domain.Services.EdificioService;
-using AvaluoAPI.Domain.Services.TipoInformeService;
 using AvaluoAPI.Presentation.DTOs.EdificioDTOs;
-using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +18,7 @@ namespace AvaluoAPI.Presentation.Controllers
 
         // GET: api/Edificios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TipoInformeViewModel>>> Get()
+        public async Task<ActionResult<IEnumerable<EdificioViewModel>>> Get()
         {
             var edificios = await _edificioService.GetAll();
             return Ok(new { mensaje = "Edificios obtenidos exitosamente.", data = edificios });

@@ -14,7 +14,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         IUsuarioRepository Usuarios { get; }
         ITipoInformeRepository TiposInformes { get; }
         ITipoCompetenciaRepository TiposCompetencias { get; }
-        IEdificioRespository Edificio { get; }
+        IEdificioRespository Edificios { get; }
 
 
         Task<int> SaveChangesAsync();

@@ -19,23 +19,23 @@ namespace AvaluoAPI.Domain.Services.EdificioService
         }
         public async Task Delete(int id)
         {
-            var edificio = await _unitOfWork.Edificio.GetByIdAsync(id);
+            var edificio = await _unitOfWork.Edificios.GetByIdAsync(id);
             if (edificio == null)
                 throw new KeyNotFoundException("Edificio no encontrado.");
 
-            _unitOfWork.Edificio.Delete(edificio);
+            _unitOfWork.Edificios.Delete(edificio);
             _unitOfWork.SaveChanges();
         }
 
         public async Task<IEnumerable<EdificioViewModel>> GetAll()
         {
-            var edificio = await _unitOfWork.Edificio.GetAllAsync();
+            var edificio = await _unitOfWork.Edificios.GetAllEdificios();
             return _mapper.Map<IEnumerable<EdificioViewModel>>(edificio);
         }
 
         public async Task<EdificioViewModel> GetById(int id)
         {
-            var edificio = await _unitOfWork.Edificio.GetByIdAsync(id);
+            var edificio = await _unitOfWork.Edificios.GetEdificioById(id);
             if (edificio == null)
                 throw new KeyNotFoundException("Edificio no encontrado.");
 
@@ -45,17 +45,17 @@ namespace AvaluoAPI.Domain.Services.EdificioService
         public async Task Register(EdificioDTO edificioDTO)
         {
             var edificio = _mapper.Map<Edificio>(edificioDTO);
-            var edificioExiste = await _unitOfWork.Edificio.GetByIdAsync(edificio.Id);
+            var edificioExiste = await _unitOfWork.Edificios.GetByIdAsync(edificio.Id);
             if (edificioExiste != null)
                 throw new AggregateException("Edificio ya existe.");
 
-            await _unitOfWork.Edificio.AddAsync(edificio);
+            await _unitOfWork.Edificios.AddAsync(edificio);
             _unitOfWork.SaveChanges();
         }
 
         public async Task Update(int id, EdificioDTO edificioDTO)
         {
-            var edificio = await _unitOfWork.Edificio.GetByIdAsync(id);
+            var edificio = await _unitOfWork.Edificios.GetByIdAsync(id);
             if (edificio == null)
                 throw new KeyNotFoundException("Edificio no encontrado.");
 
@@ -67,7 +67,7 @@ namespace AvaluoAPI.Domain.Services.EdificioService
             edificio.IdEstado = edificioDTO.IdEstado;
             edificio.UltimaEdicion = DateTime.Now;
 
-            await _unitOfWork.Edificio.Update(edificio);
+            await _unitOfWork.Edificios.Update(edificio);
             _unitOfWork.SaveChanges();
         }
     }

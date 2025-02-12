@@ -1,4 +1,5 @@
 ﻿using Avaluo.Infrastructure.Data;
+using AvaluoAPI.Domain.Services.EdificioService;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
@@ -25,6 +26,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             TiposInformes = new TipoInformeRepository(_context);
             TiposCompetencias = new TipoCompetenciaRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
+            Edificios = new EdificioRepository(_context, _dapperContext);
 
         }
 
@@ -33,7 +35,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public IUsuarioRepository Usuarios { get; private set; }
         public ITipoInformeRepository TiposInformes { get; private set; }
         public ITipoCompetenciaRepository TiposCompetencias { get; private set; }
-        public IEdificioRespository Edificio { get; private set; }
+        public IEdificioRespository Edificios { get; private set; }
 
         // methods
         public async Task BeginTransactionAsync()
