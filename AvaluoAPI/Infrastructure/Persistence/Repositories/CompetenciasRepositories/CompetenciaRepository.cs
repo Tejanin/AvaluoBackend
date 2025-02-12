@@ -41,7 +41,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
                     tc.FechaCreacion,
                     tc.UltimaEdicion,
                     e.Id,
-                    e.Descripcion
+                    e.Descripcion,
+                    e.IdTabla
                 FROM competencia c
                 LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
                 LEFT JOIN estado e ON c.Id_Estado = e.Id";
@@ -90,7 +91,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
             tc.UltimaEdicion,
 
             e.Id,
-            e.Descripcion
+            e.Descripcion,
+            e.IdTabla
         FROM competencia c
         LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
         LEFT JOIN estado e ON c.Id_Estado = e.Id
@@ -138,7 +140,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
             tc.UltimaEdicion,
 
             e.Id,
-            e.Descripcion
+            e.Descripcion,
+            e.e.IdTabla
         FROM competencia c
         LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
         LEFT JOIN estado e ON c.Id_Estado = e.Id
