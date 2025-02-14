@@ -3,9 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace AvaluoAPI.Presentation.DTOs.CompetenciaDTOs
 {
-    public class CompetenciaDTO
+    public class CompetenciaModifyDTO
     {
-        private int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre de la competencia es requerido.")]
         [StringLength(255, ErrorMessage = "El nombre no puede tener más de 255 caracteres.")]
@@ -33,8 +32,8 @@ namespace AvaluoAPI.Presentation.DTOs.CompetenciaDTOs
         [JsonIgnore]
         public DateTime UltimaEdicion { get; set; }
 
-        [JsonIgnore]
-        public int IdEstado {  get; set; }
+        [Required(ErrorMessage = "El estado es requerido.")]
+        public int IdEstado { get; set; }
 
         [Required(ErrorMessage = "El tipo de competencia es requerido.")]
         public int IdTipo { get; set; }

@@ -22,54 +22,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
             get { return _context as AvaluoDbContext; }
         }
 
-        public async Task<IEnumerable<CompetenciaViewModel>> GetAllCompetencias()
-        {
-            using var connection = _dapperContext.CreateConnection();
-
-            var query = @"
-                SELECT 
-                    c.Id, 
-                    c.Nombre, 
-                    c.Acron, 
-                    c.Titulo, 
-                    c.DescripcionES, 
-                    c.DescripcionEN, 
-                    c.FechaCreacion, 
-                    c.UltimaEdicion,
-                    tc.Id,
-                    tc.Nombre,
-                    tc.FechaCreacion,
-                    tc.UltimaEdicion,
-                    e.Id,
-                    e.Descripcion,
-                    e.IdTabla
-                FROM competencia c
-                LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
-                LEFT JOIN estado e ON c.Id_Estado = e.Id";
-
-            var competenciasDictionary = new Dictionary<int, CompetenciaViewModel>();
-
-            await connection.QueryAsync<CompetenciaViewModel, TipoCompetenciaViewModel, EstadoViewModel, CompetenciaViewModel>(
-                query,
-                (competencia, tipoCompetencia, estado) =>
-                {
-                    if (!competenciasDictionary.TryGetValue(competencia.Id, out var competenciaEntry))
-                    {
-                        competenciaEntry = competencia;
-                        competenciasDictionary.Add(competencia.Id, competenciaEntry);
-                    }
-
-                    competenciaEntry.TipoCompetencia = tipoCompetencia;
-                    competenciaEntry.Estado = estado;
-
-                    return competenciaEntry;
-                },
-                splitOn: "Id"
-            );
-
-            return competenciasDictionary.Values;
-        }
-
         public async Task<CompetenciaViewModel?> GetCompetenciaById(int id)
         {
             using var connection = _dapperContext.CreateConnection();
@@ -141,7 +93,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
 
             e.Id,
             e.Descripcion,
-            e.e.IdTabla
+            e.IdTabla
         FROM competencia c
         LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
         LEFT JOIN estado e ON c.Id_Estado = e.Id

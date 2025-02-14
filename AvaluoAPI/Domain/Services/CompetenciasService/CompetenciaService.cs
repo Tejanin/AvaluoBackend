@@ -1,5 +1,6 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
+using AvaluoAPI.Domain.Services.EstadoService;
 using AvaluoAPI.Domain.Services.CompetenciasService;
 using AvaluoAPI.Presentation.DTOs.CompetenciaDTOs;
 using AvaluoAPI.Presentation.DTOs.TipoCompetenciaDTOs;
@@ -16,11 +17,13 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IEstadoService _estadoService;
 
-        public CompetenciaService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CompetenciaService(IUnitOfWork unitOfWork, IMapper mapper, IEstadoService estadoService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _estadoService = estadoService;
         }
 
         public async Task<CompetenciaViewModel> GetById(int id)
@@ -32,24 +35,11 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             return competencia;
         }
 
-        public async Task<IEnumerable<CompetenciaViewModel>> GetAll( string? nombre = null, string? acron = null, string? titulo = null, int? idTipo = null, int? idEstado = null)
-            {
-            IEnumerable<CompetenciaViewModel> competencias;
-            if (string.IsNullOrEmpty(nombre) && string.IsNullOrEmpty(acron) && string.IsNullOrEmpty(titulo) && idTipo == null && idEstado == null)
-            {
-
-                competencias = await _unitOfWork.Competencias.GetAllCompetencias();
-            } else
-            {
-                competencias = await _unitOfWork.Competencias.GetCompetenciasByFilter(nombre, acron, titulo, idTipo, idEstado);
-            }
-            if (!competencias.Any())
-            {
-                throw new KeyNotFoundException("No se encontraron competencias con los filtros especificados.");
-            }
+        public async Task<IEnumerable<CompetenciaViewModel>> GetAll(string? nombre, string? acron, string? titulo, int? idTipo, int? idEstado)
+        {
+            var competencias = await _unitOfWork.Competencias.GetCompetenciasByFilter(nombre, acron, titulo, idTipo, idEstado);
             return competencias;
         }
-
 
         public async Task Register(CompetenciaDTO competenciaDTO)
         {
@@ -57,19 +47,20 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             if (tipoCompetencia == null)
                 throw new KeyNotFoundException("El Tipo de Competencia especificado no existe.");
 
-            var estado = await _unitOfWork.Estados.GetByIdAsync(competenciaDTO.IdEstado);
-            if (estado == null)
-                throw new KeyNotFoundException("El Estado especificado no existe.");
+            // Se pone el estado activo por defecto
+            var estadoActivo = await _estadoService.GetAll("Competencia", "Activa");
+            if (!estadoActivo.Any()) throw new KeyNotFoundException("No se encontró un estado por defecto");
 
             var competencia = _mapper.Map<Competencia>(competenciaDTO);
             competencia.UltimaEdicion = DateTime.Now;
+            competencia.IdEstado = estadoActivo.First().Id;
 
             await _unitOfWork.Competencias.AddAsync(competencia);
             _unitOfWork.SaveChanges();
         }
 
 
-        public async Task Update(int id, CompetenciaDTO competenciaDTO)
+        public async Task Update(int id, CompetenciaModifyDTO competenciaDTO)
         {
             var competencia = await _unitOfWork.Competencias.GetByIdAsync(id);
             if (competencia == null)
@@ -82,6 +73,9 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             var estado = await _unitOfWork.Estados.GetByIdAsync(competenciaDTO.IdEstado);
             if (estado == null)
                 throw new KeyNotFoundException("El Estado especificado no existe.");
+
+            if (estado.IdTabla != "Competencia")
+                throw new ValidationException("El Estado especificado no pertenece a las competencias.");
 
             _mapper.Map(competenciaDTO, competencia);
               competencia.UltimaEdicion = DateTime.UtcNow;
