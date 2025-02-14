@@ -18,13 +18,11 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IEstadoService _estadoService;
 
-        public CompetenciaService(IUnitOfWork unitOfWork, IMapper mapper, IEstadoService estadoService)
+        public CompetenciaService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _estadoService = estadoService;
         }
 
         public async Task<CompetenciaViewModel> GetById(int id)
