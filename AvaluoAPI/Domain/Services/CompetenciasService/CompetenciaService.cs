@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace AvaluoAPI.Domain.Services.CompetenciasService
 {
@@ -47,13 +48,16 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             if (tipoCompetencia == null)
                 throw new KeyNotFoundException("El Tipo de Competencia especificado no existe.");
 
-            // Se pone el estado activo por defecto
-            var estadoActivo = await _estadoService.GetAll("Competencia", "Activa");
-            if (!estadoActivo.Any()) throw new KeyNotFoundException("No se encontró un estado por defecto");
+            Expression<Func<Estado, bool>> filter = e =>
+            (e.IdTabla == "Competencia") &&
+            (e.Descripcion == "Activa");
+
+            var estadosFiltrados = await _unitOfWork.Estados.FindAllAsync(filter);
+            if (!estadosFiltrados.Any()) throw new KeyNotFoundException("No se encontró un estado por defecto");
 
             var competencia = _mapper.Map<Competencia>(competenciaDTO);
             competencia.UltimaEdicion = DateTime.Now;
-            competencia.IdEstado = estadoActivo.First().Id;
+            competencia.IdEstado = estadosFiltrados.First().Id;
 
             await _unitOfWork.Competencias.AddAsync(competencia);
             _unitOfWork.SaveChanges();
