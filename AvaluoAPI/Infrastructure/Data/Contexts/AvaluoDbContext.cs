@@ -445,7 +445,8 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR PISequence");
                 entity.Property(e => e.IdSO).HasColumnName("SO_Id");
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(255);
-                entity.Property(e => e.Descripcion).IsRequired();
+                entity.Property(e => e.DescripcionEN).IsRequired();
+                entity.Property(e => e.DescripcionES).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
                 entity.Property(e => e.UltimaEdicion);
                 entity.HasOne(d => d.SO).WithMany(p => p.PIs)
@@ -500,7 +501,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.Acron).IsRequired();
                 entity.Property(e => e.Ubicacion).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
-                entity.Property(e => e.CantAulas).IsRequired();
+                
                 entity.HasOne(d => d.Area).WithMany(p => p.Edificios)
                     .HasForeignKey(d => d.IdArea)
                     .OnDelete(DeleteBehavior.ClientSetNull)
