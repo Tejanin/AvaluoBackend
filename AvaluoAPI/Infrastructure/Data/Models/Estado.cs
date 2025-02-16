@@ -20,7 +20,7 @@ namespace Avaluo.Infrastructure.Data.Models
         public virtual ICollection<ActionPlan> ActionPlans { get; set; }
         public virtual ICollection<Configuracion> Configuraciones { get;  set; }    
         public virtual ICollection<Competencia> Competencias { get; set; }
-
+        public virtual ICollection<MapaCompetencias> MapaCompetencias { get; set; }
         public virtual ICollection<Aula> Aulas { get; set; }
 
     }

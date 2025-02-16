@@ -179,7 +179,6 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
                 entity.Property(e => e.Periodo).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Seccion).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Evidencia).IsRequired().HasMaxLength(500);
                 entity.Property(e => e.Comentario).IsRequired().HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Problematica).IsRequired().HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Solucion).IsRequired().HasMaxLength(int.MaxValue);
@@ -896,18 +895,29 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => new { e.IdAsignatura, e.IdCompetencia }).HasName("PK_MapaCompetencias");
                 entity.ToTable("mapa_competencias");
+
                 entity.HasIndex(e => e.IdAsignatura, "Id_Asignatura");
                 entity.HasIndex(e => e.IdCompetencia, "Id_Competencia");
+                entity.HasIndex(e => e.IdEstado, "Id_Estado");
+
                 entity.Property(e => e.IdAsignatura).HasColumnName("Id_Asignatura");
                 entity.Property(e => e.IdCompetencia).HasColumnName("Id_Competencia");
+                entity.Property(e => e.IdEstado).HasColumnName("Id_Estado");
+
                 entity.HasOne(d => d.Asignatura).WithMany(p => p.MapaCompetencias)
                     .HasForeignKey(d => d.IdAsignatura)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("mapa_competencias_ibfk_1");
+
                 entity.HasOne(d => d.Competencia).WithMany(p => p.MapaCompetencias)
                     .HasForeignKey(d => d.IdCompetencia)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("mapa_competencias_ibfk_2");
+
+                entity.HasOne(d => d.Estado).WithMany(p => p.MapaCompetencias)
+                    .HasForeignKey(d => d.IdEstado)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("mapa_competencias_ibfk_3");
             });
 
             // MetodoEvaluacion
@@ -993,6 +1003,10 @@ namespace Avaluo.Infrastructure.Data
                     .HasForeignKey(d => d.IdEstado);
 
                 entity.HasMany(d => d.Aulas)
+                    .WithOne(p => p.Estado)
+                    .HasForeignKey(d => d.IdEstado);
+
+                entity.HasMany(d => d.MapaCompetencias)
                     .WithOne(p => p.Estado)
                     .HasForeignKey(d => d.IdEstado);
             });

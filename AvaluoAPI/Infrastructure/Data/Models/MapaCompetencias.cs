@@ -10,6 +10,8 @@ namespace Avaluo.Infrastructure.Data.Models
     {
         public int IdAsignatura { get; set; }
         public int IdCompetencia { get; set; }
+        public int IdEstado { get; set; }   
+        public virtual Estado Estado { get; set; }
         public virtual Asignatura Asignatura { get; set; }
         public virtual Competencia Competencia { get; set; }
     }
