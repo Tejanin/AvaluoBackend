@@ -79,13 +79,13 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
 
         }
 
-        public async Task ChangePassword(int id, string newPassword)
+        public async Task ChangePassword(ChangePasswordDTO changePasswordDTO)
         {
            
-            var user = await _unitOfWork.Usuarios.GetByIdAsync(id);
+            var user = await _unitOfWork.Usuarios.GetByIdAsync(changePasswordDTO.Id);
             if (user == null) throw new KeyNotFoundException("El usuario no existe");
             user.Salt = DateTime.Now.ToString();
-            user.HashedPassword = Hasher.Hash(newPassword, user.Salt);
+            user.HashedPassword = Hasher.Hash(changePasswordDTO.NewPassword, user.Salt);
             _unitOfWork.SaveChanges();
 
         }

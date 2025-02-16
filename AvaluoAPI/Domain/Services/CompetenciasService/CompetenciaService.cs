@@ -32,7 +32,7 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             return competencia;
         }
 
-        public async Task<IEnumerable<CompetenciaViewModel>> GetAll( string? nombre = null, string? acron = null, string? titulo = null, int? idTipo = null, int? idEstado = null)
+        public async Task<IEnumerable<CompetenciaViewModel>> GetAll( string? nombre , string? acron , string? titulo , int? idTipo , int? idEstado )
             {
             IEnumerable<CompetenciaViewModel> competencias;
             if (string.IsNullOrEmpty(nombre) && string.IsNullOrEmpty(acron) && string.IsNullOrEmpty(titulo) && idTipo == null && idEstado == null)
