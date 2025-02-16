@@ -1,5 +1,6 @@
 ﻿using AvaluoAPI.Application.Handlers;
 using AvaluoAPI.Domain.Services.UsuariosService;
+using AvaluoAPI.Infrastructure.Integrations.INTEC;
 using AvaluoAPI.Infrastructure.Integrations.Moodle;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
@@ -163,10 +164,10 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
         [HttpGet("test")]
-        public async Task<ActionResult> Test()
+        public async Task<ActionResult> Test(string id)
         {
-            var mock = new MoodleServiceMock();
-            var evidencias = await mock.GetAllEvidencias();
+            var mock = new INTECServiceMock();
+            var evidencias = await mock.GetSeccionesByProfesor(id);
             return Ok(new { message = "Datos de prueba obtenidos exitosamente", data = evidencias });
         }
     }
