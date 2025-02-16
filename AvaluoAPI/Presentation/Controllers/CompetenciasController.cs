@@ -50,7 +50,7 @@ namespace AvaluoAPI.Presentation.Controllers
 
         // PUT: api/Competencias/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] CompetenciaDTO competenciaDTO)
+        public async Task<IActionResult> Put(int id, [FromBody] CompetenciaModifyDTO competenciaDTO)
         {
             await _competenciaService.Update(id, competenciaDTO);
             return Ok(new { mensaje = "La competencia ha sido actualizada con éxito." });

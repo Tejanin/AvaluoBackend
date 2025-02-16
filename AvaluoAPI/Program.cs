@@ -17,8 +17,12 @@ using System.Text;
 using AvaluoAPI.Domain.Services.CompetenciasService;
 using AvaluoAPI.Application.Handlers;
 using AvaluoAPI.Utilities.JWT;
+
+using AvaluoAPI.Domain.Services.EstadoService;
+
 using Swashbuckle.AspNetCore.Filters;
 using AvaluoAPI.Swagger;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -104,6 +108,8 @@ builder.Services.AddScoped<ITipoInformeService, TipoInformeService>();
 builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
 
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
+
+builder.Services.AddScoped<IEstadoService, EstadoService>();
 
 // FileHandler
 
