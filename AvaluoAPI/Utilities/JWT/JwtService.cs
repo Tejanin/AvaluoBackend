@@ -36,6 +36,8 @@ namespace AvaluoAPI.Utilities.JWT
         ClaimsPrincipal? GetClaimsPrincipal(string token);
         UserPermissions? ValidatePermissionCookie(string permissionToken);
         string? GetClaimValue(string token, string claimType);
+        void BlacklistToken(string token);
+        bool IsTokenBlacklisted(string token);
     }
 
     public class JwtService : IJwtService
@@ -45,7 +47,7 @@ namespace AvaluoAPI.Utilities.JWT
         private readonly string _audience;
         private readonly IDataProtector _protector;
         private readonly IClaimsFactory _claimsFactory;
-
+        private readonly HashSet<string> _blacklistedTokens = new();
         public JwtService(
         IConfiguration configuration,
         IDataProtectionProvider dataProtectionProvider,
@@ -176,6 +178,16 @@ namespace AvaluoAPI.Utilities.JWT
             {
                 return null;
             }
+        }
+
+        public void BlacklistToken(string token)
+        {
+            _blacklistedTokens.Add(token);
+        }
+
+        public bool IsTokenBlacklisted(string token)
+        {
+            return _blacklistedTokens.Contains(token);
         }
     }
 }

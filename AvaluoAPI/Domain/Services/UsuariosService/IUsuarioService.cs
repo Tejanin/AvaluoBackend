@@ -11,9 +11,11 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         Task Register(UsuarioDTO userDTO);
         Task Update(int id,ModifyUsuarioDTO user);
         Task Desactivate(int id);
+        Task RequestPasswordChange();
+        Task ChangePassword(string newPassword);
         Task UpdatePfp(int id, IFormFile file);
         Task UpdateCv(int id, IFormFile file);
-        Task ChangePassword(int id, string newPassword);
+        Task ChangePassword(ChangePasswordDTO changePasswordDTO);
         Task Activate(int id);
         Task<UsuarioViewModel> GetById(int id);
         Task<IEnumerable<UsuarioViewModel>> GetAll(int? estado, int? area, int? rol);

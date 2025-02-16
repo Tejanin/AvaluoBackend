@@ -34,6 +34,7 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             return competencia;
         }
 
+
         public async Task<IEnumerable<CompetenciaViewModel>> GetAll(string? nombre, string? acron, string? titulo, int? idTipo, int? idEstado)
         {
             var competencias = await _unitOfWork.Competencias.GetCompetenciasByFilter(nombre, acron, titulo, idTipo, idEstado);

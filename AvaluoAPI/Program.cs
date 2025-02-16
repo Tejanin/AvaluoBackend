@@ -17,7 +17,12 @@ using System.Text;
 using AvaluoAPI.Domain.Services.CompetenciasService;
 using AvaluoAPI.Application.Handlers;
 using AvaluoAPI.Utilities.JWT;
+
 using AvaluoAPI.Domain.Services.EstadoService;
+
+using Swashbuckle.AspNetCore.Filters;
+using AvaluoAPI.Swagger;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +48,13 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Avaluo",
+        Version = "v1"
+    });
+
+    
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Jwt Authorization",
@@ -51,6 +63,8 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
+
+   
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -66,7 +80,11 @@ builder.Services.AddSwaggerGen(c =>
             new string[]{ }
         }
     });
+
+    
 });
+
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 builder.Services.AddDbContext<AvaluoDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -96,6 +114,9 @@ builder.Services.AddScoped<IEstadoService, EstadoService>();
 // FileHandler
 
 builder.Services.AddSingleton<FileHandler>();
+
+// EmailService
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
