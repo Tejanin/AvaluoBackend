@@ -5,6 +5,10 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 {
     public interface IRubricaService
     {
-        Task<IEnumerable<AsignaturaConCompetenciasViewModel>> InsertRubricas();
+        Task InsertRubricas();
+        Task CompleteRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras);
+        Task DesactivateRubricas();
+
+
     }
 }

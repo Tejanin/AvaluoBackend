@@ -1,4 +1,5 @@
 ﻿using AvaluoAPI.Domain.Services.RubricasService;
+using AvaluoAPI.Presentation.DTOs.RubricaDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +15,11 @@ namespace AvaluoAPI.Presentation.Controllers
             _rubricaService = rubricaService;   
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Get()
+        [HttpPost]
+        public async Task<IActionResult> CompleteRubricas(CompleteRubricaFormDTO rubricaDTO)
         {
-           var rubricas = await _rubricaService.InsertRubricas();
-            return Ok(new { message = "Operación exitosa", data = rubricas });
+            await _rubricaService.CompleteRubricas(rubricaDTO.GetRubricaDTO(),rubricaDTO.Evidencias);
+            return Ok();
         }
     }
 }

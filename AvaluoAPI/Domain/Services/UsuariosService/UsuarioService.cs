@@ -169,7 +169,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             // Guardar el archivo
             RutaUsuarioBuilder rutaBuilder = new RutaUsuarioBuilder($"{usuario.Username}_{usuario.Id}");
 
-            (bool exito, string mensaje, string ruta) = await _fileHandler.Upload(
+            (bool exito, string mensaje, string ruta, _) = await _fileHandler.Upload(
                 file,
                 new List<string> { ".jpg", ".png" },
                 rutaBuilder,
@@ -197,7 +197,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             // Guardar el archivo
             RutaUsuarioBuilder rutaBuilder = new RutaUsuarioBuilder($"{usuario.Username}_{usuario.Id}");
 
-            (bool exito, string mensaje, string ruta) = await _fileHandler.Upload(
+            (bool exito, string mensaje, string ruta, _) = await _fileHandler.Upload(
                 file,
                 new List<string> { ".pdf" },
                 rutaBuilder,

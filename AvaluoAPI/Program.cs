@@ -24,6 +24,8 @@ using Swashbuckle.AspNetCore.Filters;
 using AvaluoAPI.Swagger;
 using AvaluoAPI.Infrastructure.Integrations.INTEC;
 using AvaluoAPI.Domain.Services.RubricasService;
+using Quartz;
+using AvaluoAPI.Infrastructure.Jobs.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -123,6 +125,9 @@ builder.Services.AddSingleton<FileHandler>();
 
 // EmailService
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Jobs
+builder.Services.ConfigureQuartz();
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
