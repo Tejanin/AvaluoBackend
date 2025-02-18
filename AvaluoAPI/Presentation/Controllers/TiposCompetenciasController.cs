@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Domain.Services.TipoCompetenciaService;
+﻿using Avaluo.Infrastructure.Persistence.Repositories.Base;
+using AvaluoAPI.Domain.Services.TipoCompetenciaService;
 using AvaluoAPI.Presentation.DTOs.TipoCompetenciaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,9 @@ namespace AvaluoAPI.Presentation.Controllers
 
         // GET: api/TipoCompetencias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TipoCompetenciaViewModel>>> Get()
+        public async Task<ActionResult<PaginatedResult<TipoCompetenciaViewModel>>> Get([FromQuery] int? page, [FromQuery] int? recordsPerPage)
         {
-            var tipos = await _tipoCompetenciaService.GetAll();
+            var tipos = await _tipoCompetenciaService.GetAll(page, recordsPerPage);
             return Ok(new { mensaje = "Tipos de competencias obtenidos exitosamente.", data = tipos });
         }
 

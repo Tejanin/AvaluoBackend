@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Presentation.DTOs.EstadoDTOs;
+﻿using Avaluo.Infrastructure.Persistence.Repositories.Base;
+using AvaluoAPI.Presentation.DTOs.EstadoDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 
 namespace AvaluoAPI.Domain.Services.EstadoService
@@ -7,7 +8,7 @@ namespace AvaluoAPI.Domain.Services.EstadoService
     {
         Task<EstadoViewModel> GetById(int id); // Obtiene un estado por su ID
 
-        Task<IEnumerable<EstadoViewModel>> GetAll(string? idTabla, string? descripcion); // Obtiene todos los estados y filtros
+        Task<PaginatedResult<EstadoViewModel>> GetAll(string? idTabla, string? descripcion, int? page, int? recordsPerPagee); // Obtiene todos los estados filtrados y paginados
 
         Task Register(EstadoDTO estadoDTO); // Registra un nuevo estado
 

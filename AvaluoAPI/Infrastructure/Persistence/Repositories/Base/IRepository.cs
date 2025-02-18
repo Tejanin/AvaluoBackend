@@ -1,9 +1,11 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using AvaluoAPI.Presentation.ViewModels;
 
 namespace Avaluo.Infrastructure.Persistence.Repositories.Base
 {
@@ -45,6 +47,10 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
         void Delete(TEntity entity);
         void DeleteRange(IEnumerable<TEntity> entities);
 
-
+        // Metodos queryable
+        Task<PaginatedResult<TEntity>> PaginateWithQuery(IQueryable<TEntity> query, int? page, int? recordsPerPage);
+        IQueryable<TEntity> AsQueryable();
+        IQueryable<TEntity> FilterQuery(IQueryable<TEntity> query, List<Expression<Func<TEntity, bool>>> filters);
+        IQueryable<TEntity> FindAllQuery(Expression<Func<TEntity, bool>> expression);
     }
 }
