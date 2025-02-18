@@ -22,6 +22,8 @@ using AvaluoAPI.Domain.Services.EstadoService;
 
 using Swashbuckle.AspNetCore.Filters;
 using AvaluoAPI.Swagger;
+using AvaluoAPI.Infrastructure.Integrations.INTEC;
+using AvaluoAPI.Domain.Services.RubricasService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -110,6 +112,10 @@ builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
 builder.Services.AddScoped<IEstadoService, EstadoService>();
+
+builder.Services.AddScoped<IRubricaService, RubricaService>();
+
+builder.Services.AddScoped<IintecService,INTECServiceMock>();
 
 // FileHandler
 
