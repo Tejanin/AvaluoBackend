@@ -47,8 +47,14 @@ namespace AvaluoAPI.Domain.Services.MetodoEvaluacionService
             var metodoEvaluacionExist = await _unitOfWork.MetodoEvaluacion.GetAllAsync();
             foreach (var metodos in metodoEvaluacionExist)
             {
-                if (metodos.Descripcion == metodoEvaluacionDTO.Descripcion)
-                    throw new ArgumentException("Ya existe un Metodo de Evaluacion con esa descripcion.");
+                if (metodos.DescripcionES == metodoEvaluacionDTO.DescripcionES)
+                    throw new ArgumentException("Ya existe un Metodo de Evaluacion con esa descripcion (ES).");
+            }
+
+            foreach (var metodos in metodoEvaluacionExist)
+            {
+                if (metodos.DescripcionEN == metodoEvaluacionDTO.DescripcionEN)
+                    throw new ArgumentException("Ya existe un Metodo de Evaluacion con esa descripcion (EN).");
             }
 
             await _unitOfWork.MetodoEvaluacion.AddAsync(metodoEvaluacion);
@@ -63,11 +69,17 @@ namespace AvaluoAPI.Domain.Services.MetodoEvaluacionService
                 throw new KeyNotFoundException("Metodo de Evaluacion no encontrado.");
             foreach (var metodos in metodoEvaluacionExist)
             {
-                if (metodos.Descripcion == metodoEvaluacionDTO.Descripcion)
-                    throw new ArgumentException("Ya existe un Metodo de Evaluacion con esa descripcion.");
+                if (metodos.DescripcionES == metodoEvaluacionDTO.DescripcionES)
+                    throw new ArgumentException("Ya existe un Metodo de Evaluacion con esa descripcion (ES).");
             }
 
-            metodoEvaluacion.Descripcion = metodoEvaluacionDTO.Descripcion;
+            foreach (var metodos in metodoEvaluacionExist)
+            {
+                if (metodos.DescripcionEN == metodoEvaluacionDTO.DescripcionEN)
+                    throw new ArgumentException("Ya existe un Metodo de Evaluacion con esa descripcion (EN).");
+            }
+
+            metodoEvaluacion.DescripcionES = metodoEvaluacionDTO.DescripcionES;
             await _unitOfWork.MetodoEvaluacion.Update(metodoEvaluacion);
             _unitOfWork.SaveChanges();
         }

@@ -171,5 +171,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
 
             return usuario.Rol.EsProfesor;
         }
+
+        
     }
 }

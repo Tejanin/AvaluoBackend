@@ -9,13 +9,15 @@ INSERT INTO Estado (idtabla, descripcion) VALUES
 ('Asignatura', 'Activa'),
 ('Asignatura', 'Desactivada'),
 ('Competencia', 'Activa'),
-('Competencia', 'Desactivada')
+('Competencia', 'Desactivada'),
+('MapaCompetencia','Activada'),
+('MapaCompetencia','Desactivada')
 
-INSERT INTO metodo_evaluacion ( descripcion) VALUES
-('Examen'),
-('Tarea'),
-('Proyecto'),
-('Exposicion')
+INSERT INTO metodo_evaluacion ( descripcionES, descripcionEN) VALUES
+('Examen', 'Exam'),
+('Tarea', 'Assignment'),
+('Proyecto', 'Project'),
+('Presentación', 'Presentation');
 
 INSERT INTO Roles (Descripcion) VALUES
 ('Profesor'),
@@ -123,3 +125,36 @@ INSERT INTO Competencia (Nombre, Acron, Titulo, DescripcionES, DescripcionEN, id
 ('PI 1', 7, 'Need to acquire new knowledge', 'Necesidad de adquirir nuevos conocimientos'),
 ('PI 2', 7, 'Relationship between knowledge and learning strategy', 'Relación entre conocimiento y estrategia de aprendizaje'),
 ('PI 3', 7, 'Obtaining new concepts', 'Obtención de nuevos conceptos');
+
+INSERT INTO mapa_competencias (Id_Asignatura, Id_Competencia, Id_Estado) VALUES 
+(13,3,11),
+(13,1,11),
+(13,5,11),
+(15,2,11),
+(15,6,11),
+(20,7,11),
+(20,3,11),
+(8,4,11),
+(8,3,11)
+
+INSERT INTO so_evaluacion (Id_SO, Id_MetodoEvaluacion) VALUES
+(1, 2),
+(1, 3),
+(1, 4),
+(2, 1),
+(2, 2),
+(2, 3),
+(2, 4),
+(3, 1),
+(3, 2),
+(3, 4),
+(4, 1),
+(4, 2),
+(5, 2),
+(5, 3),
+(6, 1),
+(6, 2),
+(6, 3),
+(7, 1),
+(7, 3),
+(7, 4);

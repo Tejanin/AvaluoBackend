@@ -16,6 +16,7 @@
 
     public class ProfesorModel : PersonModel
     {
+        public string Email { get; set; } = null!;
         public List<SeccionModel>? Secciones { get; set; }
 
     }

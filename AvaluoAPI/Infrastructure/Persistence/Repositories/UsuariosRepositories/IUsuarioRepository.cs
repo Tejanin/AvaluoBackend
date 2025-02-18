@@ -13,6 +13,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
         Task<bool> EsProfesor(int id);
         Task<Usuario> GetUsuarioWithRol(string username);
         Task<UsuarioViewModel> GetUsuarioById(int id);
+        
         void Activate(int id);
         Task<bool> Exists(int id);
         Task<bool> EmailExists(string email);

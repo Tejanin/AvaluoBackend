@@ -5,6 +5,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
     public interface IintecService
     {
         Task<List<SeccionModel>> GetSeccionesByProfesor(string id);
+        Task<List<SeccionModel>> GetSecciones();
         Task<List<ProfesorModel>> GetProfesores();
     }
     public class INTECServiceMock : IintecService
@@ -20,7 +21,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             new SeccionModel
             {
                 Numero = "001",
-                Asignatura = "Programación I",
+                Asignatura = "IDS340",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088001", Nombre = "Juan", Apellido = "Pérez", Cargo = "Estudiante" },
@@ -33,7 +34,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             new SeccionModel
             {
                 Numero = "002",
-                Asignatura = "Estructuras de Datos",
+                Asignatura = "IDS343",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088006", Nombre = "Laura", Apellido = "Díaz", Cargo = "Estudiante" },
@@ -46,7 +47,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             new SeccionModel
             {
                 Numero = "003",
-                Asignatura = "Base de Datos",
+                Asignatura = "IDS323",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088011", Nombre = "Diego", Apellido = "Fernández", Cargo = "Estudiante" },
@@ -59,7 +60,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             new SeccionModel
             {
                 Numero = "004",
-                Asignatura = "Algoritmos Avanzados",
+                Asignatura = "IDS341",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088016", Nombre = "Julia", Apellido = "Mendoza", Cargo = "Estudiante" },
@@ -72,7 +73,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             new SeccionModel
             {
                 Numero = "005",
-                Asignatura = "Desarrollo Web",
+                Asignatura = "IDS344",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088021", Nombre = "Leonardo", Apellido = "Navarro", Cargo = "Estudiante" },
@@ -91,6 +92,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                 Id = "P001",
                 Nombre = "Roberto",
                 Apellido = "Martínez",
+                Email = "rmartinez@gmail.com",
                 Cargo = "Profesor",
                 Secciones = new List<SeccionModel> { _secciones[0], _secciones[1] }
             },
@@ -99,6 +101,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                 Id = "P002",
                 Nombre = "Carmen",
                 Apellido = "Vásquez",
+                Email = "cvaquez@gmail.com",
                 Cargo = "Profesor",
                 Secciones = new List<SeccionModel> { _secciones[2], _secciones[3] }
             },
@@ -107,6 +110,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                 Id = "P003",
                 Nombre = "José",
                 Apellido = "García",
+                Email = "jgarcia@gmail.com",
                 Cargo = "Profesor",
                 Secciones = new List<SeccionModel> { _secciones[4] }
             }
@@ -117,6 +121,11 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
         {
             await Task.Delay(100);
             return _profesores;
+        }
+
+        public Task<List<SeccionModel>> GetSecciones()
+        {
+            return Task.FromResult(_secciones);
         }
 
         public async Task<List<SeccionModel>> GetSeccionesByProfesor(string id)

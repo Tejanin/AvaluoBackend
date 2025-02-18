@@ -36,7 +36,7 @@ namespace Avaluo.Infrastructure.Data
         public DbSet<Carrera> Carreras { get; set; }
         public DbSet<ProfesorCarrera> ProfesorCarreras { get; set; }
         public DbSet<CarreraRubrica> CarreraRubricas { get; set; }
-        public DbSet<Configuracion> Configuraciones { get; set; }
+        public DbSet<ConfiguracionEvaluaciones> Configuraciones { get; set; }
         public DbSet<Rol> Roles { get; set; }
         public DbSet<MetodoEvaluacion> MetodosEvaluacion { get; set; }
         public DbSet<TipoCompetencia> TiposCompetencia { get; set; }
@@ -179,11 +179,11 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
                 entity.Property(e => e.Periodo).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Seccion).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Comentario).IsRequired().HasMaxLength(int.MaxValue);
-                entity.Property(e => e.Problematica).IsRequired().HasMaxLength(int.MaxValue);
-                entity.Property(e => e.Solucion).IsRequired().HasMaxLength(int.MaxValue);
-                entity.Property(e => e.EvaluacionesFormativas).IsRequired().HasMaxLength(int.MaxValue);
-                entity.Property(e => e.Estrategias).IsRequired().HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Comentario).IsRequired(false).HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Problematica).IsRequired(false).HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Solucion).IsRequired(false).HasMaxLength(int.MaxValue);
+                entity.Property(e => e.EvaluacionesFormativas).IsRequired(false).HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Estrategias).IsRequired(false).HasMaxLength(int.MaxValue);
 
                 entity.HasOne(d => d.Estado)
                     .WithMany(p => p.Rubricas)
@@ -759,18 +759,17 @@ namespace Avaluo.Infrastructure.Data
                     .HasConstraintName("resumen_ibfk_2");
             });
 
-            // Configuracion
-            modelBuilder.Entity<Configuracion>(entity =>
+            // ConfiguracionEvaluaciones
+            modelBuilder.Entity<ConfiguracionEvaluaciones>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_Configuracion");
-                entity.ToTable("configuracion");
+                entity.ToTable("ConfiguracionEvaluaciones");
                 entity.HasIndex(e => e.IdEstado, "Id_Estado");
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR ConfiguracionSequence");
                 entity.Property(e => e.IdEstado).HasColumnName("Id_Estado");
-                entity.Property(e => e.Año).IsRequired();
-                entity.Property(e => e.Trimestre).IsRequired();
                 entity.Property(e => e.FechaInicio).IsRequired();
                 entity.Property(e => e.FechaCierre).IsRequired();
+                entity.Property(e => e.Descripcion).IsRequired().HasMaxLength(200);
                 entity.HasOne(d => d.Estado).WithMany(p => p.Configuraciones)
                     .HasForeignKey(d => d.IdEstado)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -797,6 +796,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.DescripcionES).IsRequired();
                 entity.Property(e => e.DescripcionEN).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
+                entity.Property(e => e.UltimaEdicion).IsRequired(false);
 
                 entity.HasOne(d => d.TipoCompetencia)
                     .WithMany(p => p.Competencias)
@@ -925,9 +925,11 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_MetodoEvaluacion");
                 entity.ToTable("metodo_evaluacion");
-                entity.HasIndex(e => e.Descripcion, "Unique_Descripcion").IsUnique();
+                entity.HasIndex(e => e.DescripcionES, "Unique_Descripcion").IsUnique();
+                entity.HasIndex(e => e.DescripcionEN, "Unique_DescripcionEN").IsUnique();
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR MetodoEvaluacionSequence");
-                entity.Property(e => e.Descripcion).IsRequired();
+                entity.Property(e => e.DescripcionES).IsRequired();
+                entity.Property(e => e.DescripcionEN).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
                 entity.HasMany(d => d.SOEvaluaciones)

@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.SOEvaluacionRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.MapaCompetenciaRepositories;
 
 namespace Avaluo.Infrastructure.Persistence.UnitOfWork
 {
@@ -22,6 +25,9 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         ITipoInformeRepository TiposInformes { get; }
         ITipoCompetenciaRepository TiposCompetencias { get; }
         ICompetenciaRepository Competencias { get; }
+        ISOEvaluacionRepository SOEvaluaciones { get; }
+        IMapaCompetenciaRepository MapaCompetencias { get; }
+        IRubricaRepository Rubricas { get; }
         IEstadoRepository Estados { get; }
 
         Task<int> SaveChangesAsync();
