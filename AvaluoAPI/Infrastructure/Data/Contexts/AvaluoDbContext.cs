@@ -179,6 +179,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
                 entity.Property(e => e.Periodo).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Seccion).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Evidencia).IsRequired().HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Comentario).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Problematica).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Solucion).IsRequired(false).HasMaxLength(int.MaxValue);
