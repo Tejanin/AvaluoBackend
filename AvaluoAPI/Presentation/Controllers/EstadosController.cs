@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Domain.Services.EstadoService;
+﻿using Avaluo.Infrastructure.Persistence.Repositories.Base;
+using AvaluoAPI.Domain.Services.EstadoService;
 using AvaluoAPI.Presentation.DTOs.EstadoDTOs;
 using AvaluoAPI.Presentation.DTOs.TipoCompetenciaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
@@ -19,13 +20,15 @@ namespace AvaluoAPI.Presentation.Controllers
             _estadoService = estadoService;
         }
 
-        // GET: api/Estados?tabla=Competencia&descripcion=Activa
+        // GET: api/Estados?tabla=Competencia&descripcion=Activa&page=1&recordsPerPage=10
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EstadoViewModel>>> Get(
-            [FromQuery] string? tabla = null,
-            [FromQuery] string? descripcion = null)
+        public async Task<ActionResult<PaginatedResult<EstadoViewModel>>> Get(
+            [FromQuery] string? tabla,
+            [FromQuery] string? descripcion,
+            [FromQuery] int? page,
+            [FromQuery] int? recordsPerPage)
         {
-            var estados = await _estadoService.GetAll(tabla, descripcion);
+            var estados = await _estadoService.GetAll(tabla, descripcion, page, recordsPerPage);
             return Ok(new { mensaje = "Estados obtenidos exitosamente.", data = estados });
         }
 

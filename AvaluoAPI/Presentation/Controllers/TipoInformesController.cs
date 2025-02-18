@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Domain.Services.TipoInformeService;
+﻿using Avaluo.Infrastructure.Persistence.Repositories.Base;
+using AvaluoAPI.Domain.Services.TipoInformeService;
 using AvaluoAPI.Presentation.DTOs;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
@@ -19,11 +20,13 @@ namespace AvaluoAPI.Presentation.Controllers
             _tipoInformeService = tipoInformeService;
         }
 
-        // GET: api/TipoInformes
+        // GET: api/TipoInformes?page=1&recordsPerPage=10
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TipoInformeViewModel>>> Get()
+        public async Task<ActionResult<PaginatedResult<TipoInformeViewModel>>> Get(
+            [FromQuery] int? page = null,
+            [FromQuery] int? recordsPerPage = null)
         {
-            var tipos = await _tipoInformeService.GetAll();
+            var tipos = await _tipoInformeService.GetAll(page, recordsPerPage);
             return Ok(new { mensaje = "Tipos de informes obtenidos exitosamente.", data = tipos });
         }
 

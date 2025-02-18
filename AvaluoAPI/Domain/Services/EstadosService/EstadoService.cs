@@ -1,4 +1,5 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
+using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Presentation.DTOs.EstadoDTOs;
 using AvaluoAPI.Presentation.ViewModels;
@@ -30,15 +31,16 @@ namespace AvaluoAPI.Domain.Services.EstadoService
             return _mapper.Map<EstadoViewModel>(estado);
         }
 
-        public async Task<IEnumerable<EstadoViewModel>> GetAll(string? idTabla, string? descripcion)
+        public async Task<PaginatedResult<EstadoViewModel>> GetAll(string? idTabla, string? descripcion, int? page, int? recordsPerPage)
         {
             Expression<Func<Estado, bool>> filter = e =>
                 (string.IsNullOrEmpty(idTabla) || e.IdTabla == idTabla) &&
                 (string.IsNullOrEmpty(descripcion) || e.Descripcion == descripcion);
 
-            var estadosFiltrados = await _unitOfWork.Estados.FindAllAsync(filter);
+            IQueryable<Estado> query = _unitOfWork.Estados.FindAllQuery(filter);
+            var paginatedResult = await _unitOfWork.Estados.PaginateWithQuery(query, page, recordsPerPage);
 
-            return _mapper.Map<IEnumerable<EstadoViewModel>>(estadosFiltrados);
+            return paginatedResult.Convert(e => _mapper.Map<EstadoViewModel>(e));
         }
 
         public async Task Register(EstadoDTO estadoDTO)
