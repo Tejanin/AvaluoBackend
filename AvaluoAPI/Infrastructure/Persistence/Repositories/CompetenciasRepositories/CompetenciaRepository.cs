@@ -66,42 +66,72 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
 
             return competencia.FirstOrDefault();
         }
-        public async Task<IEnumerable<CompetenciaViewModel>> GetCompetenciasByFilter(
-    string? nombre = null,
-    string? acron = null,
-    string? titulo = null,
-    int? idTipo = null,
-    int? idEstado = null)
-        {
+        public async Task<PaginatedResult<CompetenciaViewModel>> GetCompetencias(
+         string? nombre,
+         string? acron,
+         string? titulo,
+         int? idTipo,
+         int? idEstado,
+         int? page,
+         int? recordsPerPage)
+           {   
             using var connection = _dapperContext.CreateConnection();
 
-            var query = @"
-        SELECT 
-            c.Id, 
-            c.Nombre, 
-            c.Acron, 
-            c.Titulo, 
-            c.DescripcionES, 
-            c.DescripcionEN, 
-            c.FechaCreacion, 
-            c.UltimaEdicion,
+            var countQuery = @"
+            SELECT COUNT(*)
+            FROM competencia c
+            LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
+            LEFT JOIN estado e ON c.Id_Estado = e.Id
+            WHERE (@Nombre IS NULL OR c.Nombre LIKE '%' + @Nombre + '%')
+            AND (@Acron IS NULL OR c.Acron LIKE '%' + @Acron + '%')
+            AND (@Titulo IS NULL OR c.Titulo LIKE '%' + @Titulo + '%')
+            AND (@IdTipo IS NULL OR c.Id_Tipo = @IdTipo)
+            AND (@IdEstado IS NULL OR c.Id_Estado = @IdEstado)";
 
-            tc.Id,
-            tc.Nombre,
-            tc.FechaCreacion,
-            tc.UltimaEdicion,
+            int totalRecords = await connection.ExecuteScalarAsync<int>(countQuery, new
+            {
+                Nombre = nombre,
+                Acron = acron,
+                Titulo = titulo,
+                IdTipo = idTipo,
+                IdEstado = idEstado
+            });
 
-            e.Id,
-            e.Descripcion,
-            e.IdTabla
-        FROM competencia c
-        LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
-        LEFT JOIN estado e ON c.Id_Estado = e.Id
-        WHERE (@Nombre IS NULL OR c.Nombre LIKE '%' + @Nombre + '%')
-        AND (@Acron IS NULL OR c.Acron LIKE '%' + @Acron + '%')
-        AND (@Titulo IS NULL OR c.Titulo LIKE '%' + @Titulo + '%')
-        AND (@IdTipo IS NULL OR c.Id_Tipo = @IdTipo)
-        AND (@IdEstado IS NULL OR c.Id_Estado = @IdEstado)";
+            int currentRecordsPerPage = recordsPerPage.HasValue && recordsPerPage > 0 ? recordsPerPage.Value : totalRecords;
+
+            int currentPage = page.HasValue && page > 0 ? page.Value : 1;
+
+            int offset = (currentPage - 1) * currentRecordsPerPage;
+
+            var query = $@"
+            SELECT 
+                c.Id, 
+                c.Nombre, 
+                c.Acron, 
+                c.Titulo, 
+                c.DescripcionES, 
+                c.DescripcionEN, 
+                c.FechaCreacion, 
+                c.UltimaEdicion,
+
+                tc.Id,
+                tc.Nombre,
+                tc.FechaCreacion,
+                tc.UltimaEdicion,
+
+                e.Id,
+                e.Descripcion,
+                e.IdTabla
+            FROM competencia c
+            LEFT JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id  
+            LEFT JOIN estado e ON c.Id_Estado = e.Id
+            WHERE (@Nombre IS NULL OR c.Nombre LIKE '%' + @Nombre + '%')
+            AND (@Acron IS NULL OR c.Acron LIKE '%' + @Acron + '%')
+            AND (@Titulo IS NULL OR c.Titulo LIKE '%' + @Titulo + '%')
+            AND (@IdTipo IS NULL OR c.Id_Tipo = @IdTipo)
+            AND (@IdEstado IS NULL OR c.Id_Estado = @IdEstado)
+            ORDER BY c.Id
+            OFFSET @Offset ROWS FETCH NEXT @RecordsPerPage ROWS ONLY";
 
             var parametros = new
             {
@@ -109,7 +139,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
                 Acron = acron,
                 Titulo = titulo,
                 IdTipo = idTipo,
-                IdEstado = idEstado
+                IdEstado = idEstado,
+                Offset = offset,
+                RecordsPerPage = currentRecordsPerPage
             };
 
             var competenciasDictionary = new Dictionary<int, CompetenciaViewModel>();
@@ -131,8 +163,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
                 parametros,
                 splitOn: "Id"
             );
-
-            return competenciasDictionary.Values;
+            return new PaginatedResult<CompetenciaViewModel>(competenciasDictionary.Values, currentPage, currentRecordsPerPage, totalRecords);
         }
     }
 }

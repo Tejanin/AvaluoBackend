@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Domain.Services.CompetenciasService;
+﻿using Avaluo.Infrastructure.Persistence.Repositories.Base;
+using AvaluoAPI.Domain.Services.CompetenciasService;
 using AvaluoAPI.Presentation.DTOs.CompetenciaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -21,16 +22,19 @@ namespace AvaluoAPI.Presentation.Controllers
 
         // GET: api/Competencias
         [HttpGet]
-        public async Task<IActionResult> Get(
+        public async Task<ActionResult<PaginatedResult<CompetenciaViewModel>>> Get(
             [FromQuery] string? nombre,
             [FromQuery] string? acron,
             [FromQuery] string? titulo,
             [FromQuery] int? idTipo,
-            [FromQuery] int? idEstado)
+            [FromQuery] int? idEstado,
+            [FromQuery] int? page,
+            [FromQuery] int? recordsPerPage)
         {
-            var competencias = await _competenciaService.GetAll(nombre, acron, titulo, idTipo, idEstado);
+            var competencias = await _competenciaService.GetAll(nombre, acron, titulo, idTipo, idEstado, page, recordsPerPage);
             return Ok(new { mensaje = "Competencias obtenidas exitosamente.", data = competencias });
         }
+
 
         // GET: api/Competencias/{id}
         [HttpGet("{id}")]

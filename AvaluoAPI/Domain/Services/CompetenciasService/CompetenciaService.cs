@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using Avaluo.Infrastructure.Persistence.Repositories.Base;
 
 namespace AvaluoAPI.Domain.Services.CompetenciasService
 {
@@ -35,10 +36,9 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
         }
 
 
-        public async Task<IEnumerable<CompetenciaViewModel>> GetAll(string? nombre, string? acron, string? titulo, int? idTipo, int? idEstado)
+        public async Task<PaginatedResult<CompetenciaViewModel>> GetAll( string? nombre, string? acron, string? titulo, int? idTipo, int? idEstado, int? page, int? recordsPerPage)
         {
-            var competencias = await _unitOfWork.Competencias.GetCompetenciasByFilter(nombre, acron, titulo, idTipo, idEstado);
-            return competencias;
+            return await _unitOfWork.Competencias.GetCompetencias(nombre, acron, titulo, idTipo, idEstado, page, recordsPerPage);
         }
 
         public async Task Register(CompetenciaDTO competenciaDTO)
