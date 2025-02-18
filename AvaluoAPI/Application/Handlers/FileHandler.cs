@@ -22,38 +22,37 @@ namespace AvaluoAPI.Application.Handlers
             }
         }
 
-        public async Task<(bool exitoso, string mensaje, string ruta)> Upload(
-        IFormFile archivo,
-        List<string> extensionesValidas,
-        IRutaBuilder rutaBuilder,
-        Func<string, string> generadorNombreArchivo = null)
+        public async Task<(bool exitoso, string mensaje, string ruta, string nombreArchivo)> Upload(
+                IFormFile archivo,
+                List<string> extensionesValidas,
+                IRutaBuilder rutaBuilder,
+                Func<string, string> generadorNombreArchivo = null)
         {
             try
             {
                 var validacionArchivo = ValidarArchivo(archivo, extensionesValidas);
                 if (!validacionArchivo.exitoso)
-                    return (false, validacionArchivo.mensaje, null);
+                    return (false, validacionArchivo.mensaje, null, null);
 
                 string nombreArchivo = GenerarNombreArchivo(archivo, generadorNombreArchivo);
                 var carpetaDestino = rutaBuilder.Construir();
                 var (rutaDirectorio, rutaCompleta) = GenerarRutas(carpetaDestino, nombreArchivo);
-
                 var validacionDirectorio = ValidarYCrearDirectorio(rutaDirectorio);
                 if (!validacionDirectorio.exitoso)
-                    return (false, validacionDirectorio.mensaje, null);
+                    return (false, validacionDirectorio.mensaje, null, null);
 
                 var manejoArchivoDuplicado = ManejarArchivoDuplicado(rutaCompleta, nombreArchivo);
                 rutaCompleta = manejoArchivoDuplicado.rutaFinal;
                 nombreArchivo = manejoArchivoDuplicado.nombreFinal;
 
                 await GuardarArchivo(archivo, rutaCompleta);
-
                 string rutaRelativa = Path.Combine(carpetaDestino, nombreArchivo);
-                return (true, "Archivo subido exitosamente", rutaCompleta);
+
+                return (true, "Archivo subido exitosamente", rutaCompleta, nombreArchivo);
             }
             catch (Exception ex)
             {
-                return (false, $"Error al subir el archivo: {ex.Message}", null);
+                return (false, $"Error al subir el archivo: {ex.Message}", null, null);
             }
         }
 
@@ -82,7 +81,7 @@ namespace AvaluoAPI.Application.Handlers
                 return generadorNombreArchivo(archivo.FileName) + extension;
             }
 
-            return $"{Path.GetFileNameWithoutExtension(archivo.FileName)}_{DateTime.Now:yyyyMMddHHmmss}{extension}";
+            return $"{Path.GetFileNameWithoutExtension(archivo.FileName)}_{DateTime.Now:yyyyMMddHHmmss}";
         }
 
         private (string rutaDirectorio, string rutaCompleta) GenerarRutas(string carpetaDestino, string nombreArchivo)

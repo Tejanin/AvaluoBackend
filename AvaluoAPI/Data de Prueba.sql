@@ -9,13 +9,15 @@ INSERT INTO Estado (idtabla, descripcion) VALUES
 ('Asignatura', 'Activa'),
 ('Asignatura', 'Desactivada'),
 ('Competencia', 'Activa'),
-('Competencia', 'Desactivada')
+('Competencia', 'Desactivada'),
+('MapaCompetencia','Activada'),
+('MapaCompetencia','Desactivada')
 
-INSERT INTO metodo_evaluacion ( descripcion) VALUES
-('Examen'),
-('Tarea'),
-('Proyecto'),
-('Exposicion')
+INSERT INTO metodo_evaluacion ( descripcionES, descripcionEN) VALUES
+('Examen', 'Exam'),
+('Tarea', 'Assignment'),
+('Proyecto', 'Project'),
+('Presentación', 'Presentation');
 
 INSERT INTO Roles (Descripcion) VALUES
 ('Profesor'),
@@ -96,3 +98,63 @@ INSERT INTO Competencia (Nombre, Acron, Titulo, DescripcionES, DescripcionEN, id
  'Ability to acquire and apply new knowledge as needed, using appropriate learning strategies.', 
  1, 9, GETDATE(), GETDATE());
  
+
+ INSERT INTO pi (Nombre, SO_id, descripcionEN, descripcionES) VALUES
+('PI 1', 1, 'Define the problem', 'Define el problema'),
+('PI 2', 1, 'Determine the causes of the problem', 'Determina las causas del problema'),
+('PI 3', 1, 'Propose solutions to the problem by applying principles of engineering, science, and/or mathematics', 'Propone soluciones al problema aplicando principios de ingeniería, ciencia y/o matemáticas'),
+('PI 4', 1, 'Justifies the selected solution', 'Justifica la solución seleccionada'),
+('PI 1', 2, 'Identifies needs and converts them into objectives, criteria and design restrictions', 'Identifica necesidades y las convierte en objetivos, criterios y restricciones de diseño'),
+('PI 2', 2, 'Generates alternatives based on engineering sciences, social sciences, economics, among others', 'Genera alternativas basadas en ciencias de la ingeniería, ciencias sociales, economía, entre otras'),
+('PI 3', 2, 'Selects the best alternative', 'Selecciona la mejor alternativa'),
+('PI 4', 2, 'Creates specifications, prototypes or other means of design communication', 'Crea especificaciones, prototipos u otros medios de comunicación del diseño'),
+('PI 1', 3, 'Writes reports based on standard formats adapted to the target audience', 'Redacta informes basados en formatos estándar adaptados al público objetivo'),
+('PI 2', 3, 'Presents the content orally in his/her own words and adapts it to the audience present', 'Presenta el contenido oralmente con sus propias palabras y lo adapta a la audiencia presente'),
+('PI 3', 3, 'Complements the information using graphs, diagrams, among others, according to the audience', 'Complementa la información utilizando gráficos, diagramas, entre otros, según la audiencia'),
+('PI 4', 3, 'Provides the information with sustainable evidence', 'Proporciona la información con evidencia sustentable'),
+('PI 1', 4, 'Develops solutions in accordance with current reality, taking into account ethical and professional responsibility', 'Desarrolla soluciones de acuerdo con la realidad actual, tomando en cuenta la responsabilidad ética y profesional'),
+('PI 2', 4, 'Assesses the consequences of the impact of engineering decisions in global, regional and local contexts (economic, environmental and social)', 'Evalúa las consecuencias del impacto de las decisiones de ingeniería en contextos globales, regionales y locales (económico, ambiental y social)'),
+('PI 3', 4, 'Recognizes the copyright in the particular solutions developed', 'Reconoce los derechos de autor en las soluciones particulares desarrolladas'),
+('PI 1', 5, 'Plans strategies to meet objectives', 'Planifica estrategias para cumplir objetivos'),
+('PI 2', 5, 'Interacts and communicates with team members, open to the opinions of others', 'Interactúa y se comunica con los miembros del equipo, abierto a las opiniones de otros'),
+('PI 3', 5, 'Identifies and fulfills his role as a member of the work team to achieve the objectives', 'Identifica y cumple su rol como miembro del equipo de trabajo para lograr los objetivos'),
+('PI 1', 6, 'Plan or design the experiment', 'Planifica o diseña el experimento'),
+('PI 2', 6, 'Conduct the experiment', 'Realiza el experimento'),
+('PI 3', 6, 'Analyze and interpret the results', 'Analiza e interpreta los resultados'),
+('PI 4', 6, 'Discuss the results obtained from the experiment', 'Discute los resultados obtenidos del experimento'),
+('PI 1', 7, 'Need to acquire new knowledge', 'Necesidad de adquirir nuevos conocimientos'),
+('PI 2', 7, 'Relationship between knowledge and learning strategy', 'Relación entre conocimiento y estrategia de aprendizaje'),
+('PI 3', 7, 'Obtaining new concepts', 'Obtención de nuevos conceptos');
+
+INSERT INTO mapa_competencias (Id_Asignatura, Id_Competencia, Id_Estado) VALUES 
+(13,3,11),
+(13,1,11),
+(13,5,11),
+(15,2,11),
+(15,6,11),
+(20,7,11),
+(20,3,11),
+(8,4,11),
+(8,3,11)
+
+INSERT INTO so_evaluacion (Id_SO, Id_MetodoEvaluacion) VALUES
+(1, 2),
+(1, 3),
+(1, 4),
+(2, 1),
+(2, 2),
+(2, 3),
+(2, 4),
+(3, 1),
+(3, 2),
+(3, 4),
+(4, 1),
+(4, 2),
+(5, 2),
+(5, 3),
+(6, 1),
+(6, 2),
+(6, 3),
+(7, 1),
+(7, 3),
+(7, 4);

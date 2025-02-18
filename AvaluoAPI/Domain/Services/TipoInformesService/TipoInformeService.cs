@@ -1,4 +1,5 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
+using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Presentation.DTOs;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
@@ -31,10 +32,12 @@ namespace AvaluoAPI.Domain.Services.TipoInformeService
             return _mapper.Map<TipoInformeViewModel>(tipoInforme);
         }
 
-        public async Task<IEnumerable<TipoInformeViewModel>> GetAll()
+        public async Task<PaginatedResult<TipoInformeViewModel>> GetAll(int? page, int? recordsPerPage)
         {
-            var tiposInformes = await _unitOfWork.TiposInformes.GetAllAsync();
-            return _mapper.Map<IEnumerable<TipoInformeViewModel>>(tiposInformes);
+            IQueryable<TipoInforme> query = _unitOfWork.TiposInformes.AsQueryable();
+            var paginatedResult = await _unitOfWork.TiposInformes.PaginateWithQuery(query, page, recordsPerPage);
+
+            return paginatedResult.Convert(ti => _mapper.Map<TipoInformeViewModel>(ti));
         }
 
         public async Task Register(TipoInformeDTO tipoInformeDTO)

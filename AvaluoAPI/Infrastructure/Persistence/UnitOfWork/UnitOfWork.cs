@@ -17,6 +17,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avaluo.Infrastructure.Data;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.SOEvaluacionRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.MapaCompetenciaRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.ResumenRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.EvidenciaRepositories;
 
 namespace Avaluo.Infrastructure.Persistence.UnitOfWork
 {
@@ -30,11 +35,16 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         {
             _dapperContext = dapperContext;
             _context = context;
+            SOEvaluaciones = new SOEvaluacionRepository(_context, _dapperContext);
+            MapaCompetencias = new MapaCompetenciaRepository(_context, _dapperContext);
+            Rubricas = new RubricaRepository(_context, _dapperContext);
             TiposInformes = new TipoInformeRepository(_context);
             TiposCompetencias = new TipoCompetenciaRepository(_context);
             Competencias = new CompetenciaRepository(_context, _dapperContext);
             Estados = new EstadoRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
+            Resumenes = new ResumenRepository(_context, _dapperContext);
+            Evidencias = new EvidenciaRepository(_context);
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
 
         }
@@ -46,7 +56,11 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public ITipoCompetenciaRepository TiposCompetencias { get; private set; }
         public ICompetenciaRepository Competencias { get; private set; }
         public IEstadoRepository Estados { get; private set; }
-
+        public IRubricaRepository Rubricas { get; private set; }
+        public IEvidenciaRepository Evidencias { get; private set; }
+        public IResumenRepository Resumenes { get; private set; }
+        public ISOEvaluacionRepository SOEvaluaciones { get; private set; }
+        public IMapaCompetenciaRepository MapaCompetencias { get; private set; }
         public IMetodoEvaluacionRepository MetodoEvaluacion { get; private set; }
 
         // methods

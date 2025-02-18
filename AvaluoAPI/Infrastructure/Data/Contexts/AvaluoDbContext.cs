@@ -36,7 +36,7 @@ namespace Avaluo.Infrastructure.Data
         public DbSet<Carrera> Carreras { get; set; }
         public DbSet<ProfesorCarrera> ProfesorCarreras { get; set; }
         public DbSet<CarreraRubrica> CarreraRubricas { get; set; }
-        public DbSet<Configuracion> Configuraciones { get; set; }
+        public DbSet<ConfiguracionEvaluaciones> Configuraciones { get; set; }
         public DbSet<Rol> Roles { get; set; }
         public DbSet<MetodoEvaluacion> MetodosEvaluacion { get; set; }
         public DbSet<TipoCompetencia> TiposCompetencia { get; set; }
@@ -179,12 +179,12 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
                 entity.Property(e => e.Periodo).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Seccion).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Evidencia).IsRequired().HasMaxLength(500);
-                entity.Property(e => e.Comentario).IsRequired().HasMaxLength(int.MaxValue);
-                entity.Property(e => e.Problematica).IsRequired().HasMaxLength(int.MaxValue);
-                entity.Property(e => e.Solucion).IsRequired().HasMaxLength(int.MaxValue);
-                entity.Property(e => e.EvaluacionesFormativas).IsRequired().HasMaxLength(int.MaxValue);
-                entity.Property(e => e.Estrategias).IsRequired().HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Evidencia).IsRequired().HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Comentario).IsRequired(false).HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Problematica).IsRequired(false).HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Solucion).IsRequired(false).HasMaxLength(int.MaxValue);
+                entity.Property(e => e.EvaluacionesFormativas).IsRequired(false).HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Estrategias).IsRequired(false).HasMaxLength(int.MaxValue);
 
                 entity.HasOne(d => d.Estado)
                     .WithMany(p => p.Rubricas)
@@ -445,7 +445,8 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR PISequence");
                 entity.Property(e => e.IdSO).HasColumnName("SO_Id");
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(255);
-                entity.Property(e => e.Descripcion).IsRequired();
+                entity.Property(e => e.DescripcionEN).IsRequired();
+                entity.Property(e => e.DescripcionES).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
                 entity.Property(e => e.UltimaEdicion);
                 entity.HasOne(d => d.SO).WithMany(p => p.PIs)
@@ -500,7 +501,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.Acron).IsRequired();
                 entity.Property(e => e.Ubicacion).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
-                entity.Property(e => e.CantAulas).IsRequired();
+                
                 entity.HasOne(d => d.Area).WithMany(p => p.Edificios)
                     .HasForeignKey(d => d.IdArea)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -759,18 +760,17 @@ namespace Avaluo.Infrastructure.Data
                     .HasConstraintName("resumen_ibfk_2");
             });
 
-            // Configuracion
-            modelBuilder.Entity<Configuracion>(entity =>
+            // ConfiguracionEvaluaciones
+            modelBuilder.Entity<ConfiguracionEvaluaciones>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_Configuracion");
-                entity.ToTable("configuracion");
+                entity.ToTable("ConfiguracionEvaluaciones");
                 entity.HasIndex(e => e.IdEstado, "Id_Estado");
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR ConfiguracionSequence");
                 entity.Property(e => e.IdEstado).HasColumnName("Id_Estado");
-                entity.Property(e => e.Año).IsRequired();
-                entity.Property(e => e.Trimestre).IsRequired();
                 entity.Property(e => e.FechaInicio).IsRequired();
                 entity.Property(e => e.FechaCierre).IsRequired();
+                entity.Property(e => e.Descripcion).IsRequired().HasMaxLength(200);
                 entity.HasOne(d => d.Estado).WithMany(p => p.Configuraciones)
                     .HasForeignKey(d => d.IdEstado)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -797,6 +797,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.DescripcionES).IsRequired();
                 entity.Property(e => e.DescripcionEN).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
+                entity.Property(e => e.UltimaEdicion).IsRequired(false);
 
                 entity.HasOne(d => d.TipoCompetencia)
                     .WithMany(p => p.Competencias)
@@ -895,18 +896,29 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => new { e.IdAsignatura, e.IdCompetencia }).HasName("PK_MapaCompetencias");
                 entity.ToTable("mapa_competencias");
+
                 entity.HasIndex(e => e.IdAsignatura, "Id_Asignatura");
                 entity.HasIndex(e => e.IdCompetencia, "Id_Competencia");
+                entity.HasIndex(e => e.IdEstado, "Id_Estado");
+
                 entity.Property(e => e.IdAsignatura).HasColumnName("Id_Asignatura");
                 entity.Property(e => e.IdCompetencia).HasColumnName("Id_Competencia");
+                entity.Property(e => e.IdEstado).HasColumnName("Id_Estado");
+
                 entity.HasOne(d => d.Asignatura).WithMany(p => p.MapaCompetencias)
                     .HasForeignKey(d => d.IdAsignatura)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("mapa_competencias_ibfk_1");
+
                 entity.HasOne(d => d.Competencia).WithMany(p => p.MapaCompetencias)
                     .HasForeignKey(d => d.IdCompetencia)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("mapa_competencias_ibfk_2");
+
+                entity.HasOne(d => d.Estado).WithMany(p => p.MapaCompetencias)
+                    .HasForeignKey(d => d.IdEstado)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("mapa_competencias_ibfk_3");
             });
 
             // MetodoEvaluacion
@@ -914,9 +926,11 @@ namespace Avaluo.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_MetodoEvaluacion");
                 entity.ToTable("metodo_evaluacion");
-                entity.HasIndex(e => e.Descripcion, "Unique_Descripcion").IsUnique();
+                entity.HasIndex(e => e.DescripcionES, "Unique_Descripcion").IsUnique();
+                entity.HasIndex(e => e.DescripcionEN, "Unique_DescripcionEN").IsUnique();
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR MetodoEvaluacionSequence");
-                entity.Property(e => e.Descripcion).IsRequired();
+                entity.Property(e => e.DescripcionES).IsRequired();
+                entity.Property(e => e.DescripcionEN).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
                 entity.HasMany(d => d.SOEvaluaciones)
@@ -992,6 +1006,10 @@ namespace Avaluo.Infrastructure.Data
                     .HasForeignKey(d => d.IdEstado);
 
                 entity.HasMany(d => d.Aulas)
+                    .WithOne(p => p.Estado)
+                    .HasForeignKey(d => d.IdEstado);
+
+                entity.HasMany(d => d.MapaCompetencias)
                     .WithOne(p => p.Estado)
                     .HasForeignKey(d => d.IdEstado);
             });

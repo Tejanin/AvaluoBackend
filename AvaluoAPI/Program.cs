@@ -22,6 +22,10 @@ using AvaluoAPI.Domain.Services.EstadoService;
 
 using Swashbuckle.AspNetCore.Filters;
 using AvaluoAPI.Swagger;
+using AvaluoAPI.Infrastructure.Integrations.INTEC;
+using AvaluoAPI.Domain.Services.RubricasService;
+using Quartz;
+using AvaluoAPI.Infrastructure.Jobs.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -111,12 +115,19 @@ builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
 builder.Services.AddScoped<IEstadoService, EstadoService>();
 
+builder.Services.AddScoped<IRubricaService, RubricaService>();
+
+builder.Services.AddScoped<IintecService,INTECServiceMock>();
+
 // FileHandler
 
 builder.Services.AddSingleton<FileHandler>();
 
 // EmailService
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Jobs
+builder.Services.ConfigureQuartz();
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

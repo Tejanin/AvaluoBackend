@@ -10,10 +10,10 @@ namespace Avaluo.Infrastructure.Data.Models
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = null!;
-        public string Acron { get; set; } = null!; // Nuevo campo para el acrónimo del SO (SO1, SO2, etc.)
-        public string Titulo { get; set; } = null!; // Nuevo campo para el título del SO
-        public string DescripcionES { get; set; } = null!; // Nuevo campo para la descripción en español
-        public string DescripcionEN { get; set; } = null!; // Nuevo campo para la descripción en inglés
+        public string Acron { get; set; } = null!; 
+        public string Titulo { get; set; } = null!; 
+        public string DescripcionES { get; set; } = null!;
+        public string DescripcionEN { get; set; } = null!; 
         public int IdTipo { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public DateTime? UltimaEdicion { get; set; }

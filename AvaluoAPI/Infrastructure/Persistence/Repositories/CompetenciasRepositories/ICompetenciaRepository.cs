@@ -7,6 +7,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
     public interface ICompetenciaRepository : IRepository<Competencia>
     {
         Task<CompetenciaViewModel> GetCompetenciaById(int id);
-        Task<IEnumerable<CompetenciaViewModel>> GetCompetenciasByFilter(string? nombre, string? acron, string? titulo, int? idTipo, int? idEstado);
+        Task<PaginatedResult<CompetenciaViewModel>> GetCompetencias(string? nombre, string? acron, string? titulo, int? idTipo, int? idEstado, int? page, int? recordsPerPage);
     }
 }

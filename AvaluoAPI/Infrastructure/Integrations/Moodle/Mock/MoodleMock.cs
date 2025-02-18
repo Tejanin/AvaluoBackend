@@ -1,18 +1,12 @@
-﻿using AvaluoAPI.Infrastructure.Integrations.Moodle.Models;
+﻿using AvaluoAPI.Infrastructure.Integrations.INTEC.Models;
+using AvaluoAPI.Infrastructure.Integrations.INTEC;
+using AvaluoAPI.Infrastructure.Integrations.Moodle.Models;
 
 namespace AvaluoAPI.Infrastructure.Integrations.Moodle.Mock
 {
     public class MoodleMock
     {
-        private readonly List<string> _codigosAsignatura = new()
-    {
-        "IDS323", // Técnicas Fundamentales de Ingeniería de Software
-        "IDS340", // Desarrollo de Software I
-        "IDS341", // Desarrollo de Software II
-        "IDS343", // Estructuras de Datos y Algoritmos I
-        "IDS344"  // Estructuras de Datos y Algoritmos II
-    };
-
+        private readonly Dictionary<string, List<PersonModel>> _seccionesEstudiantes;
         private readonly List<string> _nombresTareas = new()
     {
         "Proyecto Final",
@@ -25,85 +19,63 @@ namespace AvaluoAPI.Infrastructure.Integrations.Moodle.Mock
         "Documentación de API"
     };
 
-        public  List<ListaDeEvidenciasMoodleModel> GetMockData()
+        public MoodleMock()
         {
-            var random = new Random();
+            var intecService = new INTECServiceMock();
+            var secciones = intecService.GetSecciones().Result;
+            _seccionesEstudiantes = secciones.ToDictionary(
+                s => s.Asignatura,
+                s => s.Estudiantes
+            );
+        }
+
+        public List<ListaDeEvidenciasMoodleModel> GetMockData()
+        {
             var listaEvidencias = new List<ListaDeEvidenciasMoodleModel>();
 
-            foreach (var codigo in _codigosAsignatura)
+            foreach (var seccion in _seccionesEstudiantes)
             {
-                var seccion = random.Next(1, 5).ToString("D2");
-
                 var evidencias = new ListaDeEvidenciasMoodleModel
                 {
-                    CodigoAsignatura = codigo,
-                    Seccion = seccion,
-                    NombreDeEvidencias = GenerarEvidencias(random)
+                    CodigoAsignatura = seccion.Key,
+                    Seccion = ObtenerSeccionPorAsignatura(seccion.Key),
+                    NombreDeEvidencias = GenerarEvidencias(seccion.Value)
                 };
-
                 listaEvidencias.Add(evidencias);
             }
 
             return listaEvidencias;
         }
 
-        private List<EvidenciasMoodleModel> GenerarEvidencias(Random random)
+        private string ObtenerSeccionPorAsignatura(string codigoAsignatura)
         {
-            var cantidadEvidencias = random.Next(3, 6);
-            var evidencias = new List<EvidenciasMoodleModel>();
+            var intecService = new INTECServiceMock();
+            var seccion = intecService.GetSecciones().Result
+                .First(s => s.Asignatura == codigoAsignatura);
+            return seccion.Numero;
+        }
 
-            for (int i = 0; i < cantidadEvidencias; i++)
+        private List<EvidenciasMoodleModel> GenerarEvidencias(List<PersonModel> estudiantes)
+        {
+            var evidencias = new List<EvidenciasMoodleModel>();
+            // Usar 4 tareas fijas para cada asignatura
+            for (int i = 0; i < 4; i++)
             {
                 var evidencia = new EvidenciasMoodleModel
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Nombre = _nombresTareas[random.Next(_nombresTareas.Count)],
-                   
-                    Estudiantes = GenerarEstudiantes(random)
+                    Id = $"EV{i + 1}",
+                    Nombre = _nombresTareas[i],
+                    Estudiantes = estudiantes.Select(e => new EstudianteMoodleModel
+                    {
+                        Matricula = ((EstudianteModel)e).Id,
+                        Nombre = e.Nombre,
+                        Apellido = e.Apellido,
+                        Ruta = $"/moodle/evidencias/{((EstudianteModel)e).Id}/{i + 1}"
+                    }).ToList()
                 };
-
                 evidencias.Add(evidencia);
             }
-
             return evidencias;
-        }
-
-        private List<EstudianteMoodleModel> GenerarEstudiantes(Random random)
-        {
-            var cantidadEstudiantes = random.Next(15, 31);
-            var estudiantes = new List<EstudianteMoodleModel>();
-
-            for (int i = 0; i < cantidadEstudiantes; i++)
-            {
-                var estudiante = new EstudianteMoodleModel
-                {
-                    Matricula = GenerarMatricula(random),
-                    Nombre = GenerarNombre(random),
-                    Apellido = GenerarApellido(random),
-                    Ruta = $"/moodle/evidencias/{Guid.NewGuid():N}"  // Movimos la ruta aquí
-                };
-
-                estudiantes.Add(estudiante);
-            }
-
-            return estudiantes;
-        }
-
-        private string GenerarMatricula(Random random)
-        {
-            return random.Next(1000000, 1200000).ToString();
-        }
-
-        private string GenerarNombre(Random random)
-        {
-            var nombres = new[] { "Juan", "María", "Carlos", "Ana", "Luis", "Laura", "Miguel", "Sofia", "José", "Isabella" };
-            return nombres[random.Next(nombres.Length)];
-        }
-
-        private string GenerarApellido(Random random)
-        {
-            var apellidos = new[] { "García", "Rodríguez", "Martínez", "López", "Pérez", "González", "Sánchez", "Ramírez" };
-            return apellidos[random.Next(apellidos.Length)];
         }
     }
 }

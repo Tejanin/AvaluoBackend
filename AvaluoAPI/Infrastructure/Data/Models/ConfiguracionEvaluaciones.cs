@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Avaluo.Infrastructure.Data.Models
 {
-    public class Configuracion
+    public class ConfiguracionEvaluaciones
     {
         public int Id { get; set; }
-        public string Año { get; set; }
-        public string Trimestre { get; set; }
+        public string Descripcion { get; set; } = null!;      
         public DateTime FechaInicio { get; set; }
         public DateTime FechaCierre { get; set; }
         public int IdEstado { get; set; }

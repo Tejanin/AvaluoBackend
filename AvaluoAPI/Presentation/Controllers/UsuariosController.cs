@@ -1,5 +1,7 @@
 ﻿using AvaluoAPI.Application.Handlers;
+using AvaluoAPI.Domain.Helper;
 using AvaluoAPI.Domain.Services.UsuariosService;
+using AvaluoAPI.Infrastructure.Integrations.INTEC;
 using AvaluoAPI.Infrastructure.Integrations.Moodle;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
@@ -162,12 +164,22 @@ namespace AvaluoAPI.Presentation.Controllers
             return Accepted(new { message = "Contraseña actualizada exitosamente" });
         }
 
-        [HttpGet("test")]
+        [HttpGet("testMocks")]
         public async Task<ActionResult> Test()
         {
-            var mock = new MoodleServiceMock();
-            var evidencias = await mock.GetAllEvidencias();
+            var mock = new INTECServiceMock();
+            var evidencias = await mock.GetProfesores();
             return Ok(new { message = "Datos de prueba obtenidos exitosamente", data = evidencias });
+        }
+
+
+        [HttpGet("testFehcas")]
+        public async Task<ActionResult> TestFechas()
+        {
+            var trimestre = Trimestre.NoviembreEnero;
+            var (inicio, fin) = trimestre.GetFechas(2024);
+
+            return Ok(new { message = "Datos de prueba obtenidos exitosamente", data = $"Trimestre actual: {inicio:d} - {fin:d}" });
         }
     }
 }

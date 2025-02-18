@@ -10,6 +10,7 @@ namespace AvaluoAPI.Presentation.DTOs.MetodoEvaluacionDTOs
         public int Id { get; set; }
         [Required(ErrorMessage = "La descripción del metodo de evaluacion es requerida")]
         [StringLength(255, ErrorMessage = "La descripción no puede tener más de 255 caracteres.")]
-        public string Descripcion { get; set; }
+        public string DescripcionES { get; set; }
+        public string DescripcionEN { get; set; }
     }
 }
