@@ -12,6 +12,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositor
             
         }
 
-
+        public AvaluoDbContext? AvaluoDbContext
+        {
+            get { return _context as AvaluoDbContext; }
+        }
     }
 }

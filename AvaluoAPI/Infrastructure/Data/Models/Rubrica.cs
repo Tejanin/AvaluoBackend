@@ -19,10 +19,10 @@ namespace Avaluo.Infrastructure.Data.Models
         public int Año { get; set; }
         public string Periodo { get; set; }
         public string Seccion { get; set; }
-        public string Evidencia { get; set; }
         public string Comentario { get; set; }
         public string Problematica { get; set; }
         public string Solucion { get; set; }
+        public string Evidencia { get; set; } 
         public string EvaluacionesFormativas { get; set; }
         public string Estrategias { get; set; }
         public virtual Estado Estado { get; set; }

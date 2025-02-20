@@ -1,7 +1,7 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
-using AvaluoAPI.Utilities;
+using AvaluoAPI.Utilities.JWT;
 
 namespace AvaluoAPI.Domain.Services.UsuariosService
 {
@@ -9,9 +9,13 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
     {
         Task<TokenConfig> Login(LoginDTO user);
         Task Register(UsuarioDTO userDTO);
-        Task Update(UsuarioDTO user);
+        Task Update(int id,ModifyUsuarioDTO user);
         Task Desactivate(int id);
-        Task ChangePassword(int id, string newPassword);
+        Task RequestPasswordChange();
+        Task ChangePassword(string newPassword);
+        Task UpdatePfp(int id, IFormFile file);
+        Task UpdateCv(int id, IFormFile file);
+        Task ChangePassword(ChangePasswordDTO changePasswordDTO);
         Task Activate(int id);
         Task<UsuarioViewModel> GetById(int id);
         Task<IEnumerable<UsuarioViewModel>> GetAll(int? estado, int? area, int? rol);

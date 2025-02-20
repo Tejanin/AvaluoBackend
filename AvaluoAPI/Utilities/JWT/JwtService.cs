@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
-namespace AvaluoAPI.Utilities
+namespace AvaluoAPI.Utilities.JWT
 {
     public class TokenConfig
     {
@@ -30,13 +30,15 @@ namespace AvaluoAPI.Utilities
         public Dictionary<string, bool> Permisos { get; set; } = null!;
     }
     public interface IJwtService
-{
-    TokenConfig GenerateTokens(Usuario user, Rol rol);
-    bool ValidateToken(string token);
-    ClaimsPrincipal? GetClaimsPrincipal(string token);
-    UserPermissions? ValidatePermissionCookie(string permissionToken);
-    string? GetClaimValue(string token, string claimType);
-}
+    {
+        TokenConfig GenerateTokens(Usuario user, Rol rol, bool includeSOClaim = false);
+        bool ValidateToken(string token);
+        ClaimsPrincipal? GetClaimsPrincipal(string token);
+        UserPermissions? ValidatePermissionCookie(string permissionToken);
+        string? GetClaimValue(string token, string claimType);
+        void BlacklistToken(string token);
+        bool IsTokenBlacklisted(string token);
+    }
 
     public class JwtService : IJwtService
     {
@@ -44,25 +46,24 @@ namespace AvaluoAPI.Utilities
         private readonly string _issuer;
         private readonly string _audience;
         private readonly IDataProtector _protector;
-
-        public JwtService(IConfiguration configuration, IDataProtectionProvider dataProtectionProvider)
+        private readonly IClaimsFactory _claimsFactory;
+        private readonly HashSet<string> _blacklistedTokens = new();
+        public JwtService(
+        IConfiguration configuration,
+        IDataProtectionProvider dataProtectionProvider,
+        IClaimsFactory claimsFactory)
         {
             _key = configuration["Jwt:Key"]!;
             _issuer = configuration["Jwt:Issuer"]!;
             _audience = configuration["Jwt:Audience"]!;
             _protector = dataProtectionProvider.CreateProtector("Permissions");
+            _claimsFactory = claimsFactory;
         }
 
-        public TokenConfig GenerateTokens(Usuario user, Rol rol)
+        public TokenConfig GenerateTokens(Usuario user, Rol rol, bool includeSOClaim = false)
         {
             // JWT con info no sensitiva
-            var jwtClaims = new[]
-            {
-                new Claim("Id", user.Id.ToString()),
-                new Claim("Email", user.Email),
-                new Claim("Name", user.Nombre),
-                new Claim("Lname", user.Apellido)
-             };
+            var jwtClaims = _claimsFactory.CreateClaims(user, includeSOClaim);
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -177,6 +178,16 @@ namespace AvaluoAPI.Utilities
             {
                 return null;
             }
+        }
+
+        public void BlacklistToken(string token)
+        {
+            _blacklistedTokens.Add(token);
+        }
+
+        public bool IsTokenBlacklisted(string token)
+        {
+            return _blacklistedTokens.Contains(token);
         }
     }
 }

@@ -10,11 +10,16 @@ namespace Avaluo.Infrastructure.Data.Models
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = null!;
-        public string Descripcion { get; set; } = null!;
+        public string Acron { get; set; } = null!; 
+        public string Titulo { get; set; } = null!; 
+        public string DescripcionES { get; set; } = null!;
+        public string DescripcionEN { get; set; } = null!; 
         public int IdTipo { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public DateTime? UltimaEdicion { get; set; }
         public int IdEstado { get; set; }
+
+        // Relaciones con otras entidades
         public virtual TipoCompetencia TipoCompetencia { get; set; }
         public virtual Estado Estado { get; set; }
         public virtual ICollection<MapaCompetencias> MapaCompetencias { get; set; }

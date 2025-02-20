@@ -38,7 +38,7 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
         }
 
 
-        public async Task<IEnumerable<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> expression)
+        public async Task<List<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> expression)
         {
             return await _context.Set<TEntity>().Where(expression).ToListAsync();
         }
@@ -52,8 +52,6 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
         {
             return await _context.Set<TEntity>().ToListAsync();
         }
-
-       
 
         public async Task<IEnumerable<TEntity>> GetAllIncluding<TEntity>(Expression<Func<TEntity, bool>>? expression,
         params Expression<Func<TEntity, object>>[] includeProperties) where TEntity : class
@@ -138,6 +136,52 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
             _context.Set<TEntity>().Add(entity);
         }
 
+        // Metodos queryable
+        public IQueryable<TEntity> AsQueryable()
+        {
+            return _context.Set<TEntity>().AsQueryable();
+        }
+        public IQueryable<TEntity> FindAllQuery(Expression<Func<TEntity, bool>> expression)
+        {
+            return _context.Set<TEntity>().Where(expression);
+        }
+        public IQueryable<TEntity> FilterQuery(IQueryable<TEntity> query, List<Expression<Func<TEntity, bool>>> filters)
+        {
+            if (filters == null || !filters.Any())
+            {
+                return query;
+            }
 
+            foreach (var filter in filters)
+            {
+                query = query.Where(filter);
+            }
+
+            return query;
+        }
+        public async Task<PaginatedResult<TEntity>> PaginateWithQuery(IQueryable<TEntity> query, int? page, int? recordsPerPage)
+        {
+            int currentPage = page.HasValue && page.Value > 0 ? page.Value : 1;
+
+            int totalRecords = await query.CountAsync();
+
+            int records = recordsPerPage.HasValue && recordsPerPage.Value > 0 ? recordsPerPage.Value : totalRecords;
+
+            var items = (page == null && recordsPerPage == null)
+                ? await query.ToListAsync()
+                : await query.Skip((currentPage - 1) * records)
+                             .Take(records)
+                             .ToListAsync();
+
+            return new PaginatedResult<TEntity>(items, currentPage, records, totalRecords);
+        }
+
+        public async Task UpdateRangeAsync(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                _context.Set<TEntity>().UpdateRange(entity);
+            }
+        }
     }
 }

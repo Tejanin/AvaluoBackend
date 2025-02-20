@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Presentation.DTOs.TipoCompetenciaDTOs;
+﻿using Avaluo.Infrastructure.Persistence.Repositories.Base;
+using AvaluoAPI.Presentation.DTOs.TipoCompetenciaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 
 namespace AvaluoAPI.Domain.Services.TipoCompetenciaService
@@ -7,7 +8,7 @@ namespace AvaluoAPI.Domain.Services.TipoCompetenciaService
     {
         Task<TipoCompetenciaViewModel> GetById(int id); // Obtiene un tipo de competencia por su ID
 
-        Task<IEnumerable<TipoCompetenciaViewModel>> GetAll(); // Obtiene todos los tipos de competencias
+        Task<PaginatedResult<TipoCompetenciaViewModel>> GetAll(int? page, int? recordsPerPage); // Obtiene todos los tipos de comptencias paginados
 
         Task Register(TipoCompetenciaDTO tipoCompetenciaDTO); // Registra un nuevo tipo de competencia
 

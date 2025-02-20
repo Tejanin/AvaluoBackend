@@ -12,7 +12,6 @@ namespace Avaluo.Infrastructure.Data.Models
         public int IdArea { get; set; }
         public string Nombre { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
-        public int CantAulas { get; set; }
         public DateTime? UltimaEdicion { get; set; }
         public string Acron { get; set; }
         public int IdEstado { get; set; }

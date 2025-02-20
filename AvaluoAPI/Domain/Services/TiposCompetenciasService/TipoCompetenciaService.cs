@@ -1,4 +1,5 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
+using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Presentation.DTOs.TipoCompetenciaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
@@ -30,10 +31,12 @@ namespace AvaluoAPI.Domain.Services.TipoCompetenciaService
             return _mapper.Map<TipoCompetenciaViewModel>(tipoCompetencia);
         }
 
-        public async Task<IEnumerable<TipoCompetenciaViewModel>> GetAll()
+        public async Task<PaginatedResult<TipoCompetenciaViewModel>> GetAll(int? page, int? recordsPerPage)
         {
-            var tiposCompetencias = await _unitOfWork.TiposCompetencias.GetAllAsync();
-            return _mapper.Map<IEnumerable<TipoCompetenciaViewModel>>(tiposCompetencias);
+            var tiposQuery = _unitOfWork.TiposCompetencias.AsQueryable();
+            var paginatedResult = await _unitOfWork.TiposCompetencias.PaginateWithQuery(tiposQuery, page, recordsPerPage);
+
+            return paginatedResult.Convert(e => _mapper.Map<TipoCompetenciaViewModel>(e));
         }
 
         public async Task Register(TipoCompetenciaDTO tipoCompetenciaDTO)
