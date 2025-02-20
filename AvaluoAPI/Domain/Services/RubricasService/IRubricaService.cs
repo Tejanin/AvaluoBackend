@@ -9,6 +9,8 @@ namespace AvaluoAPI.Domain.Services.RubricasService
         Task CompleteRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras);
         Task DesactivateRubricas();
 
+        Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile> evidenciasExtras);
+
 
     }
 }
