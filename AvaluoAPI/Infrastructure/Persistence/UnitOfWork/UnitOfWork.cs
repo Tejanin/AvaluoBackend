@@ -22,6 +22,7 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.SOEvaluacionRepositories
 using AvaluoAPI.Infrastructure.Persistence.Repositories.MapaCompetenciaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ResumenRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EvidenciaRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.AulaRepositories;
 
 namespace Avaluo.Infrastructure.Persistence.UnitOfWork
 {
@@ -46,7 +47,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             Resumenes = new ResumenRepository(_context, _dapperContext);
             Evidencias = new EvidenciaRepository(_context);
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
-
+            Aulas = new AulaRepository(_context, _dapperContext);
         }
 
         // props
@@ -62,6 +63,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public ISOEvaluacionRepository SOEvaluaciones { get; private set; }
         public IMapaCompetenciaRepository MapaCompetencias { get; private set; }
         public IMetodoEvaluacionRepository MetodoEvaluacion { get; private set; }
+        public IAulaRepository Aulas { get; private set; }
 
         // methods
         public async Task BeginTransactionAsync()
