@@ -16,6 +16,7 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.SOEvaluacionRepositories
 using AvaluoAPI.Infrastructure.Persistence.Repositories.MapaCompetenciaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ResumenRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EvidenciaRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.AulaRepositories;
 
 namespace Avaluo.Infrastructure.Persistence.UnitOfWork
 {
@@ -34,6 +35,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         IEstadoRepository Estados { get; }
         IEvidenciaRepository Evidencias { get; }
         IResumenRepository Resumenes { get; }
+        IAulaRepository Aulas { get; }
 
 
         Task<int> SaveChangesAsync();
