@@ -21,5 +21,12 @@ namespace AvaluoAPI.Presentation.Controllers
             await _rubricaService.CompleteRubricas(rubricaDTO.GetRubricaDTO(),rubricaDTO.Evidencias);
             return Ok();
         }
+
+        [HttpPut]
+        public async Task<IActionResult> EditRubricas(CompleteRubricaFormDTO rubricaDTO)
+        {
+            await _rubricaService.EditRubricas(rubricaDTO.GetRubricaDTO(), rubricaDTO.Evidencias);
+            return Ok();
+        }
     }
 }

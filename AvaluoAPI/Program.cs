@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
+using AvaluoAPI.Domain.Services.EdificioService;
 using AvaluoAPI.Domain.Services.CompetenciasService;
 using AvaluoAPI.Application.Handlers;
 using AvaluoAPI.Utilities.JWT;
@@ -27,6 +29,7 @@ using AvaluoAPI.Domain.Services.RubricasService;
 using Quartz;
 using AvaluoAPI.Infrastructure.Jobs.Configuration;
 using AvaluoAPI.Domain.Services.AulaService;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -112,6 +115,10 @@ builder.Services.AddScoped<ITipoInformeService, TipoInformeService>();
 
 builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
 
+
+builder.Services.AddScoped<IEdificioService,  EdificioService>();
+
+
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
 builder.Services.AddScoped<IEstadoService, EstadoService>();
@@ -131,6 +138,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Jobs
 builder.Services.ConfigureQuartz();
+
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
