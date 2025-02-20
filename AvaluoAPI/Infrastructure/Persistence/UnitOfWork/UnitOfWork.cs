@@ -1,8 +1,15 @@
 
+using Avaluo.Infrastructure.Data;
+using AvaluoAPI.Domain.Services.EdificioService;
+using AvaluoAPI.Infrastructure.Data.Contexts;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories;
+
+
 using Avaluo.Infrastructure.Data.Models;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EstadosRepositories;
+
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
 
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TiposCompetenciasRepositories;
@@ -43,9 +50,13 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             Competencias = new CompetenciaRepository(_context, _dapperContext);
             Estados = new EstadoRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
+
+            Edificios = new EdificioRepository(_context, _dapperContext);
+
             Resumenes = new ResumenRepository(_context, _dapperContext);
             Evidencias = new EvidenciaRepository(_context);
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
+
 
         }
 
@@ -54,6 +65,9 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public IUsuarioRepository Usuarios { get; private set; }
         public ITipoInformeRepository TiposInformes { get; private set; }
         public ITipoCompetenciaRepository TiposCompetencias { get; private set; }
+
+        public IEdificioRespository Edificios { get; private set; }
+
         public ICompetenciaRepository Competencias { get; private set; }
         public IEstadoRepository Estados { get; private set; }
         public IRubricaRepository Rubricas { get; private set; }
