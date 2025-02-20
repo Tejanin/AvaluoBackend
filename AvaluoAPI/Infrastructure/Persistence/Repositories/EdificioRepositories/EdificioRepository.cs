@@ -22,7 +22,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories
                     SELECT 
                         e.Id,
                         e.Nombre,
-                        e.CantAulas,
+                        (SELECT COUNT(*) FROM aula a2 WHERE a2.Id_Edificio = e.Id) CantAulas,
                         e.Acron,
                         e.Ubicacion,
                         a.Descripcion AS Area,
@@ -40,7 +40,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories
                     SELECT 
                         e.Id,
                         e.Nombre,
-                        e.CantAulas,
+                        (SELECT COUNT(*) FROM aula a2 WHERE a2.Id_Edificio = e.Id) CantAulas,
                         e.Acron,
                         e.Ubicacion,
                         a.Descripcion AS Area,

@@ -59,8 +59,22 @@ namespace AvaluoAPI.Domain.Services.EdificioService
             if (edificio == null)
                 throw new KeyNotFoundException("Edificio no encontrado.");
 
+            if (edificio.Nombre == null || edificio.Nombre == "")
+                edificioDTO.Nombre = edificio.Nombre;
+
+            if (edificio.Acron == null || edificio.Acron == "")
+                edificioDTO.Acron = edificio.Acron;
+
+            if (edificio.Ubicacion == null || edificio.Ubicacion == "")
+                edificioDTO.Ubicacion = edificio.Ubicacion;
+
+            if (edificio.IdArea == null)
+                edificioDTO.IdArea = edificio.IdArea;
+
+            if (edificio.IdEstado == null)
+                edificioDTO.IdEstado = edificio.IdEstado;
+
             edificio.Nombre = edificioDTO.Nombre;
-            edificio.CantAulas = edificioDTO.CantAulas;
             edificio.Acron = edificioDTO.Acron;
             edificio.Ubicacion = edificioDTO.Ubicacion;
             edificio.IdArea = edificioDTO.IdArea;
