@@ -1,8 +1,15 @@
 
+using Avaluo.Infrastructure.Data;
+using AvaluoAPI.Domain.Services.EdificioService;
+using AvaluoAPI.Infrastructure.Data.Contexts;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories;
+
+
 using Avaluo.Infrastructure.Data.Models;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EstadosRepositories;
+
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
 
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TiposCompetenciasRepositories;
@@ -22,9 +29,13 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.SOEvaluacionRepositories
 using AvaluoAPI.Infrastructure.Persistence.Repositories.MapaCompetenciaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ResumenRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EvidenciaRepositories;
+
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AreaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories;
+
+using AvaluoAPI.Infrastructure.Persistence.Repositories.AulaRepositories;
+
 
 namespace Avaluo.Infrastructure.Persistence.UnitOfWork
 {
@@ -46,11 +57,19 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             Competencias = new CompetenciaRepository(_context, _dapperContext);
             Estados = new EstadoRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
+
+            Edificios = new EdificioRepository(_context, _dapperContext);
+
             Resumenes = new ResumenRepository(_context, _dapperContext);
             Evidencias = new EvidenciaRepository(_context);
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
+
             Asignaturas = new AsignaturaRepository(_context, _dapperContext);
             Areas = new AreaRepository(_context);
+=======
+
+            Aulas = new AulaRepository(_context, _dapperContext);
+
         }
 
         // props
@@ -58,6 +77,9 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public IUsuarioRepository Usuarios { get; private set; }
         public ITipoInformeRepository TiposInformes { get; private set; }
         public ITipoCompetenciaRepository TiposCompetencias { get; private set; }
+
+        public IEdificioRespository Edificios { get; private set; }
+
         public ICompetenciaRepository Competencias { get; private set; }
         public IEstadoRepository Estados { get; private set; }
         public IRubricaRepository Rubricas { get; private set; }
@@ -66,8 +88,12 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public ISOEvaluacionRepository SOEvaluaciones { get; private set; }
         public IMapaCompetenciaRepository MapaCompetencias { get; private set; }
         public IMetodoEvaluacionRepository MetodoEvaluacion { get; private set; }
+
         public IAsignaturaRepository Asignaturas { get; private set; }
         public IAreaRepository Areas { get; private set; }
+
+        public IAulaRepository Aulas { get; private set; }
+
 
         // methods
         public async Task BeginTransactionAsync()

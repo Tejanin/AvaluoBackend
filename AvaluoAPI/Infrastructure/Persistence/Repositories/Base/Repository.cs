@@ -38,7 +38,7 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
         }
 
 
-        public async Task<IEnumerable<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> expression)
+        public async Task<List<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> expression)
         {
             return await _context.Set<TEntity>().Where(expression).ToListAsync();
         }
@@ -176,5 +176,12 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
             return new PaginatedResult<TEntity>(items, currentPage, records, totalRecords);
         }
 
+        public async Task UpdateRangeAsync(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                _context.Set<TEntity>().UpdateRange(entity);
+            }
+        }
     }
 }

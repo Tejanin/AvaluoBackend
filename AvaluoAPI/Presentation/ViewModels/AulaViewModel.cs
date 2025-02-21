@@ -2,15 +2,13 @@
 
 namespace AvaluoAPI.Presentation.ViewModels
 {
-    public class AreaViewModel
+    public class AulaViewModel
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }
-
-        public int? IdCoordinador { get; set; }
         public DateTime FechaCreacion { get; set; }
-        public DateTime? UltimaEdicion { get; set; }
-
-
+        public DateTime UltimaEdicion { get; set; }
+        public EdificioViewModel Edificio { get; set; }
+        public EstadoViewModel Estado { get; set; }
     }
 }
