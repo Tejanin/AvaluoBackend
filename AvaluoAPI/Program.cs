@@ -28,7 +28,11 @@ using AvaluoAPI.Infrastructure.Integrations.INTEC;
 using AvaluoAPI.Domain.Services.RubricasService;
 using Quartz;
 using AvaluoAPI.Infrastructure.Jobs.Configuration;
+
+using AvaluoAPI.Domain.Services.AsignaturaService;
+
 using AvaluoAPI.Domain.Services.AulaService;
+
 
 
 
@@ -126,6 +130,8 @@ builder.Services.AddScoped<IEstadoService, EstadoService>();
 builder.Services.AddScoped<IRubricaService, RubricaService>();
 
 builder.Services.AddScoped<IintecService,INTECServiceMock>();
+
+builder.Services.AddScoped<IAsignaturaService, AsignaturaService>();
 
 builder.Services.AddScoped<IAulaService, AulaService>();
 

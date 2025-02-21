@@ -47,16 +47,13 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             if (tipoCompetencia == null)
                 throw new KeyNotFoundException("El Tipo de Competencia especificado no existe.");
 
-            Expression<Func<Estado, bool>> filter = e =>
-            (e.IdTabla == "Competencia") &&
-            (e.Descripcion == "Activa");
-
-            var estadosFiltrados = await _unitOfWork.Estados.FindAllAsync(filter);
-            if (!estadosFiltrados.Any()) throw new KeyNotFoundException("No se encontró un estado por defecto");
+            var estadoPorDefecto = await _unitOfWork.Estados.GetEstadoByTablaName("Competencia", "Activa");
+            if (estadoPorDefecto == null)
+                throw new KeyNotFoundException("No se encontró un estado por defecto para 'Competencia'.");
 
             var competencia = _mapper.Map<Competencia>(competenciaDTO);
             competencia.UltimaEdicion = DateTime.Now;
-            competencia.IdEstado = estadosFiltrados.First().Id;
+            competencia.IdEstado = estadoPorDefecto.Id;
 
             await _unitOfWork.Competencias.AddAsync(competencia);
             _unitOfWork.SaveChanges();
