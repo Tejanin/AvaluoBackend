@@ -17,6 +17,7 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.MapaCompetenciaRepositor
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ResumenRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EvidenciaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AulaRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories;
 
 namespace Avaluo.Infrastructure.Persistence.UnitOfWork
 {

@@ -53,18 +53,52 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             _unitOfWork.SaveChanges();
         }
 
-        public Task DesactivateRubricas()
+        public async Task<IEnumerable<RubricaViewModel>> GetAllRubricas()
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.Rubricas.GetAllRubricas();
+        }
+        public async Task DesactivateRubricas()
+        {
+
+            var entregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Entregada");
+            var noEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "No entregada");
+            var activo = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
+            var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
+
+            var rubricasActivasEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activoEntregado.Id);
+            var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activo.Id);
+
+            foreach (var rubrica in rubricasActivasEntregadas)
+            {
+                rubrica.IdEstado = entregado.Id;
+            }
+
+            foreach (var rubrica in rubricasActivasNoEntregadas)
+            {
+                rubrica.IdEstado = noEntregado.Id;
+            }
+
+            await Task.WhenAll(
+                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasNoEntregadas),
+                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas)
+            );
+            
         }
 
-        public async Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile> evidenciasExtras)
+        public async Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras)
         {
             var rubrica = await _unitOfWork.Rubricas.FindAsync(r => r.Id == rubricaDTO.Id);
-            var estadoRubricaCompletada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
-            rubrica.UltimaEdicion = DateTime.Now;
+            
 
-            rubrica.IdEstado = estadoRubricaCompletada.Id;
+
+            var estadoRubricaCompletada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
+            if (rubrica.IdEstado != estadoRubricaCompletada.Id)
+            {
+                throw new Exception("No se puede editar una rubrica sin completar");
+            }
+
+            rubrica.UltimaEdicion = DateTime.Now;
+            
             rubrica.Comentario = rubricaDTO.Comentario;
             rubrica.Problematica = rubricaDTO.Problematica;
             rubrica.Solucion = rubricaDTO.Solucion;

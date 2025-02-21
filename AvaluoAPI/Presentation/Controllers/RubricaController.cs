@@ -28,5 +28,12 @@ namespace AvaluoAPI.Presentation.Controllers
             await _rubricaService.EditRubricas(rubricaDTO.GetRubricaDTO(), rubricaDTO.Evidencias);
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllRubricas()
+        {
+            
+            return Ok(new { mensaje = "Operacion exitosa", data = await _rubricaService.GetAllRubricas() });
+        }
     }
 }
