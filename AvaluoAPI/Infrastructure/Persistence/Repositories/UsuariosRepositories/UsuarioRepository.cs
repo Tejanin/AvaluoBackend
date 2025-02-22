@@ -66,6 +66,30 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
 
             return usuarios.FirstOrDefault();
         }
+
+        public async Task<Usuario> GetUsuarioWithRolById(int usuarioId)
+        {
+            using var connection = _dapperContext.CreateConnection();
+            var query = @"
+                    SELECT 
+                        u.*,
+                        r.*
+                    FROM usuario u
+                    LEFT JOIN roles r ON u.IdRol = r.Id
+                    WHERE u.Id = @UsuarioId";
+            var usuarios = await connection.QueryAsync<Usuario, Rol, Usuario>(
+                query,
+                (usuario, rol) =>
+                {
+                    usuario.Rol = rol;
+                    return usuario;
+                },
+                new { UsuarioId = usuarioId },
+                splitOn: "Id"
+            );
+            return usuarios.FirstOrDefault();
+        }
+
         public async Task<UsuarioViewModel> GetUsuarioById(int id)
         {
             using var connection = _dapperContext.CreateConnection();
