@@ -1,8 +1,9 @@
 ﻿using Avaluo.Infrastructure.Data;
 using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.Repositories.Base;
+using AvaluoAPI.Domain;
 using AvaluoAPI.Infrastructure.Data.Contexts;
-using AvaluoAPI.Infrastructure.Data.EntitiesResult;
+
 using Dapper;
 
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepositories

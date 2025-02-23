@@ -1,6 +1,6 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.Repositories.Base;
-using AvaluoAPI.Infrastructure.Data.EntitiesResult;
+using AvaluoAPI.Domain;
 
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepositories
 {

@@ -21,51 +21,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
             get { return _context as AvaluoDbContext; }
         }
 
-        public async Task<IEnumerable<RubricaViewModel>> GetAllRubricas()
-        {
-            using var connection = _dapperContext.CreateConnection();
+        
 
-            const string query = @"
-                                    SELECT 
-                                        r.Id,
-                                        r.Comentario,
-                                        r.Problematica,
-                                        r.Solucion,
-                                        r.Evidencia,
-                                        r.EvaluacionesFormativas,
-                                        r.Estrategias,
-                                        rs.Id_PI as IdPI,
-                                        rs.CantExperto,
-                                        rs.CantSatisfactorio,
-                                        rs.CantPrincipiante,
-                                        rs.CantDesarrollo
-                                    FROM rubricas r
-                                    LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica";
-
-            var rubricaDict = new Dictionary<int, RubricaViewModel>();
-
-            var rubricas = await connection.QueryAsync<RubricaViewModel, ResumenViewModel, RubricaViewModel>(
-                query,
-                (rubrica, resumen) =>
-                {
-                    if (!rubricaDict.TryGetValue(rubrica.Id, out var rubricaEntry))
-                    {
-                        rubricaEntry = rubrica;
-                        rubricaEntry.Resumenes = new List<ResumenViewModel>();
-                        rubricaDict.Add(rubrica.Id, rubricaEntry);
-                    }
-
-                    if (resumen != null)
-                    {
-                        rubricaEntry.Resumenes.Add(resumen);
-                    }
-
-                    return rubricaEntry;
-                },
-                splitOn: "IdPI");
-
-            return rubricaDict.Values;
-        }
+       
 
         public async Task<IEnumerable<RubricaViewModel>> GetRubricasFiltered(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null)
         {
@@ -95,10 +53,13 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                            rs.CantExperto,
                            rs.CantSatisfactorio,
                            rs.CantPrincipiante,
-                           rs.CantDesarrollo
+                           rs.CantDesarrollo,
+                           u.Id,
+                           u.Nombre
                        FROM rubricas r
                        INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
                        INNER JOIN carreras c ON cr.Id_Carrera = c.Id
+                       INNER JOIN usuario u ON r.IdProfesor = u.Id
                        INNER JOIN competencia comp ON r.IdSO = comp.Id
                        INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
                        INNER JOIN estado e ON r.IdEstado = e.Id
@@ -158,7 +119,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                     return rubricaEntry;
                 },
                 parameters,
-                splitOn: "Id,Id,Id,Id,IdPI");
+                splitOn: "Id,Id,Id,Id,Id,IdPI");
 
             return rubricaDict.Values;
         }
