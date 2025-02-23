@@ -179,7 +179,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
                 entity.Property(e => e.Periodo).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Seccion).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Evidencia).IsRequired().HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Evidencia).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Comentario).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Problematica).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Solucion).IsRequired(false).HasMaxLength(int.MaxValue);
@@ -334,7 +334,7 @@ namespace Avaluo.Infrastructure.Data
                     .WithMany()
                     .HasForeignKey(c => c.IdArea)
                     .OnDelete(DeleteBehavior.Restrict); // Relación con Area, sin eliminación en cascada
-
+                entity.Property(c => c.IdCoordinadorCarrera).IsRequired(false);
                 entity.HasOne(c => c.CoordinadorCarrera)
                     .WithMany()
                     .HasForeignKey(c => c.IdCoordinadorCarrera)

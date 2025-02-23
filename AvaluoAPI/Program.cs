@@ -147,7 +147,7 @@ builder.Services.AddSingleton<FileHandler>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Jobs
-builder.Services.ConfigureQuartz();
+//builder.Services.ConfigureQuartz();
 
 
 // JWT

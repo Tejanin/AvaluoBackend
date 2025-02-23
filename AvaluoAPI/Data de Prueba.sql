@@ -11,7 +11,11 @@ INSERT INTO Estado (idtabla, descripcion) VALUES
 ('Competencia', 'Activa'),
 ('Competencia', 'Desactivada'),
 ('MapaCompetencia','Activada'),
-('MapaCompetencia','Desactivada')
+('MapaCompetencia','Desactivada'),
+('Configuracion','Activa'),
+('Configuracion','Desactivada'),
+('Carrera', 'Activa'),
+('Carrera', 'Desactivada')
 
 INSERT INTO metodo_evaluacion (descripcionES, descripcionEN) VALUES
 ('Examen', 'Exam'),
@@ -58,9 +62,18 @@ VALUES
 (3, 'IDS341', 'DESARROLLO DE SOFTWARE II', GETDATE(), GETDATE(), 7, 'Aplicaciones avanzadas en desarrollo de software', 'https://syllabus.universidad.edu/desarrollo_sw2.pdf', 1),
 (4, 'IDS208', 'TEAM BUILDING', GETDATE(), GETDATE(), 7, 'Habilidades para el trabajo en equipo', 'https://syllabus.universidad.edu/team_building.pdf', 1),
 (5, 'CBM208', 'ALGEBRA LINEAL', GETDATE(), GETDATE(), 7, 'Espacios vectoriales y transformaciones lineales', 'Por definir', 2),
-(4, 'IDS311', 'PROCESO DE SOFTWARE', GETDATE(), GETDATE(), 7, 'Ciclo de vida del software', 'https://syllabus.universidad.edu/proceso_software.pdf', 1),
+(3, 'IDS311', 'PROCESO DE SOFTWARE', GETDATE(), GETDATE(), 7, 'Ciclo de vida del software', 'https://syllabus.universidad.edu/proceso_software.pdf', 1),
 (4, 'IDS324', 'INGENIERIA DE REQUERIMIENTOS DE SOFTWARE', GETDATE(), GETDATE(), 7, 'Gestión y documentación de requisitos', 'https://syllabus.universidad.edu/req_sw.pdf', 1),
-(3, 'IDS343', 'ESTRUCTURAS DE DATOS Y ALGORITMOS I', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1);
+(1, 'IDS343L','LABORATORIO ESTRUCTURAS DE DATOS Y ALGORITMOS I', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1),
+(4, 'INS377', 'BASES DE DATOS I', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1),
+(1, 'INS377L', 'LABORATORIO BASES DE DATOS I', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1),
+(3, 'IDS345', 'DESARROLLO DE SOFTWARE III', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1),
+(1, 'IDS345L', 'LABORATORIO DE DESARROLLO DE SOFTWARE III', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1),
+(3, 'IDS346', 'MODELOS Y METODOS DE LA INGENIERIA DE SOFTWARE', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1),
+(4, 'IDS329', 'INGENIERIA DE FACTORES HUMANOS', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1),
+(4, 'INS380', 'BASES DE DATOS II', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1),
+(1, 'INS380L', 'LABORATORIO DE BASES DE DATOS II', GETDATE(), GETDATE(), 7, 'Algoritmos y estructuras de datos fundamentales', 'https://syllabus.universidad.edu/estructuras_datos1.pdf', 1)
+
 
 INSERT INTO Competencia (Nombre, Acron, Titulo, DescripcionES, DescripcionEN, id_tipo, id_estado, FechaCreacion, UltimaEdicion) VALUES
 ('Student Outcome 1', 'SO1', 'Resolución de problemas complejos de ingeniería', 
@@ -158,3 +171,51 @@ INSERT INTO so_evaluacion (Id_SO, Id_MetodoEvaluacion) VALUES
 (7, 1),
 (7, 3),
 (7, 4);
+
+
+INSERT INTO [dbo].[carreras]
+           ([IdArea]
+           ,[Año]
+           ,[NombreCarrera]
+           ,[IdCoordinadorCarrera]
+           ,[PEOs]
+           ,[FechaCreacion]
+           ,[UltimaEdicion]
+           ,[IdEstado])
+     VALUES
+           (1,2020,'Ingeniería de Software',null,
+		   'Ser líderes en organizaciones locales e internacionales, ejerciendo la ingeniería industrial en un marco de integridad, excelencia y responsabilidad social.
+			Generar soluciones integradas y sustentables para la industria considerando la actualidad y el contexto global.
+			Lograr el desarrollo profesional y el crecimiento del conocimiento a través de certificaciones internacionales, estudios de posgrado, experiencia laboral y autoaprendizaje.',
+			GETDATE(),null,15),
+			(1,2020,'Ingeniería en Sistemas',null,
+		   'Ser líderes en organizaciones locales e internacionales, ejerciendo la ingeniería industrial en un marco de integridad, excelencia y responsabilidad social.
+			Generar soluciones integradas y sustentables para la industria considerando la actualidad y el contexto global.
+			Lograr el desarrollo profesional y el crecimiento del conocimiento a través de certificaciones internacionales, estudios de posgrado, experiencia laboral y autoaprendizaje.',
+			GETDATE(),null,15);
+
+
+
+INSERT INTO [dbo].[asignatura_carrera] ([Id_Asignatura],[Id_Carrera])
+     VALUES
+           (5,1),
+           (8,1),
+           (12,1), 
+           (13,1), 
+           (15,1),
+           (12,2),
+           (13,2),
+           (15,2),
+           (16,1),
+           (18,1),
+           (19,1), 
+           (19,2),
+           (20,1),
+           (21,1), 
+           (22,1), 
+           (23,1), 
+           (24,1), 
+           (21,2), 
+           (22,2), 
+           (23,2), 
+           (24,2)

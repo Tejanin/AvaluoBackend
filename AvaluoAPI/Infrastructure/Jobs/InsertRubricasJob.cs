@@ -19,13 +19,13 @@ namespace AvaluoAPI.Infrastructure.Jobs
         {
             try
             {
-                var proximaEjecucion = new DateTime(2025, 2, 18, 16, 05, 0);
-                if (proximaEjecucion > DateTime.Now)
-                {
-                    await ReprogramarJob(context, proximaEjecucion);
-                    _logger.LogInformation("Job reprogramado para {fecha}", proximaEjecucion);
-                    return; // Importante: salir del método para evitar la ejecución inmediata
-                }
+                //var proximaEjecucion = new DateTime(2025, 2, 18, 16, 05, 0);
+                //if (proximaEjecucion > DateTime.Now)
+                //{
+                //    await ReprogramarJob(context, proximaEjecucion);
+                //    _logger.LogInformation("Job reprogramado para {fecha}", proximaEjecucion);
+                //    return; // Importante: salir del método para evitar la ejecución inmediata
+                //}
                 await _rubricaService.InsertRubricas();
             }
             catch (Exception ex)
