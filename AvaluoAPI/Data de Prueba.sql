@@ -13,7 +13,7 @@ INSERT INTO Estado (idtabla, descripcion) VALUES
 ('MapaCompetencia','Activada'),
 ('MapaCompetencia','Desactivada')
 
-INSERT INTO metodo_evaluacion ( descripcionES, descripcionEN) VALUES
+INSERT INTO metodo_evaluacion (descripcionES, descripcionEN) VALUES
 ('Examen', 'Exam'),
 ('Tarea', 'Assignment'),
 ('Proyecto', 'Project'),

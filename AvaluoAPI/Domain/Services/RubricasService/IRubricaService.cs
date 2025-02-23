@@ -8,6 +8,8 @@ namespace AvaluoAPI.Domain.Services.RubricasService
         Task InsertRubricas();
         Task CompleteRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras);
         Task DesactivateRubricas();
+        Task<IEnumerable<RubricaViewModel>> GetAllRubricas();
+        Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile> evidenciasExtras);
 
 
     }

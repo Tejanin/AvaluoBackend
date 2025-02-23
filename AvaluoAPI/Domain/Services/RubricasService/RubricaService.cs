@@ -13,7 +13,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
     public class RubricaService : IRubricaService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly FileHandler _fileHandler;  
+        private readonly FileHandler _fileHandler;
         private readonly IintecService _intecService;
         public RubricaService(IUnitOfWork unitOfWork, IintecService intecService, FileHandler fileHandler)
         {
@@ -27,7 +27,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var rubrica = await _unitOfWork.Rubricas.FindAsync(r => r.Id == rubricaDTO.Id);
             var estadoRubricaCompletada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
 
-            rubrica.UltimaEdicion = rubrica.IdEstado == estadoRubricaCompletada.Id ? DateTime.Now : rubrica.UltimaEdicion;
+
             rubrica.IdEstado = estadoRubricaCompletada.Id;
             rubrica.Comentario = rubricaDTO.Comentario;
             rubrica.Problematica = rubricaDTO.Problematica;
@@ -39,10 +39,10 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
 
 
-            var resumenes =await PrepareResumenes(rubricaDTO.Resumenes, rubrica.Id);
-            var evidencias =await PrepareEvidencias(evidenciasExtras, rubrica.Año, rubrica.Periodo, rubrica.Id);
-            
-            
+            var resumenes = await PrepareResumenesForInsert(rubricaDTO.Resumenes, rubrica.Id);
+            var evidencias = await PrepareEvidenciasForInsert(evidenciasExtras, rubrica.Año, rubrica.Periodo, rubrica.Id);
+
+
 
 
             await Task.WhenAll(
@@ -53,9 +53,74 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             _unitOfWork.SaveChanges();
         }
 
-        public Task DesactivateRubricas()
+        public async Task<IEnumerable<RubricaViewModel>> GetAllRubricas()
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.Rubricas.GetAllRubricas();
+        }
+        public async Task DesactivateRubricas()
+        {
+
+            var entregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Entregada");
+            var noEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "No entregada");
+            var activo = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
+            var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
+
+            var rubricasActivasEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activoEntregado.Id);
+            var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activo.Id);
+
+            foreach (var rubrica in rubricasActivasEntregadas)
+            {
+                rubrica.IdEstado = entregado.Id;
+            }
+
+            foreach (var rubrica in rubricasActivasNoEntregadas)
+            {
+                rubrica.IdEstado = noEntregado.Id;
+            }
+
+            await Task.WhenAll(
+                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasNoEntregadas),
+                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas)
+            );
+            
+        }
+
+        public async Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras)
+        {
+            var rubrica = await _unitOfWork.Rubricas.FindAsync(r => r.Id == rubricaDTO.Id);
+            
+
+
+            var estadoRubricaCompletada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
+            if (rubrica.IdEstado != estadoRubricaCompletada.Id)
+            {
+                throw new Exception("No se puede editar una rubrica sin completar");
+            }
+
+            rubrica.UltimaEdicion = DateTime.Now;
+            
+            rubrica.Comentario = rubricaDTO.Comentario;
+            rubrica.Problematica = rubricaDTO.Problematica;
+            rubrica.Solucion = rubricaDTO.Solucion;
+            rubrica.EvaluacionesFormativas = rubricaDTO.EvaluacionesFormativas;
+            rubrica.Estrategias = rubricaDTO.Estrategias;
+            rubrica.Evidencia = rubricaDTO.Evidencia;
+
+
+            var evidenciasBeforeUpdate = await _unitOfWork.Evidencias.FindAllAsync(r => r.IdRubrica == rubrica.Id);
+
+            var resumenes = await PrepareResumenesForUpdate(rubricaDTO.Resumenes, rubrica.Id);
+            var evidencias = await PrepareEvidenciasForInsert(evidenciasExtras, rubrica.Año, rubrica.Periodo, rubrica.Id);
+
+
+
+
+            await Task.WhenAll(
+                _unitOfWork.Rubricas.Update(rubrica),
+                _unitOfWork.Evidencias.AddRangeAsync(evidencias),
+                _unitOfWork.Resumenes.UpdateRangeAsync(resumenes)
+             );
+            _unitOfWork.SaveChanges();
         }
 
         public async Task InsertRubricas()
@@ -78,7 +143,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
                 var Profesor = await _unitOfWork.Usuarios.FindAsync(p => p.Email == profesor.Email);
 
-                if(Profesor == null)
+                if (Profesor == null)
                 {
                     continue;
                 }
@@ -90,7 +155,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
                     if (asignaturaConCompetencias != null && asignaturaConCompetencias.Competencias != null)
                     {
-                        
+
                         foreach (var competencia in asignaturaConCompetencias.Competencias)
                         {
                             var rubrica = new Rubrica
@@ -109,15 +174,15 @@ namespace AvaluoAPI.Domain.Services.RubricasService
                         }
                     }
                 }
-                    
-                    
+
+
             }
 
             await _unitOfWork.Rubricas.AddRangeAsync(rubricas);
-           _unitOfWork.SaveChanges();
+            _unitOfWork.SaveChanges();
         }
 
-        private async Task<List<Evidencia>> PrepareEvidencias(List<IFormFile> evidenciasExtras,int año, string periodo, int idRubrica)
+        private async Task<List<Evidencia>> PrepareEvidenciasForInsert(List<IFormFile> evidenciasExtras, int año, string periodo, int idRubrica)
         {
             var evidencias = new List<Evidencia>();
 
@@ -149,7 +214,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
             return evidencias;
         }
-        private async Task<List<Resumen>> PrepareResumenes(List<ResumenDTO> resumenes, int idRubrica)
+        private async Task<List<Resumen>> PrepareResumenesForInsert(List<ResumenDTO> resumenes, int idRubrica)
         {
             var resumenList = new List<Resumen>();
             foreach (var resumen in resumenes)
@@ -165,6 +230,23 @@ namespace AvaluoAPI.Domain.Services.RubricasService
                 });
             }
             return resumenList;
+        }
+
+        private async Task<List<Resumen>> PrepareResumenesForUpdate(List<ResumenDTO> resumenesDTO, int idRubrica)
+        {
+            var resumenes = await _unitOfWork.Resumenes.FindAllAsync(r => r.IdRubrica == idRubrica);
+
+            foreach (var resumen in resumenes)
+            {
+                var resumenDTO = resumenesDTO.FirstOrDefault(r => r.IdPI == resumen.IdPI)!;
+                resumen.CantDesarrollo = resumenDTO.CantDesarrollo;
+                resumen.CantPrincipiante = resumenDTO.CantPrincipiante;
+                resumen.CantSatisfactorio = resumenDTO.CantSatisfactorio;
+                resumen.CantExperto = resumenDTO.CantExperto;
+
+            }
+
+            return resumenes;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AvaluoAPI.Presentation.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace AvaluoAPI.Presentation.DTOs.RubricaDTOs

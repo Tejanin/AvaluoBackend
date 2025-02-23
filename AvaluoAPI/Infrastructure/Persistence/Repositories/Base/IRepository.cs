@@ -33,7 +33,7 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
         IEnumerable<TEntity> Filter(IEnumerable<TEntity> entities, List<Func<TEntity, bool>> filters);
         IEnumerable<TEntity> Paginate(IEnumerable<TEntity> entities, int page, decimal recordPerPage);
 
-        Task<IEnumerable<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> expression);
+        Task<List<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> expression);
 
         // POST
         Task AddAsync(TEntity entity);
@@ -42,6 +42,7 @@ namespace Avaluo.Infrastructure.Persistence.Repositories.Base
 
         // PUT
         Task Update(TEntity entity);
+        Task UpdateRangeAsync(IEnumerable<TEntity> entities);
 
         // DELETE 
         void Delete(TEntity entity);
