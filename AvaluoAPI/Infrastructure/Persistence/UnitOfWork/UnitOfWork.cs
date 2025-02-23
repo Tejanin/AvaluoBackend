@@ -20,12 +20,17 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.AreaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories;
 
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AulaRepositories;
+
+using AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasCarrerasRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories;
+
 using System.Drawing.Printing;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ConfiguracionRepositories;
 using Avaluo.Infrastructure.Data.Models;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.CarreraRubricaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturaCarreraRepositories;
+
 
 
 namespace Avaluo.Infrastructure.Persistence.UnitOfWork
@@ -49,19 +54,26 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             Competencias = new CompetenciaRepository(_context, _dapperContext);
             Estados = new EstadoRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
+
+            Edificios = new EdificioRepository(_context, _dapperContext);
+
             CarrerasRubricas = new CarreraRubricaRepository(_context);
             Edificios = new EdificioRepository(_context, _dapperContext);
             AsignaturasCarreras = new AsignaturaCarreraRepository(_context);
+
             Resumenes = new ResumenRepository(_context, _dapperContext);
             Evidencias = new EvidenciaRepository(_context);
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
-
             Asignaturas = new AsignaturaRepository(_context, _dapperContext);
+
+
             Areas = new AreaRepository(_context,_dapperContext);
             ProfesoresCarreras = new ProfesorCarreraRepository(_context,_dapperContext);
 
-            Aulas = new AulaRepository(_context, _dapperContext);
 
+            Aulas = new AulaRepository(_context, _dapperContext);
+            Carreras = new CarreraRepository(_context, _dapperContext);
+            AsignaturasCarreras = new AsignaturaCarreraRepository(_context, _dapperContext);
         }
 
         // props
@@ -81,11 +93,16 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public ISOEvaluacionRepository SOEvaluaciones { get; private set; }
         public IMapaCompetenciaRepository MapaCompetencias { get; private set; }
         public IMetodoEvaluacionRepository MetodoEvaluacion { get; private set; }
+
+
         public IAsignaturaCarreraRepository AsignaturasCarreras { get; private set; }
+
         public IAsignaturaRepository Asignaturas { get; private set; }
         public IAreaRepository Areas { get; private set; }
 
         public IAulaRepository Aulas { get; private set; }
+        public ICarreraRepository Carreras { get; private set; }
+        public IAsignaturaCarreraRepository AsignaturasCarreras { get; private set; }
 
 
         // methods

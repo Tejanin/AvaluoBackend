@@ -17,10 +17,15 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.AreaRepositories;
 
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AulaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories;
+
+using AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasCarrerasRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories;
+
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ConfiguracionRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.CarreraRubricaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturaCarreraRepositories;
+
 
 
 namespace Avaluo.Infrastructure.Persistence.UnitOfWork
@@ -33,8 +38,10 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         ITipoInformeRepository TiposInformes { get; }
         ITipoCompetenciaRepository TiposCompetencias { get; }
         IEdificioRespository Edificios { get; }
+
         ICarreraRubricaRepository CarrerasRubricas { get; }
         IConfiguracionRepository Configuraciones { get; }
+
         ICompetenciaRepository Competencias { get; }
         ISOEvaluacionRepository SOEvaluaciones { get; }
         IMapaCompetenciaRepository MapaCompetencias { get; }
@@ -42,12 +49,14 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         IEstadoRepository Estados { get; }
         IEvidenciaRepository Evidencias { get; }
         IResumenRepository Resumenes { get; }
+
         IAsignaturaCarreraRepository AsignaturasCarreras { get; }
+
         IAsignaturaRepository Asignaturas { get;}
         IAreaRepository Areas { get;}
-
         IAulaRepository Aulas { get; }
-
+        ICarreraRepository Carreras { get; }
+        IAsignaturaCarreraRepository AsignaturasCarreras { get; }
 
 
         Task<int> SaveChangesAsync();
