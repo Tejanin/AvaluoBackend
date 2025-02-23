@@ -4,6 +4,7 @@ using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Presentation.ViewModels;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasCarrerasRepositories
 {
@@ -49,6 +50,12 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasCarrerasR
             return result;
         }
 
-
+        public async Task<List<int>> GetCarrerasIdsByAsignaturaId(int asignatura)
+        {
+            return await _context.Set<AsignaturaCarrera>()
+                .Where(ac => ac.IdAsignatura == asignatura)
+                .Select(ac => ac.IdCarrera)
+                .ToListAsync();
+        }
     }
 }

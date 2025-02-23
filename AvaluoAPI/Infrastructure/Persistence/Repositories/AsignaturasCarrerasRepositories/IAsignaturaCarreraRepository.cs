@@ -7,5 +7,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasCarrerasR
     public interface IAsignaturaCarreraRepository : IRepository<AsignaturaCarrera>
     {
         Task<IEnumerable<AsignaturaCarreraViewModel>> GetAllByCareer(int? idCarrera);
+        Task<List<int>> GetCarrerasIdsByAsignaturaId(int asignatura);
     }
 }
