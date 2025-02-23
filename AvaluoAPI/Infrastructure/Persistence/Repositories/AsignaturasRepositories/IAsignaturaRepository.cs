@@ -10,5 +10,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasRepositor
         Task<AsignaturaViewModel?> GetAsignaturaById(int id);  // Obtener una asignatura por ID con Estado y Área
 
         Task<PaginatedResult<AsignaturaViewModel>> GetAsignaturas( string? codigo, string? nombre, int? idEstado, int? idArea, int? page, int? recordsPerPage); // Obtener todas las asignaturas con filtros y paginación
+        
     }
 }
