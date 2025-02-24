@@ -31,7 +31,7 @@ namespace AvaluoAPI.Infrastructure.Jobs.Configuration
 
                 // Job para generar informe Self-Study-Report
 
-                // Job que inserte en el Historial de Incumplimiento por cada rubrica no completada 
+             
 
             });
 

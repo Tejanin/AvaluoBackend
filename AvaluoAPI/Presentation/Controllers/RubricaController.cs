@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Domain.Services.RubricasService;
+﻿using AvaluoAPI.Domain.Helper;
+using AvaluoAPI.Domain.Services.RubricasService;
 using AvaluoAPI.Presentation.DTOs.RubricaDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,10 +31,22 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRubricas()
+        public async Task<IActionResult> GetAllRubricas([FromQuery]int? so = null, [FromQuery] List<int>? carreras = null, [FromQuery] int? estado = null, [FromQuery] int? asignatura = null)
         {
             
-            return Ok(new { mensaje = "Operacion exitosa", data = await _rubricaService.GetAllRubricas() });
+            return Ok(new { mensaje = "Operacion exitosa", data = await _rubricaService.GetAllRubricas(so,carreras,estado,asignatura) });
         }
+
+        [HttpGet("fechas")]
+
+        public async Task<IActionResult> GetFechasCriticas()
+        {
+            (var Inicio, var Cierre) = await _rubricaService.GetFechasCriticas();
+            return Ok(new { mensaje = "Operacion exitosa", data = new { inicio = Inicio, cierre = Cierre } });
+        }
+
+        
+
+
     }
 }

@@ -6,7 +6,9 @@ using AvaluoAPI.Domain.Helper;
 using AvaluoAPI.Infrastructure.Integrations.INTEC;
 using AvaluoAPI.Presentation.DTOs.RubricaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
+using AvaluoAPI.Presentation.ViewModels.RubricaViewModels;
 using AvaluoAPI.Utilities;
+using AvaluoAPI.Utilities.JWT;
 
 namespace AvaluoAPI.Domain.Services.RubricasService
 {
@@ -15,8 +17,11 @@ namespace AvaluoAPI.Domain.Services.RubricasService
         private readonly IUnitOfWork _unitOfWork;
         private readonly FileHandler _fileHandler;
         private readonly IintecService _intecService;
-        public RubricaService(IUnitOfWork unitOfWork, IintecService intecService, FileHandler fileHandler)
+        private readonly IJwtService _jwtService;
+        private TokenConfig _tokens;
+        public RubricaService(IUnitOfWork unitOfWork, IintecService intecService, FileHandler fileHandler, IJwtService jwtService)
         {
+            _jwtService = jwtService;
             _fileHandler = fileHandler;
             _unitOfWork = unitOfWork;
             _intecService = intecService;
@@ -53,9 +58,9 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             _unitOfWork.SaveChanges();
         }
 
-        public async Task<IEnumerable<RubricaViewModel>> GetAllRubricas()
+        public async Task<IEnumerable<RubricaViewModel>> GetAllRubricas(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null)
         {
-            return await _unitOfWork.Rubricas.GetAllRubricas();
+            return await _unitOfWork.Rubricas.GetRubricasFiltered(idSO,carrerasIds,idEstado,idAsignatura);
         }
         public async Task DesactivateRubricas()
         {
@@ -66,7 +71,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
 
             var rubricasActivasEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activoEntregado.Id);
-            var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activo.Id);
+            var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.GetAllIncluding<Rubrica>(r => r.IdEstado == activo.Id, r => r.Asignatura, r => r.Profesor);
 
             foreach (var rubrica in rubricasActivasEntregadas)
             {
@@ -80,9 +85,12 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
             await Task.WhenAll(
                 _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasNoEntregadas),
-                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas)
+                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas),
+                _unitOfWork.HistorialIncumplimientos.InsertIncumplimientos(rubricasActivasNoEntregadas)
             );
-            
+
+           _unitOfWork.SaveChanges();
+
         }
 
         public async Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras)
@@ -125,28 +133,23 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
         public async Task InsertRubricas()
         {
+            // 1. Obtener datos iniciales (igual que antes)
             var profesoresTask = _intecService.GetProfesores();
             var asignaturasConCompetenciasTask = _unitOfWork.MapaCompetencias.GetAsignaturasConCompetencias();
             var estadoTask = _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
             (int trimestre, int año) = PeriodoExtensions.ObtenerTrimestreActual();
 
-            // Esperar a que se completen las tareas asíncronas
             var profesores = await profesoresTask;
             var asignaturasConCompetencias = await asignaturasConCompetenciasTask;
             var estado = await estadoTask;
 
-            var rubricas = new List<Rubrica>();
+            // 2. Crear las rúbricas pero sin insertarlas aún
+            var rubricasParaInsertar = new List<(Rubrica Rubrica, int IdAsignatura)>();
 
-            // Iterar por cada sección
             foreach (var profesor in profesores)
             {
-
                 var Profesor = await _unitOfWork.Usuarios.FindAsync(p => p.Email == profesor.Email);
-
-                if (Profesor == null)
-                {
-                    continue;
-                }
+                if (Profesor == null) continue;
 
                 foreach (var seccion in profesor.Secciones!)
                 {
@@ -155,7 +158,6 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
                     if (asignaturaConCompetencias != null && asignaturaConCompetencias.Competencias != null)
                     {
-
                         foreach (var competencia in asignaturaConCompetencias.Competencias)
                         {
                             var rubrica = new Rubrica
@@ -170,16 +172,38 @@ namespace AvaluoAPI.Domain.Services.RubricasService
                                 CantEstudiantes = seccion.Estudiantes.Count,
                             };
 
-                            rubricas.Add(rubrica);
+                            // Guardamos la rúbrica junto con el ID de asignatura para uso posterior
+                            rubricasParaInsertar.Add((rubrica, asignaturaConCompetencias.Id));
                         }
                     }
                 }
-
-
             }
 
-            await _unitOfWork.Rubricas.AddRangeAsync(rubricas);
-            _unitOfWork.SaveChanges();
+            // 3. Insertar las rúbricas y obtener sus IDs
+            await _unitOfWork.Rubricas.AddRangeAsync(rubricasParaInsertar.Select(r => r.Rubrica));
+            _unitOfWork.SaveChanges(); // Importante: usar SaveChangesAsync para obtener los IDs
+
+            // 4. Crear los registros para la tabla puente
+            var carreraRubricaRegistros = new List<CarreraRubrica>();
+
+            foreach (var (rubrica, idAsignatura) in rubricasParaInsertar)
+            {
+                // Obtener las carreras asociadas a la asignatura
+                var carrerasAsignatura = await _unitOfWork.AsignaturasCarreras.GetCarrerasIdsByAsignaturaId(idAsignatura);
+
+                foreach (var carrera in carrerasAsignatura)
+                {
+                    carreraRubricaRegistros.Add(new CarreraRubrica
+                    {
+                        IdRubrica = rubrica.Id, // Ahora tenemos el ID porque ya se insertó
+                        IdCarrera = carrera,
+                    });
+                }
+            }
+
+            // 5. Insertar los registros de la tabla puente
+            await _unitOfWork.CarrerasRubricas.AddRangeAsync(carreraRubricaRegistros);
+             _unitOfWork.SaveChanges();
         }
 
         private async Task<List<Evidencia>> PrepareEvidenciasForInsert(List<IFormFile> evidenciasExtras, int año, string periodo, int idRubrica)
@@ -247,6 +271,28 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             }
 
             return resumenes;
+        }
+        public async Task<(DateTime inicio, DateTime cierre)> GetFechasCriticas()
+        {
+            var activa = await _unitOfWork.Estados.GetEstadoByTablaName("Configuracion", "Activa");
+            var config = await _unitOfWork.Configuraciones.FindAsync(c => c.IdEstado == activa.Id);
+            if (config == null)
+            {
+                throw new NullReferenceException("No hay una configuración activa");
+            }
+            return (config.FechaInicio, config.FechaCierre);
+        }
+
+        public async Task<IEnumerable<RubricaViewModel>> GetRubricasBySupervisor()
+        {
+            string id = _jwtService.GetClaimValue(_tokens.JwtToken, "id")!;
+            var activaSinEntrega = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
+            var activaEntregada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
+            var carrerasDelSupervisor = await _unitOfWork.ProfesoresCarreras.GetProfesorWithCarreras(int.Parse(id));
+
+            var rubricas = await _unitOfWork.Rubricas.GetRubricasFiltered(carrerasDelSupervisor.IdSO,carrerasDelSupervisor.CarrerasIds);
+
+            throw new NotImplementedException();
         }
     }
 }

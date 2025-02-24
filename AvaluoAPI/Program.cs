@@ -32,6 +32,7 @@ using AvaluoAPI.Infrastructure.Jobs.Configuration;
 using AvaluoAPI.Domain.Services.AsignaturaService;
 
 using AvaluoAPI.Domain.Services.AulaService;
+using AvaluoAPI.Domain.Services.CarreraService;
 
 
 
@@ -135,6 +136,9 @@ builder.Services.AddScoped<IAsignaturaService, AsignaturaService>();
 
 builder.Services.AddScoped<IAulaService, AulaService>();
 
+builder.Services.AddScoped<ICarreraService, CarreraService>();
+
+
 // FileHandler
 
 builder.Services.AddSingleton<FileHandler>();
@@ -143,7 +147,7 @@ builder.Services.AddSingleton<FileHandler>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Jobs
-builder.Services.ConfigureQuartz();
+//builder.Services.ConfigureQuartz();
 
 
 // JWT
