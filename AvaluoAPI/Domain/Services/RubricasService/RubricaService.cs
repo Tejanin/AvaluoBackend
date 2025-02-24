@@ -71,7 +71,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
 
             var rubricasActivasEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activoEntregado.Id);
-            var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activo.Id);
+            var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.GetAllIncluding<Rubrica>(r => r.IdEstado == activo.Id, r => r.Asignatura, r => r.Profesor);
 
             foreach (var rubrica in rubricasActivasEntregadas)
             {
@@ -85,9 +85,12 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
             await Task.WhenAll(
                 _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasNoEntregadas),
-                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas)
+                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas),
+                _unitOfWork.HistorialIncumplimientos.InsertIncumplimientos(rubricasActivasNoEntregadas)
             );
-            
+
+           _unitOfWork.SaveChanges();
+
         }
 
         public async Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras)

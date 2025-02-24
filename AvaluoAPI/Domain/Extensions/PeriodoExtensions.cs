@@ -80,5 +80,17 @@
             var (trimestreActual, añoActual) = ObtenerTrimestreActual();
             return trimestre == (Trimestre)trimestreActual && añoUniversitario == añoActual;
         }
+
+        public static string GetNombreTrimestre(string trimestre)
+        {
+            return trimestre switch
+            {
+                "1" => "Febrero - Abril",
+                "2" => "Mayo - Julio",
+               "3" => "Agosto - Octubre",
+                "4" => "Noviembre - Enero",
+                _ => throw new ArgumentException("Trimestre no válido")
+            };
+        }
     }
 }
