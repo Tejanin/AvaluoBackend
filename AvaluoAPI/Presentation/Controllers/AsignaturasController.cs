@@ -33,6 +33,13 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok(new { mensaje = "Asignaturas obtenidas exitosamente.", data = asignaturas });
         }
 
+        [HttpGet("carrera/{idCarrera}")]
+        public async Task<ActionResult<IEnumerable<AsignaturaViewModel>>> GetByCareer(
+        int idCarrera, [FromQuery] int? page, int? recordsPerPage)
+        {
+            var asignaturasCarreras = await _asignaturaService.GetSubjectByCareer(idCarrera, page, recordsPerPage);
+            return Ok(new { mensaje = "Asignaturas por carrera obtenidas exitosamente.", data = asignaturasCarreras });
+        }
 
         // GET: api/Asignaturas/{id}
         [HttpGet("{id}")]

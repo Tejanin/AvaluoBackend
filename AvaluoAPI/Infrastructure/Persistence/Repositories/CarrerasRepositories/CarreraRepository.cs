@@ -51,7 +51,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories
 
                 u.Id,
                 u.Nombre,
-                u.Email
+				u.Apellido,
+                u.Email,
+				u.Username
             FROM dbo.carreras c
             LEFT JOIN dbo.estado e ON c.IdEstado = e.Id
             LEFT JOIN dbo.areas ar ON c.IdArea = ar.Id
@@ -78,32 +80,38 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories
 
         // Obtener todas las carreras con filtros y paginación
         public async Task<PaginatedResult<CarreraViewModel>> GetCarreras(
-            string? nombreCarrera,
-            int? idEstado,
-            int? idArea,
-            int? idCoordinadorCarrera,
-            int? page,
-            int? recordsPerPage)
+     string? nombreCarrera,
+     int? idEstado,
+     int? idArea,
+     int? idCoordinadorCarrera,
+     int? año,
+     string? peos,
+     int? page,
+     int? recordsPerPage)
         {
             using var connection = _dapperContext.CreateConnection();
 
             var countQuery = @"
-            SELECT COUNT(*)
-            FROM dbo.carreras c
-            LEFT JOIN dbo.estado e ON c.IdEstado = e.Id
-            LEFT JOIN dbo.areas ar ON c.IdArea = ar.Id
-            LEFT JOIN dbo.usuario u ON c.IdCoordinadorCarrera = u.Id
-            WHERE (@NombreCarrera IS NULL OR c.NombreCarrera LIKE '%' + @NombreCarrera + '%')
-            AND (@IdEstado IS NULL OR c.IdEstado = @IdEstado)
-            AND (@IdArea IS NULL OR c.IdArea = @IdArea)
-            AND (@IdCoordinadorCarrera IS NULL OR c.IdCoordinadorCarrera = @IdCoordinadorCarrera)";
+    SELECT COUNT(*)
+    FROM dbo.carreras c
+    LEFT JOIN dbo.estado e ON c.IdEstado = e.Id
+    LEFT JOIN dbo.areas ar ON c.IdArea = ar.Id
+    LEFT JOIN dbo.usuario u ON c.IdCoordinadorCarrera = u.Id
+    WHERE (@NombreCarrera IS NULL OR c.NombreCarrera LIKE '%' + @NombreCarrera + '%')
+    AND (@IdEstado IS NULL OR c.IdEstado = @IdEstado)
+    AND (@IdArea IS NULL OR c.IdArea = @IdArea)
+    AND (@IdCoordinadorCarrera IS NULL OR c.IdCoordinadorCarrera = @IdCoordinadorCarrera)
+    AND (@Año IS NULL OR c.Año = @Año)
+    AND (@PEOs IS NULL OR c.PEOs LIKE '%' + @PEOs + '%')";
 
             int totalRecords = await connection.ExecuteScalarAsync<int>(countQuery, new
             {
                 NombreCarrera = nombreCarrera,
                 IdEstado = idEstado,
                 IdArea = idArea,
-                IdCoordinadorCarrera = idCoordinadorCarrera
+                IdCoordinadorCarrera = idCoordinadorCarrera,
+                Año = año,
+                PEOs = peos
             });
 
             if (totalRecords == 0)
@@ -116,40 +124,44 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories
             int offset = (currentPage - 1) * currentRecordsPerPage;
 
             var query = $@"
-            SELECT 
-                c.Id, 
-                c.Año, 
-                c.NombreCarrera, 
-                c.PEOs, 
-                c.FechaCreacion, 
-                c.UltimaEdicion, 
-                c.IdEstado, 
-                c.IdArea, 
-                c.IdCoordinadorCarrera,
+    SELECT 
+        c.Id, 
+        c.Año, 
+        c.NombreCarrera, 
+        c.PEOs, 
+        c.FechaCreacion, 
+        c.UltimaEdicion, 
+        c.IdEstado, 
+        c.IdArea, 
+        c.IdCoordinadorCarrera,
 
-                e.Id,
-                e.Descripcion,
-                e.IdTabla,
+        e.Id,
+        e.Descripcion,
+        e.IdTabla,
 
-                ar.Id,
-                ar.Descripcion,
-                ar.IdCoordinador,
-                ar.FechaCreacion,
-                ar.UltimaEdicion,
+        ar.Id,
+        ar.Descripcion,
+        ar.IdCoordinador,
+        ar.FechaCreacion,
+        ar.UltimaEdicion,
 
-                u.Id,
-                u.Nombre,
-                u.Email
-            FROM dbo.carreras c
-            LEFT JOIN dbo.estado e ON c.IdEstado = e.Id
-            LEFT JOIN dbo.areas ar ON c.IdArea = ar.Id
-            LEFT JOIN dbo.usuario u ON c.IdCoordinadorCarrera = u.Id
-            WHERE (@NombreCarrera IS NULL OR c.NombreCarrera LIKE '%' + @NombreCarrera + '%')
-            AND (@IdEstado IS NULL OR c.IdEstado = @IdEstado)
-            AND (@IdArea IS NULL OR c.IdArea = @IdArea)
-            AND (@IdCoordinadorCarrera IS NULL OR c.IdCoordinadorCarrera = @IdCoordinadorCarrera)
-            ORDER BY c.Id
-            OFFSET @Offset ROWS FETCH NEXT @RecordsPerPage ROWS ONLY";
+        u.Id,
+        u.Nombre,
+        u.Apellido,
+        u.Email,
+        u.Username
+    FROM dbo.carreras c
+    LEFT JOIN dbo.estado e ON c.IdEstado = e.Id
+    LEFT JOIN dbo.areas ar ON c.IdArea = ar.Id
+    LEFT JOIN dbo.usuario u ON c.IdCoordinadorCarrera = u.Id
+    WHERE (@NombreCarrera IS NULL OR c.NombreCarrera LIKE '%' + @NombreCarrera + '%')
+    AND (@IdEstado IS NULL OR c.IdEstado = @IdEstado)
+    AND (@IdArea IS NULL OR c.IdArea = @IdArea)
+    AND (@IdCoordinadorCarrera IS NULL OR c.IdCoordinadorCarrera = @IdCoordinadorCarrera)
+    AND (@Año IS NULL OR c.Año = @Año)
+    AND (@PEOs IS NULL OR c.PEOs LIKE '%' + @PEOs + '%')
+    ORDER BY c.Id
+    OFFSET @Offset ROWS FETCH NEXT @RecordsPerPage ROWS ONLY";
 
             var parametros = new
             {
@@ -157,6 +169,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories
                 IdEstado = idEstado,
                 IdArea = idArea,
                 IdCoordinadorCarrera = idCoordinadorCarrera,
+                Año = año,
+                PEOs = peos,
                 Offset = offset,
                 RecordsPerPage = currentRecordsPerPage
             };
