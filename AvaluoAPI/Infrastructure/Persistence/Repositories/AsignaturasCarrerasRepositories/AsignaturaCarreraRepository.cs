@@ -16,38 +16,85 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasCarrerasR
             _dapperContext = dapperContext;
         }
 
-        public async Task<IEnumerable<AsignaturaCarreraViewModel>> GetAllByCareer(int? idCarrera)
+        public async Task<PaginatedResult<AsignaturaViewModel>> GetAllByCareer(int idCarrera, int? page, int? recordsPerPage)
         {
             using var connection = _dapperContext.CreateConnection();
 
-            var query = @"
-        SELECT 
-            ac.Id_Carrera,
-            ac.Id_Asignatura,
-
-            c.Id,
-            c.NombreCarrera,
-
-            a.Id,
-            a.Nombre
+            // Obtener el total de registros antes de la paginación
+            var countQuery = @"
+        SELECT COUNT(*)
         FROM dbo.asignatura_carrera ac
-        INNER JOIN dbo.carreras c ON ac.Id_Carrera = c.Id
         INNER JOIN dbo.asignaturas a ON ac.Id_Asignatura = a.Id
-        WHERE (@IdCarrera IS NULL OR ac.Id_Carrera = @IdCarrera)";
+        WHERE ac.Id_Carrera = @IdCarrera";
 
-            var result = await connection.QueryAsync<AsignaturaCarreraViewModel, CarreraViewModel, AsignaturaViewModel, AsignaturaCarreraViewModel>(
+            int totalRecords = await connection.ExecuteScalarAsync<int>(countQuery, new { IdCarrera = idCarrera });
+
+            if (totalRecords == 0)
+            {
+                return new PaginatedResult<AsignaturaViewModel>(Enumerable.Empty<AsignaturaViewModel>(), 1, 0, 0);
+            }
+
+            // Configuración de paginación
+            int currentRecordsPerPage = recordsPerPage.HasValue && recordsPerPage > 0 ? recordsPerPage.Value : totalRecords;
+            int currentPage = page.HasValue && page > 0 ? page.Value : 1;
+            int offset = (currentPage - 1) * currentRecordsPerPage;
+
+            // Consulta con paginación
+            var query = $@"
+        SELECT 
+            a.Id, 
+            a.Creditos, 
+            a.Codigo, 
+            a.Nombre, 
+            a.FechaCreacion, 
+            a.UltimaEdicion,  
+            a.ProgramaAsignatura, 
+            a.Syllabus, 
+
+            e.Id,
+            e.Descripcion,
+            e.IdTabla,
+
+            ar.Id,
+            ar.Descripcion,
+            ar.IdCoordinador,
+            ar.FechaCreacion,
+            ar.UltimaEdicion
+        FROM dbo.asignatura_carrera ac
+        INNER JOIN dbo.asignaturas a ON ac.Id_Asignatura = a.Id
+        LEFT JOIN dbo.estado e ON a.IdEstado = e.Id
+        LEFT JOIN dbo.areas ar ON a.IdArea = ar.Id
+        WHERE ac.Id_Carrera = @IdCarrera
+        ORDER BY a.Id
+        OFFSET @Offset ROWS FETCH NEXT @RecordsPerPage ROWS ONLY";
+
+            var parametros = new
+            {
+                IdCarrera = idCarrera,
+                Offset = offset,
+                RecordsPerPage = currentRecordsPerPage
+            };
+
+            var asignaturasDictionary = new Dictionary<int, AsignaturaViewModel>();
+
+            var asignaturas = await connection.QueryAsync<AsignaturaViewModel, EstadoViewModel, AreaViewModel, AsignaturaViewModel>(
                 query,
-                (asignaturaCarrera, carrera, asignatura) =>
+                (asignatura, estado, area) =>
                 {
-                    asignaturaCarrera.Carrera = carrera;
-                    asignaturaCarrera.Asignatura = asignatura;
-                    return asignaturaCarrera;
+                    if (!asignaturasDictionary.TryGetValue(asignatura.Id, out var asignaturaEntry))
+                    {
+                        asignaturaEntry = asignatura;
+                        asignaturaEntry.Estado = estado;
+                        asignaturaEntry.Area = area;
+                        asignaturasDictionary.Add(asignatura.Id, asignaturaEntry);
+                    }
+                    return asignaturaEntry;
                 },
-                new { IdCarrera = idCarrera },
+                parametros,
                 splitOn: "Id"
             );
 
-            return result;
+            return new PaginatedResult<AsignaturaViewModel>(asignaturasDictionary.Values, currentPage, currentRecordsPerPage, totalRecords);
         }
 
         public async Task<List<int>> GetCarrerasIdsByAsignaturaId(int asignatura)

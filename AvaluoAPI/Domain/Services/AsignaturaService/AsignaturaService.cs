@@ -35,6 +35,15 @@ namespace AvaluoAPI.Domain.Services.AsignaturaService
             return await _unitOfWork.Asignaturas.GetAsignaturas(codigo, nombre, idEstado, idArea, page, recordsPerPage);
         }
 
+        public async Task<PaginatedResult<AsignaturaViewModel>> GetSubjectByCareer(int idCarrera, int? page, int? recordsPerPage)
+        {
+            var carrera = await _unitOfWork.Carreras.GetByIdAsync(idCarrera);
+            if (carrera == null)
+                throw new KeyNotFoundException("Carrera especificada no encontrada.");
+
+            return await _unitOfWork.AsignaturasCarreras.GetAllByCareer(idCarrera, page, recordsPerPage);
+        }
+
         public async Task Register(AsignaturaDTO asignaturaDTO)
         {  
             var area = await _unitOfWork.Areas.GetByIdAsync(asignaturaDTO.IdArea);
