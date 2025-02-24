@@ -29,6 +29,7 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.ConfiguracionRepositorie
 using Avaluo.Infrastructure.Data.Models;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.CarreraRubricaRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.HistorialIncumplimientoRepositories;
 
 
 
@@ -59,8 +60,8 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
 
             CarrerasRubricas = new CarreraRubricaRepository(_context);
             Edificios = new EdificioRepository(_context, _dapperContext);
-            
 
+            HistorialIncumplimientos = new HistorialIncumplimientoRepository(_context, _dapperContext);
             Resumenes = new ResumenRepository(_context, _dapperContext);
             Evidencias = new EvidenciaRepository(_context);
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
@@ -94,7 +95,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public IMapaCompetenciaRepository MapaCompetencias { get; private set; }
         public IMetodoEvaluacionRepository MetodoEvaluacion { get; private set; }
 
-
+        public IHistorialIncumplimientoRepository HistorialIncumplimientos { get; private set; }
         public IAsignaturaCarreraRepository AsignaturasCarreras { get; private set; }
 
         public IAsignaturaRepository Asignaturas { get; private set; }

@@ -8,5 +8,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories
     {
         Task<CarreraViewModel?> GetCarreraById(int id);
         Task<PaginatedResult<CarreraViewModel>> GetCarreras(string? nombreCarrera, int? idEstado, int? idArea, int? idCoordinadorCarrera, int? page, int? recordsPerPage);
+        Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia);
     }
 }

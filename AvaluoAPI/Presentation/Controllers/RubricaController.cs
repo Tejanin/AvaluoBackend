@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Domain.Services.RubricasService;
+﻿using AvaluoAPI.Domain.Helper;
+using AvaluoAPI.Domain.Services.RubricasService;
 using AvaluoAPI.Presentation.DTOs.RubricaDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +44,8 @@ namespace AvaluoAPI.Presentation.Controllers
             (var Inicio, var Cierre) = await _rubricaService.GetFechasCriticas();
             return Ok(new { mensaje = "Operacion exitosa", data = new { inicio = Inicio, cierre = Cierre } });
         }
+
+        
 
 
     }

@@ -138,5 +138,10 @@ namespace AvaluoAPI.Domain.Services.CarreraService
             _unitOfWork.Carreras.Delete(carrera);
             _unitOfWork.SaveChanges();
         }
+
+        public async Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia)
+        {
+           return await _unitOfWork.Carreras.GetMapaCompetencias(idCarrera, idTipoCompetencia);
+        }
     }
 }

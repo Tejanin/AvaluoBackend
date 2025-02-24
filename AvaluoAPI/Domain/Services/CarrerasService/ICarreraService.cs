@@ -12,6 +12,7 @@ namespace AvaluoAPI.Domain.Services.CarreraService
         Task Delete(int id);
         Task UpdatePEOs(int id, string nuevosPEOs);
         Task<IEnumerable<AsignaturaCarreraViewModel>> GetSubjectByCareer(int? idCarrera);
+        Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia);
     }
 
 }

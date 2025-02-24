@@ -10,12 +10,12 @@ namespace AvaluoAPI.Infrastructure.Jobs.Configuration
             {
                 // Job para activar las Rubricas segun la fecha de inicio
 
-                var jobKey = new JobKey("InsertRubricasJob");
-                q.AddJob<InsertRubricasJob>(opts => opts.WithIdentity(jobKey));
-                q.AddTrigger(opts => opts
-                    .ForJob(jobKey)
-                    .WithIdentity("InsertRubricasJob-trigger")
-                    .StartNow());
+                //var jobKey = new JobKey("InsertRubricasJob");
+                //q.AddJob<InsertRubricasJob>(opts => opts.WithIdentity(jobKey));
+                //q.AddTrigger(opts => opts
+                //    .ForJob(jobKey)
+                //    .WithIdentity("InsertRubricasJob-trigger")
+                //    .StartNow());
 
 
                 // Job para desactivar Rubricas segun la fecha de cierre
@@ -31,7 +31,7 @@ namespace AvaluoAPI.Infrastructure.Jobs.Configuration
 
                 // Job para generar informe Self-Study-Report
 
-                // Job que inserte en el Historial de Incumplimiento por cada rubrica no completada 
+             
 
             });
 
