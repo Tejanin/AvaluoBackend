@@ -97,6 +97,12 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
                 IdEstado = idEstado
             });
 
+
+            if (totalRecords == 0)
+            {
+                return new PaginatedResult<CompetenciaViewModel>(Enumerable.Empty<CompetenciaViewModel>(), 1, 0, 0);
+            }
+
             int currentRecordsPerPage = recordsPerPage.HasValue && recordsPerPage > 0 ? recordsPerPage.Value : totalRecords;
 
             int currentPage = page.HasValue && page > 0 ? page.Value : 1;
