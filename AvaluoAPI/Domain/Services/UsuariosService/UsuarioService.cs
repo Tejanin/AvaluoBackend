@@ -66,9 +66,9 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<UsuarioViewModel>> GetAll(int? estado, int? area, int? rol)
+        public async Task<PaginatedResult<UsuarioViewModel>> GetAll(int? estado, int? area, int? rol, int? page, int? recordsPerPage)
         {
-            return await _unitOfWork.Usuarios.GetAllUsuarios(estado, area, rol);
+            return await _unitOfWork.Usuarios.GetAllUsuarios(estado, area, rol, page, recordsPerPage);
         }
 
         public async Task<UsuarioViewModel> GetById(int id)

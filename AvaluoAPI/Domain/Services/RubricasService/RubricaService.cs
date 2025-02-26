@@ -61,10 +61,11 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             _unitOfWork.SaveChanges();
         }
 
-        public async Task<IEnumerable<RubricaViewModel>> GetAllRubricas(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null)
+        public async Task<PaginatedResult<RubricaViewModel>> GetAllRubricas(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null, int? page = null, int? recordsPerPage = null)
         {
-            return await _unitOfWork.Rubricas.GetRubricasFiltered(idSO,carrerasIds,idEstado,idAsignatura);
+            return await _unitOfWork.Rubricas.GetRubricasFiltered(idSO, carrerasIds, idEstado, idAsignatura, page, recordsPerPage);
         }
+
         public async Task DesactivateRubricas()
         {
 
