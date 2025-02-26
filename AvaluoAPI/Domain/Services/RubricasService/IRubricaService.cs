@@ -13,6 +13,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
         Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile> evidenciasExtras);
         Task<(DateTime inicio, DateTime cierre)> GetFechasCriticas();
         Task<IEnumerable<RubricaViewModel>> GetRubricasBySupervisor();
+        Task<List<SeccionRubricasViewModel>> GetProfesorSecciones();
 
     }
 }

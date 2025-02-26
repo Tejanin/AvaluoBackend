@@ -11,5 +11,6 @@
         public string Nombre { get; set; } = null!;
         public DateTime? UltimaEdicion { get; set; }
         public virtual ICollection<Resumen> Resumenes { get; set; }
+        public virtual ICollection<Desempeno> Desempenos { get; set; }
     }
 }

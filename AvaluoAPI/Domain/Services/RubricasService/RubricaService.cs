@@ -9,6 +9,7 @@ using AvaluoAPI.Presentation.ViewModels;
 using AvaluoAPI.Presentation.ViewModels.RubricaViewModels;
 using AvaluoAPI.Utilities;
 using AvaluoAPI.Utilities.JWT;
+using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
 
 namespace AvaluoAPI.Domain.Services.RubricasService
 {
@@ -19,12 +20,14 @@ namespace AvaluoAPI.Domain.Services.RubricasService
         private readonly IintecService _intecService;
         private readonly IJwtService _jwtService;
         private TokenConfig _tokens;
-        public RubricaService(IUnitOfWork unitOfWork, IintecService intecService, FileHandler fileHandler, IJwtService jwtService)
+        private IHttpContextAccessor _httpContextAccessor;
+        public RubricaService(IUnitOfWork unitOfWork, IintecService intecService, FileHandler fileHandler, IJwtService jwtService, IHttpContextAccessor httpContextAccessor)
         {
             _jwtService = jwtService;
             _fileHandler = fileHandler;
             _unitOfWork = unitOfWork;
             _intecService = intecService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task CompleteRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras)
@@ -70,9 +73,11 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var noEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "No entregada");
             var activo = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
             var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
-
+            var asignaturas = await _unitOfWork.Rubricas.ObtenerIdAsignaturasPorEstadoAsync(activoEntregado.Id);
             var rubricasActivasEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activoEntregado.Id);
             var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.GetAllIncluding<Rubrica>(r => r.IdEstado == activo.Id, r => r.Asignatura, r => r.Profesor);
+            string trimestre = rubricasActivasEntregadas.FirstOrDefault()!.Periodo;
+            int año = rubricasActivasEntregadas.FirstOrDefault()!.Año;
 
             foreach (var rubrica in rubricasActivasEntregadas)
             {
@@ -85,6 +90,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             }
 
             await Task.WhenAll(
+                _unitOfWork.Desempeños.InsertDesempeños(asignaturas, año, trimestre, entregado.Id),
                 _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasNoEntregadas),
                 _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas),
                 _unitOfWork.HistorialIncumplimientos.InsertIncumplimientos(rubricasActivasNoEntregadas)
@@ -286,7 +292,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
         public async Task<IEnumerable<RubricaViewModel>> GetRubricasBySupervisor()
         {
-            string id = _jwtService.GetClaimValue(_tokens.JwtToken, "id")!;
+            string id = _jwtService.GetClaimValue("Id")!;
             var activaSinEntrega = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
             var activaEntregada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
             var carrerasDelSupervisor = await _unitOfWork.ProfesoresCarreras.GetProfesorWithCarreras(int.Parse(id));
@@ -294,6 +300,15 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var rubricas = await _unitOfWork.Rubricas.GetRubricasFiltered(carrerasDelSupervisor.IdSO,carrerasDelSupervisor.CarrerasIds);
 
             throw new NotImplementedException();
+        }
+
+        public async Task<List<SeccionRubricasViewModel>> GetProfesorSecciones()
+        {
+            string id = _jwtService.GetClaimValue("Id")!;
+            var activo = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
+            var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
+            var secciones = await _unitOfWork.Rubricas.GetProfesorSeccionesWithRubricas(int.Parse(id), activo.Id, activoEntregado.Id);
+            return secciones; 
         }
     }
 }
