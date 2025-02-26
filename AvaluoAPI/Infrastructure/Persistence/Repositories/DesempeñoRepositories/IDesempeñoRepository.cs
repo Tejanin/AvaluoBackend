@@ -6,5 +6,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositor
 {
     public interface IDesempeñoRepository : IRepository<Desempeno>
     {
+        Task InsertDesempeños(List<int> asignaturas, int año, string periodo, int estado);
     }
 }

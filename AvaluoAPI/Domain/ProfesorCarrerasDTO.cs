@@ -1,6 +1,6 @@
 ﻿namespace AvaluoAPI.Domain
 {
-    public class ProfesorCarrerasResult
+    public class ProfesorCarrerasDTO
     {
         public int IdProfesor { get; set; }
         public int? IdSO { get; set; }

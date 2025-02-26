@@ -35,7 +35,7 @@ namespace AvaluoAPI.Utilities.JWT
         bool ValidateToken(string token);
         ClaimsPrincipal? GetClaimsPrincipal(string token);
         UserPermissions? ValidatePermissionCookie(string permissionToken);
-        string? GetClaimValue(string token, string claimType);
+        string? GetClaimValue( string claim);
         void BlacklistToken(string token);
         bool IsTokenBlacklisted(string token);
     }
@@ -47,12 +47,15 @@ namespace AvaluoAPI.Utilities.JWT
         private readonly string _audience;
         private readonly IDataProtector _protector;
         private readonly IClaimsFactory _claimsFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HashSet<string> _blacklistedTokens = new();
         public JwtService(
         IConfiguration configuration,
         IDataProtectionProvider dataProtectionProvider,
+        IHttpContextAccessor httpContextAccessor,
         IClaimsFactory claimsFactory)
         {
+            _httpContextAccessor = httpContextAccessor;
             _key = configuration["Jwt:Key"]!;
             _issuer = configuration["Jwt:Issuer"]!;
             _audience = configuration["Jwt:Audience"]!;
@@ -159,12 +162,15 @@ namespace AvaluoAPI.Utilities.JWT
             }
         }
 
-        public string? GetClaimValue(string token, string claimType)
+        public string? GetClaimValue(string claim)
         {
-            var principal = GetClaimsPrincipal(token);
-            if (principal == null) return null;
+            var userIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst(claim);
+            if (userIdClaim == null)
+            {
+                throw new UnauthorizedAccessException("No se pudo obtener el ID del usuario");
+            }
 
-            return principal.Claims.FirstOrDefault(c => c.Type == claimType)?.Value;
+            return userIdClaim.Value;
         }
 
         public UserPermissions? ValidatePermissionCookie(string permissionToken)

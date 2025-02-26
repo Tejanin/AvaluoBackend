@@ -166,6 +166,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 }
 );
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSingleton<IJwtService, JwtService>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -192,17 +194,16 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AvaluoDbContext>();
-    context.Database.Migrate();
-}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty; // Esto hace que Swagger UI sea la página raíz
+    });
 }
 
 // Middlewares
