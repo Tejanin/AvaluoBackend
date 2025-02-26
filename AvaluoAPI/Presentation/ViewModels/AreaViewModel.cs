@@ -7,10 +7,9 @@ namespace AvaluoAPI.Presentation.ViewModels
         public int Id { get; set; }
         public string Descripcion { get; set; }
 
-        public UsuarioViewModel Coordinador { get; set; }
-        public DateTime FechaCreacion { get; set; }
-        public DateTime? UltimaEdicion { get; set; }
+        public UsuarioViewModel Usuario { get; set; }
 
 
+       
     }
 }

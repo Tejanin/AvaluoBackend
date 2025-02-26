@@ -6,6 +6,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreaRepositories
 {
     public interface IAreaRepository : IRepository<Area>
     {
-       Task<IEnumerable<AreaViewModel>> GetAllAreas();
+
+        Task<AreaViewModel> GetAreaById(int id);
+        Task<PaginatedResult<AreaViewModel>> GetAreas(string? descripcion, int? idCoordinador, int? page, int? recordsPerPage);
+
     }
 }
