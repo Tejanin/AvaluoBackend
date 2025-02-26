@@ -43,6 +43,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             rubrica.EvaluacionesFormativas = rubricaDTO.EvaluacionesFormativas;
             rubrica.Estrategias = rubricaDTO.Estrategias;
             rubrica.Evidencia = rubricaDTO.Evidencia;
+            rubrica.IdMetodoEvaluacion = rubricaDTO.MetodoEvaluacion;
             rubrica.FechaCompletado = DateTime.Now;
 
 
@@ -72,6 +73,8 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var noEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "No entregada");
             var activo = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
             var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
+
+            // Siento que hay algo que no estoy tomando en cuenta, pero no se que es
             var asignaturas = await _unitOfWork.Rubricas.ObtenerIdAsignaturasPorEstadoAsync(activoEntregado.Id);
             var rubricasActivasEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activoEntregado.Id);
             var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.GetAllIncluding<Rubrica>(r => r.IdEstado == activo.Id, r => r.Asignatura, r => r.Profesor);
@@ -89,7 +92,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             }
 
             await Task.WhenAll(
-                _unitOfWork.Desempeños.InsertDesempeños(asignaturas, año, trimestre, entregado.Id),
+                _unitOfWork.Desempeños.InsertDesempeños(asignaturas, año, trimestre, activoEntregado.Id),
                 _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasNoEntregadas),
                 _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas),
                 _unitOfWork.HistorialIncumplimientos.InsertIncumplimientos(rubricasActivasNoEntregadas)

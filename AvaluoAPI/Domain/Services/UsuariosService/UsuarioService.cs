@@ -221,5 +221,15 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             string apellido = _jwtService.GetClaimValue( "Lname")!;
             await _emailService.SendEmailAsync(email,"Cuenta Avalúo - Solicitud de cambio de contraseña","",true);
         }
+
+        public async Task RegisterRange(List<UsuarioDTO> usuarios)
+        {
+            var users = new List<Usuario>();
+
+            foreach(var u in usuarios)
+            {
+               await Register(u);
+            }
+        }
     }
 }

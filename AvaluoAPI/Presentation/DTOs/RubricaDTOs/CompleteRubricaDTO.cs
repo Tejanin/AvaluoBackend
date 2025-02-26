@@ -12,6 +12,7 @@ namespace AvaluoAPI.Presentation.DTOs.RubricaDTOs
         public string Problematica { get; set; }
         public string Solucion { get; set; }
         public string Evidencia { get; set; }
+        public int MetodoEvaluacion { get; set; }
         public string EvaluacionesFormativas { get; set; }
         public string Estrategias { get; set; }
         public List<ResumenDTO> Resumenes { get; set; }

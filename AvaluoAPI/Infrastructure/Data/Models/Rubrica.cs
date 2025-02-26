@@ -13,7 +13,7 @@ namespace Avaluo.Infrastructure.Data.Models
         public int IdProfesor { get; set; }
         public int IdAsignatura { get; set; }
         public int IdEstado { get; set; }
-        public int IdMetodoEvaluacion { get; set; }
+        public int? IdMetodoEvaluacion { get; set; }
         public DateTime? FechaCompletado { get; set; }
         public DateTime? UltimaEdicion { get; set; }
         public int CantEstudiantes { get; set; } = 0;
@@ -30,7 +30,7 @@ namespace Avaluo.Infrastructure.Data.Models
         public virtual Usuario Profesor { get; set; }
         public virtual Asignatura Asignatura { get; set; }
         public virtual Competencia SO { get; set; }
-        public virtual MetodoEvaluacion MetodoEvaluacion { get; set; }
+        public virtual MetodoEvaluacion? MetodoEvaluacion { get; set; }
         public virtual ICollection<Resumen> Resumenes { get; set; }
         public virtual ICollection<Evidencia> Evidencias { get; set; }
         public virtual ICollection<CarreraRubrica> CarreraRubricas { get; set; }

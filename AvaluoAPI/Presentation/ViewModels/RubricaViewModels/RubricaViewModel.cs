@@ -4,7 +4,7 @@
     public class RubricaViewModel
     {
         public int Id { get; set; }
-        public string Profesor { get; set; }  // Nuevo campo
+        public string Profesor { get; set; }  
         public CarreraRubricaViewModel Carrera { get; set; }
         public SORubricaViewModel SO { get; set; }
         public AsignaturaRubricaViewModel Asignatura { get; set; }

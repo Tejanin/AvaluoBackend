@@ -26,7 +26,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
         {
             using var connection = _dapperContext.CreateConnection();
 
-            // Obtener rúbricas básicas
+            // Obtener rúbricas básicas con método de evaluación
             var rubricasQuery = @"
         SELECT 
             r.Id,
@@ -41,10 +41,14 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
             r.Solucion,
             r.Evidencia,
             r.EvaluacionesFormativas,
-            r.Estrategias
+            r.Estrategias,
+            me.Id AS MetodoEvaluacion_Id,
+            me.DescripcionES AS MetodoEvaluacion_DescripcionES,
+            me.DescripcionEN AS MetodoEvaluacion_DescripcionEN
         FROM rubricas r
         INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
         INNER JOIN estado e ON r.IdEstado = e.Id
+        LEFT JOIN metodo_evaluacion me ON r.MetodoEvaluacion = me.Id
         WHERE r.IdProfesor = @IdProfesor
           AND r.IdEstado IN (@IdEstado1, @IdEstado2)
         ORDER BY r.IdAsignatura, r.Seccion";
@@ -56,7 +60,19 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                 IdEstado2 = activoSinEntregar
             };
 
-            var rubricas = (await connection.QueryAsync<RubricaDashboardViewModel>(rubricasQuery, parameters)).ToList();
+            var rubricas = new List<RubricaDashboardViewModel>();
+
+            await connection.QueryAsync<RubricaDashboardViewModel, MetodoEvaluacionViewModel, RubricaDashboardViewModel>(
+                rubricasQuery,
+                (rubrica, metodoEvaluacion) =>
+                {
+                    rubrica.MetodoEvaluacion = metodoEvaluacion;
+                    rubricas.Add(rubrica);
+                    return rubrica;
+                },
+                parameters,
+                splitOn: "MetodoEvaluacion_Id"
+            );
 
             if (rubricas.Any())
             {
@@ -140,7 +156,14 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                     else
                     {
                         // SO por defecto en caso de no encontrar uno
-                        rubrica.SO = null;
+                        rubrica.SO = new SOwithPIsViewModel
+                        {
+                            Id = 0,
+                            Nombre = string.Empty,
+                            Acron = string.Empty,
+                            DescripcionES = string.Empty,
+                            PIs = new List<PIViewModel>()
+                        };
                     }
 
                     // Inicializar lista de resúmenes vacía
@@ -210,41 +233,40 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
             using var connection = _dapperContext.CreateConnection();
 
             var query = @"
-                       SELECT 
-                           r.Id,
-                           r.Comentario,
-                           r.Problematica,
-                           r.Solucion,
-                           r.Evidencia,
-                           r.EvaluacionesFormativas,
-                           r.Estrategias,
-                           c.Id,
-                           c.NombreCarrera as Nombre,
-                           comp.Id,
-                           comp.Nombre,
-                           comp.Acron,
-                           a.Id,
-                           a.Codigo,
-                           a.Nombre,
-                           e.Id,
-                           e.IdTabla,
-                           e.Descripcion,
-                           rs.Id_PI as IdPI,
-                           rs.CantExperto,
-                           rs.CantSatisfactorio,
-                           rs.CantPrincipiante,
-                           rs.CantDesarrollo,
-                           u.Id,
-                           u.Nombre
-                       FROM rubricas r
-                       INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
-                       INNER JOIN carreras c ON cr.Id_Carrera = c.Id
-                       INNER JOIN usuario u ON r.IdProfesor = u.Id
-                       INNER JOIN competencia comp ON r.IdSO = comp.Id
-                       INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
-                       INNER JOIN estado e ON r.IdEstado = e.Id
-                       LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
-                       WHERE 1=1 ";  // Inicio de condiciones WHERE
+                        SELECT 
+                   r.Id,
+                   r.Comentario,
+                   r.Problematica,
+                   r.Solucion,
+                   r.Evidencia,
+                   r.EvaluacionesFormativas,
+                   r.Estrategias,
+                   CONCAT(u.Nombre, ' ', u.Apellido) AS Profesor,    
+                   c.Id,
+                   c.NombreCarrera as Nombre,
+                   comp.Id,
+                   comp.Nombre,
+                   comp.Acron,
+                   a.Id,
+                   a.Codigo,
+                   a.Nombre,
+                   e.Id,
+                   e.IdTabla,
+                   e.Descripcion,
+                   rs.Id_PI as IdPI,
+                   rs.CantExperto,
+                   rs.CantSatisfactorio,
+                   rs.CantPrincipiante,
+                   rs.CantDesarrollo
+               FROM rubricas r
+               INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
+               INNER JOIN carreras c ON cr.Id_Carrera = c.Id
+               INNER JOIN usuario u ON r.IdProfesor = u.Id
+               INNER JOIN competencia comp ON r.IdSO = comp.Id
+               INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
+               INNER JOIN estado e ON r.IdEstado = e.Id
+               LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
+               WHERE 1=1  ";  // Inicio de condiciones WHERE
 
             var parameters = new DynamicParameters();
 
@@ -273,16 +295,14 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
             }
 
             var rubricaDict = new Dictionary<string, RubricaViewModel>();
-
             var rubricas = await connection.QueryAsync<RubricaViewModel, CarreraRubricaViewModel, SORubricaViewModel, AsignaturaRubricaViewModel, EstadoViewModel, ResumenViewModel, RubricaViewModel>(
                 query,
                 (rubrica, carrera, so, asignatura, estado, resumen) =>
                 {
                     var key = $"{rubrica.Id}_{carrera.Id}";
-
                     if (!rubricaDict.TryGetValue(key, out var rubricaEntry))
                     {
-                        rubricaEntry = rubrica;
+                        rubricaEntry = rubrica;  // Profesor ya está asignado en el objeto rubrica
                         rubricaEntry.Carrera = carrera;
                         rubricaEntry.SO = so;
                         rubricaEntry.Asignatura = asignatura;
@@ -290,16 +310,14 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                         rubricaEntry.Resumenes = new List<ResumenViewModel>();
                         rubricaDict.Add(key, rubricaEntry);
                     }
-
                     if (resumen != null)
                     {
                         rubricaEntry.Resumenes.Add(resumen);
                     }
-
                     return rubricaEntry;
                 },
                 parameters,
-                splitOn: "Id,Id,Id,Id,Id,IdPI");
+                splitOn: "Id,Id,Id,Id,IdPI");
 
             return rubricaDict.Values;
         }

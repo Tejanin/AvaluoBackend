@@ -81,12 +81,12 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositor
             return resultado.ToList();
         }
 
-
+        // No esta calculando el porcentaje 
         private (bool satisfactorio, decimal porcentaje) GetDesempeño(DesempeñoDTO resumen)
         {
             int total = resumen.CantDesarrollo + resumen.CantExperto + resumen.CantPrincipiante + resumen.CantSatisfactorio;
-            var satisfactorio = resumen.CantSatisfactorio / total >= 0.8;
-            var porcentaje = resumen.CantSatisfactorio / total;
+            var satisfactorio = (resumen.CantExperto + resumen.CantSatisfactorio) / total >= 0.8;
+            var porcentaje = (resumen.CantExperto + resumen.CantSatisfactorio) / total;
             return (satisfactorio, porcentaje);
         }
     }

@@ -181,5 +181,12 @@ namespace AvaluoAPI.Presentation.Controllers
 
             return Ok(new { message = "Datos de prueba obtenidos exitosamente", data = $"Trimestre actual: {inicio:d} - {fin:d}" });
         }
+
+        [HttpPost("registerManyUsers")]
+        public async Task<IActionResult> RegisterRange(List<UsuarioDTO> usuarios)
+        {
+            await _usuarioService.RegisterRange(usuarios);    
+            return Created();
+        }
     }
 }

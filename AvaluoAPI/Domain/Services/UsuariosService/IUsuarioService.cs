@@ -20,6 +20,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         Task<UsuarioViewModel> GetById(int id);
         Task<IEnumerable<UsuarioViewModel>> GetAll(int? estado, int? area, int? rol);
         Task<UsuarioViewModel> Find();
+        Task RegisterRange(List<UsuarioDTO> usuarios);
 
     }
 }
