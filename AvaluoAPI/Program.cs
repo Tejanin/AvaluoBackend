@@ -32,7 +32,11 @@ using AvaluoAPI.Infrastructure.Jobs.Configuration;
 using AvaluoAPI.Domain.Services.AsignaturaService;
 
 using AvaluoAPI.Domain.Services.AulaService;
+
 using AvaluoAPI.Domain.Services.AreaService;
+
+using AvaluoAPI.Domain.Services.CarreraService;
+
 
 
 
@@ -136,7 +140,12 @@ builder.Services.AddScoped<IAsignaturaService, AsignaturaService>();
 
 builder.Services.AddScoped<IAulaService, AulaService>();
 
+
 builder.Services.AddScoped<IAreaService, AreaService>();
+
+builder.Services.AddScoped<ICarreraService, CarreraService>();
+
+
 
 // FileHandler
 
@@ -146,7 +155,7 @@ builder.Services.AddSingleton<FileHandler>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Jobs
-builder.Services.ConfigureQuartz();
+//builder.Services.ConfigureQuartz();
 
 
 // JWT
@@ -165,6 +174,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 }
 );
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSingleton<IJwtService, JwtService>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -191,17 +202,16 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AvaluoDbContext>();
-    context.Database.Migrate();
-}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty; // Esto hace que Swagger UI sea la página raíz
+    });
 }
 
 // Middlewares

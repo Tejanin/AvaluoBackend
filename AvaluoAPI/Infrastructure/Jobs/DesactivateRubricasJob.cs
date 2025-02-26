@@ -19,8 +19,9 @@ namespace AvaluoAPI.Infrastructure.Jobs
         {
             try
             {
-                // Se deberia programar segun la fecha de cierre de la rubrica
-                var proximaEjecucion = new DateTime(2025, 2, 18, 16, 05, 0);
+                
+                (_,var proximaEjecucion) = await _rubricaService.GetFechasCriticas();
+
                 if (proximaEjecucion > DateTime.Now)
                 {
                     await ReprogramarJob(context, proximaEjecucion);

@@ -98,6 +98,11 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasRepositor
                 IdArea = idArea
             });
 
+            if (totalRecords == 0)
+            {
+                return new PaginatedResult<AsignaturaViewModel>(Enumerable.Empty<AsignaturaViewModel>(), 1, 0, 0);
+            }
+
             int currentRecordsPerPage = recordsPerPage.HasValue && recordsPerPage > 0 ? recordsPerPage.Value : totalRecords;
             int currentPage = page.HasValue && page > 0 ? page.Value : 1;
             int offset = (currentPage - 1) * currentRecordsPerPage;

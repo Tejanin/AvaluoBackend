@@ -82,8 +82,138 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088024", Nombre = "Mariana", Apellido = "Flores", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088025", Nombre = "Eduardo", Apellido = "Rojas", Cargo = "Estudiante" }
                 }
+            },
+            new SeccionModel
+            {
+                Numero = "006",
+                Asignatura = "IDS345L",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088026", Nombre = "Emilio", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088027", Nombre = "Regina", Apellido = "Palacios", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088028", Nombre = "Fernando", Apellido = "Quintero", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088029", Nombre = "Carolina", Apellido = "Jiménez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088030", Nombre = "Ricardo", Apellido = "Beltrán", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "007",
+                Asignatura = "IDS345L",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088031", Nombre = "Isabel", Apellido = "Ochoa", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088032", Nombre = "Héctor", Apellido = "Velázquez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088033", Nombre = "Lucía", Apellido = "Delgado", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088034", Nombre = "Roberto", Apellido = "Zamora", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088035", Nombre = "Patricia", Apellido = "Molina", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "008",
+                Asignatura = "IDS345",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088036", Nombre = "Gustavo", Apellido = "Aguirre", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088037", Nombre = "Natalia", Apellido = "Espinoza", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088038", Nombre = "Francisco", Apellido = "Luna", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088039", Nombre = "Andrea", Apellido = "Cordero", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088040", Nombre = "Javier", Apellido = "Soto", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "009",
+                Asignatura = "INS377L",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088041", Nombre = "Marina", Apellido = "Rivas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088042", Nombre = "Antonio", Apellido = "Cabrera", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088043", Nombre = "Cristina", Apellido = "Durán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088044", Nombre = "Raúl", Apellido = "Campos", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088045", Nombre = "Adriana", Apellido = "Mora", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "010",
+                Asignatura = "INS377",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088046", Nombre = "Pablo", Apellido = "Guerra", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088047", Nombre = "Diana", Apellido = "Santos", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088048", Nombre = "Óscar", Apellido = "Valencia", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088049", Nombre = "Mónica", Apellido = "Paredes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088050", Nombre = "Jorge", Apellido = "Cervantes", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "011",
+                Asignatura = "IDS324",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088051", Nombre = "Beatriz", Apellido = "Barrios", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088052", Nombre = "Manuel", Apellido = "Contreras", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088053", Nombre = "Cecilia", Apellido = "Méndez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088054", Nombre = "Hugo", Apellido = "Zavala", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088055", Nombre = "Elena", Apellido = "Fuentes", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "012",
+                Asignatura = "IDS208",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088056", Nombre = "Arturo", Apellido = "Ibarra", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088057", Nombre = "Silvia", Apellido = "Arenas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088058", Nombre = "Ignacio", Apellido = "Ponce", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088059", Nombre = "Rosa", Apellido = "Villanueva", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088060", Nombre = "Felipe", Apellido = "Escobar", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "013",
+                Asignatura = "IDS208",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088061", Nombre = "Carmen", Apellido = "Valdez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088062", Nombre = "Rodrigo", Apellido = "Núñez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088063", Nombre = "Lorena", Apellido = "Estrada", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088064", Nombre = "Alberto", Apellido = "Salazar", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088065", Nombre = "Martha", Apellido = "Varela", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "014",
+                Asignatura = "IDS311",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088066", Nombre = "Vicente", Apellido = "Cárdenas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088067", Nombre = "Teresa", Apellido = "Pacheco", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088068", Nombre = "Marcos", Apellido = "Vega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088069", Nombre = "Gloria", Apellido = "Miranda", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088070", Nombre = "Salvador", Apellido = "Maldonado", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "015",
+                Asignatura = "IDS311",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088071", Nombre = "Alicia", Apellido = "Rosales", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088072", Nombre = "Ramón", Apellido = "Carrillo", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088073", Nombre = "Claudia", Apellido = "Montes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088074", Nombre = "Ernesto", Apellido = "Bravo", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088075", Nombre = "Rocío", Apellido = "Pineda", Cargo = "Estudiante" }
+                }
             }
-        };
+                    };
 
             _profesores = new List<ProfesorModel>
         {
@@ -94,7 +224,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                 Apellido = "Martínez",
                 Email = "rmartinez@gmail.com",
                 Cargo = "Profesor",
-                Secciones = new List<SeccionModel> { _secciones[0], _secciones[1] }
+                Secciones = new List<SeccionModel> { _secciones[0], _secciones[1], _secciones[8], _secciones[9] }  // IDS340, IDS343, INS377L, INS377
             },
             new ProfesorModel
             {
@@ -103,7 +233,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                 Apellido = "Vásquez",
                 Email = "cvaquez@gmail.com",
                 Cargo = "Profesor",
-                Secciones = new List<SeccionModel> { _secciones[2], _secciones[3] }
+                Secciones = new List<SeccionModel> { _secciones[2], _secciones[3], _secciones[10] }  // IDS323, IDS341, IDS324
             },
             new ProfesorModel
             {
@@ -112,9 +242,27 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                 Apellido = "García",
                 Email = "jgarcia@gmail.com",
                 Cargo = "Profesor",
-                Secciones = new List<SeccionModel> { _secciones[4] }
+                Secciones = new List<SeccionModel> { _secciones[4], _secciones[11], _secciones[12] }  // IDS344, IDS208 (ambas secciones)
+            },
+            new ProfesorModel
+            {
+                Id = "P004",
+                Nombre = "Ana",
+                Apellido = "Ramírez",
+                Email = "aramirez@gmail.com",
+                Cargo = "Profesor",
+                Secciones = new List<SeccionModel> { _secciones[5], _secciones[6] }  // IDS345L (ambas secciones)
+            },
+            new ProfesorModel
+            {
+                Id = "P005",
+                Nombre = "Miguel",
+                Apellido = "Torres",
+                Email = "mtorres@gmail.com",
+                Cargo = "Profesor",
+                Secciones = new List<SeccionModel> { _secciones[7], _secciones[13], _secciones[14] }  // IDS345, IDS311 (ambas secciones)
             }
-        };
+                    };
         }
 
         public async Task<List<ProfesorModel>> GetProfesores()

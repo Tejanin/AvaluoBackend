@@ -1,4 +1,5 @@
-﻿using AvaluoAPI.Domain.Services.RubricasService;
+﻿using AvaluoAPI.Domain.Helper;
+using AvaluoAPI.Domain.Services.RubricasService;
 using AvaluoAPI.Presentation.DTOs.RubricaDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,10 +31,32 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRubricas()
+        public async Task<IActionResult> GetAllRubricas([FromQuery] int? so = null, [FromQuery] List<int>? carreras = null, [FromQuery] int? estado = null, [FromQuery] int? asignatura = null, [FromQuery] int? page = null, [FromQuery] int? recordsPerPage = null)
         {
-            
-            return Ok(new { mensaje = "Operacion exitosa", data = await _rubricaService.GetAllRubricas() });
+            return Ok(new { mensaje = "Operación exitosa", data = await _rubricaService.GetAllRubricas(so, carreras, estado, asignatura, page, recordsPerPage) });
         }
+
+        [HttpGet("fechas")]
+
+        public async Task<IActionResult> GetFechasCriticas()
+        {
+            (var Inicio, var Cierre) = await _rubricaService.GetFechasCriticas();
+            return Ok(new { mensaje = "Operacion exitosa", data = new { inicio = Inicio, cierre = Cierre } });
+        }
+
+        [HttpGet("supervisor")]
+        public async Task<IActionResult> GetRubricasBySupervisor()
+        {
+            await _rubricaService.GetRubricasBySupervisor();
+            return Ok();
+        }
+
+        [HttpGet("secciones")]
+        public async Task<IActionResult> GetSeccionesByProfesor()
+        {
+            return Ok(await _rubricaService.GetProfesorSecciones());
+        }
+
+
     }
 }

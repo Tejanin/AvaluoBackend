@@ -66,6 +66,30 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
 
             return usuarios.FirstOrDefault();
         }
+
+        public async Task<Usuario> GetUsuarioWithRolById(int usuarioId)
+        {
+            using var connection = _dapperContext.CreateConnection();
+            var query = @"
+                    SELECT 
+                        u.*,
+                        r.*
+                    FROM usuario u
+                    LEFT JOIN roles r ON u.IdRol = r.Id
+                    WHERE u.Id = @UsuarioId";
+            var usuarios = await connection.QueryAsync<Usuario, Rol, Usuario>(
+                query,
+                (usuario, rol) =>
+                {
+                    usuario.Rol = rol;
+                    return usuario;
+                },
+                new { UsuarioId = usuarioId },
+                splitOn: "Id"
+            );
+            return usuarios.FirstOrDefault();
+        }
+
         public async Task<UsuarioViewModel> GetUsuarioById(int id)
         {
             using var connection = _dapperContext.CreateConnection();
@@ -102,10 +126,39 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
             return _context.Set<Usuario>().AnyAsync(u => u.Id == id);   
         }
 
-        public async Task<IEnumerable<UsuarioViewModel>> GetAllUsuarios(int? estado, int? area, int? rol)
+        public async Task<PaginatedResult<UsuarioViewModel>> GetAllUsuarios(int? estado, int? area, int? rol, int? page, int? recordsPerPage)
         {
             using var connection = _dapperContext.CreateConnection();
-            var query = @"
+
+            var countQuery = @"
+        SELECT COUNT(*)
+        FROM usuario u
+        LEFT JOIN estado e ON u.IdEstado = e.Id
+        LEFT JOIN areas a ON u.IdArea = a.Id
+        LEFT JOIN roles r ON u.IdRol = r.Id
+        LEFT JOIN competencia c ON u.IdSO = c.Id
+        LEFT JOIN contacto con ON u.Id = con.Id_Usuario
+        WHERE (@IdEstado IS NULL OR u.IdEstado = @IdEstado)
+          AND (@IdArea IS NULL OR u.IdArea = @IdArea)
+          AND (@IdRol IS NULL OR u.IdRol = @IdRol)";
+
+            int totalRecords = await connection.ExecuteScalarAsync<int>(countQuery, new
+            {
+                IdEstado = estado,
+                IdArea = area,
+                IdRol = rol
+            });
+
+            if (totalRecords == 0)
+            {
+                return new PaginatedResult<UsuarioViewModel>(Enumerable.Empty<UsuarioViewModel>(), 1, 0, 0);
+            }
+
+            int currentPage = page.HasValue && page > 0 ? page.Value : 1;
+            int recordsPerPageValue = recordsPerPage.HasValue && recordsPerPage.Value > 0 ? recordsPerPage.Value : totalRecords;
+            int offset = (currentPage - 1) * recordsPerPageValue;
+
+            var query = $@"
                             SELECT 
                                 u.Id,
                                 u.Username,
@@ -128,7 +181,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
                             LEFT JOIN contacto con ON u.Id = con.Id_Usuario
                             WHERE (@IdEstado IS NULL OR u.IdEstado = @IdEstado)
                                 AND (@IdArea IS NULL OR u.IdArea = @IdArea)
-                                AND (@IdRol IS NULL OR u.IdRol = @IdRol)";
+                                AND (@IdRol IS NULL OR u.IdRol = @IdRol)
+                            ORDER BY u.Id
+                            OFFSET @Offset ROWS FETCH NEXT @RecordsPerPage ROWS ONLY";
 
             var usuariosDictionary = new Dictionary<int, UsuarioViewModel>();
 
@@ -150,11 +205,11 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
 
                     return usuarioEntry;
                 },
-                new { IdEstado = estado, IdArea = area, IdRol = rol },
+                new { IdEstado = estado, IdArea = area, IdRol = rol, Offset = offset, RecordsPerPage = recordsPerPageValue },
                 splitOn: "Id"
             );
 
-            return usuariosDictionary.Values;
+            return new PaginatedResult<UsuarioViewModel>(usuariosDictionary.Values, currentPage, recordsPerPageValue, totalRecords);
         }
 
         public async Task<bool> EsProfesor(int id)

@@ -7,11 +7,12 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
 {
     public interface IUsuarioRepository : IRepository<Usuario>
     {
-        Task<IEnumerable<UsuarioViewModel>> GetAllUsuarios(int? estado, int? area, int? rol);
+        Task<PaginatedResult<UsuarioViewModel>> GetAllUsuarios(int? estado, int? area, int? rol, int? page, int? recordsPerPage);
         void Desactivate(int id);
         
         Task<bool> EsProfesor(int id);
         Task<Usuario> GetUsuarioWithRol(string username);
+        Task<Usuario> GetUsuarioWithRolById(int usuarioId);
         Task<UsuarioViewModel> GetUsuarioById(int id);
         
         void Activate(int id);

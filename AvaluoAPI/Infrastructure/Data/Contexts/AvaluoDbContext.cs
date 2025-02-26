@@ -166,73 +166,68 @@ namespace Avaluo.Infrastructure.Data
             modelBuilder.Entity<Rubrica>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_Rubrica");
-
                 entity.ToTable("rubricas");
-
                 entity.HasIndex(e => e.IdSO, "Id_SO");
                 entity.HasIndex(e => e.IdProfesor, "Id_Profesor");
                 entity.HasIndex(e => e.IdAsignatura, "Id_Asignatura");
                 entity.HasIndex(e => e.IdEstado, "Id_Estado");
-
+                entity.HasIndex(e => e.IdMetodoEvaluacion, "Id_MetodoEvaluacion");
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR RubricaSequence");
                 entity.Property(e => e.FechaCompletado).IsRequired(false);
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
                 entity.Property(e => e.Periodo).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Seccion).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Evidencia).IsRequired().HasMaxLength(int.MaxValue);
+                entity.Property(e => e.Evidencia).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Comentario).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Problematica).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Solucion).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.EvaluacionesFormativas).IsRequired(false).HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Estrategias).IsRequired(false).HasMaxLength(int.MaxValue);
-
                 entity.HasOne(d => d.Estado)
                     .WithMany(p => p.Rubricas)
                     .HasForeignKey(d => d.IdEstado)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("rubricas_ibfk_1");
-
+                    .HasConstraintName("rubricas_estado_fk");
+                entity.HasOne(d => d.MetodoEvaluacion)
+                    .WithMany(p => p.Rubricas)
+                    .HasForeignKey(d => d.IdMetodoEvaluacion)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("rubricas_metodo_fk");
                 entity.HasOne(d => d.Profesor)
                     .WithMany(p => p.Rubricas)
                     .HasForeignKey(d => d.IdProfesor)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("rubricas_ibfk_2");
-
+                    .HasConstraintName("rubricas_profesor_fk");
                 entity.HasOne(d => d.Asignatura)
                     .WithMany(p => p.Rubricas)
                     .HasForeignKey(d => d.IdAsignatura)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("rubricas_ibfk_3");
-
+                    .HasConstraintName("rubricas_asignatura_fk");
                 entity.HasOne(d => d.SO)
                     .WithMany(p => p.Rubricas)
                     .HasForeignKey(d => d.IdSO)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("rubricas_ibfk_4");
-
+                    .HasConstraintName("rubricas_so_fk");
                 entity.HasMany(d => d.Resumenes)
                     .WithOne(p => p.Rubrica)
                     .HasForeignKey(p => p.IdRubrica)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("rubricas_ibfk_5");
-
+                    .HasConstraintName("resumenes_rubrica_fk");
                 entity.HasMany(d => d.Evidencias)
                     .WithOne(p => p.Rubrica)
                     .HasForeignKey(p => p.IdRubrica)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("rubricas_ibfk_6");
-
+                    .HasConstraintName("evidencias_rubrica_fk");
                 entity.HasMany(d => d.CarreraRubricas)
                     .WithOne(p => p.Rubrica)
                     .HasForeignKey(p => p.IdRubrica)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("rubricas_ibfk_7");
-
+                    .HasConstraintName("carrera_rubrica_fk");
                 entity.HasMany(d => d.ActionPlans)
                     .WithOne(p => p.Rubrica)
                     .HasForeignKey(p => p.IdRubrica)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("rubricas_ibfk_8");
+                    .HasConstraintName("actionplans_rubrica_fk");
             });
 
             // Asignatura
@@ -334,7 +329,7 @@ namespace Avaluo.Infrastructure.Data
                     .WithMany()
                     .HasForeignKey(c => c.IdArea)
                     .OnDelete(DeleteBehavior.Restrict); // Relación con Area, sin eliminación en cascada
-
+                entity.Property(c => c.IdCoordinadorCarrera).IsRequired(false);
                 entity.HasOne(c => c.CoordinadorCarrera)
                     .WithMany()
                     .HasForeignKey(c => c.IdCoordinadorCarrera)
@@ -457,6 +452,10 @@ namespace Avaluo.Infrastructure.Data
                     .HasForeignKey(d => d.IdPI)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("pi_ibfk_2");
+                entity.HasMany(d => d.Desempenos).WithOne(p => p.PI)
+                   .HasForeignKey(d => d.IdPI)
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("pi_ibfk_3");
             });
 
             // Informe
@@ -537,6 +536,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.HasKey(e => e.Id).HasName("PK_Desempeno");
                 entity.ToTable("desempeno");
                 entity.HasIndex(e => e.IdSO, "Id_SO");
+                entity.HasIndex(e => e.IdPI, "Id_PI");
                 entity.HasIndex(e => e.IdAsignatura, "Id_Asignatura");
                 entity.Property(e => e.Id).HasDefaultValueSql("NEXT VALUE FOR DesempenoSequence");
                 entity.Property(e => e.IdSO).HasColumnName("Id_SO");
@@ -553,6 +553,10 @@ namespace Avaluo.Infrastructure.Data
                     .HasForeignKey(d => d.IdAsignatura)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("desempeno_ibfk_2");
+                entity.HasOne(d => d.PI).WithMany(p => p.Desempenos)
+                    .HasForeignKey(d => d.IdPI)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("desempeno_ibfk_3");
             });
 
             // Contacto
@@ -936,8 +940,13 @@ namespace Avaluo.Infrastructure.Data
                 entity.HasMany(d => d.SOEvaluaciones)
                     .WithOne(p => p.MetodoEvaluacion)
                     .HasForeignKey(d => d.IdMetodoEvaluacion)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("so_evaluacion_ibfk_1");
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("so_evaluacion_metodo_fk");
+                entity.HasMany(d => d.Rubricas)
+                    .WithOne(p => p.MetodoEvaluacion)
+                    .HasForeignKey(d => d.IdMetodoEvaluacion)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("rubricas_metodo_fk");
             });
 
             // ObjetosAula

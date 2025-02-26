@@ -19,7 +19,8 @@ namespace AvaluoAPI.Infrastructure.Jobs
         {
             try
             {
-                var proximaEjecucion = new DateTime(2025, 2, 18, 16, 05, 0);
+                (var proximaEjecucion,_) = await _rubricaService.GetFechasCriticas();
+
                 if (proximaEjecucion > DateTime.Now)
                 {
                     await ReprogramarJob(context, proximaEjecucion);

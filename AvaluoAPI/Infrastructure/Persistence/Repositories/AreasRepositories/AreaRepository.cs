@@ -5,8 +5,10 @@ using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AreaRepositories;
 using AvaluoAPI.Presentation.ViewModels;
 using Dapper;
+
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
 {
@@ -22,6 +24,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
         {
             get { return _context as AvaluoDbContext; }
         }
+
 
         public async Task<AreaViewModel> GetAreaById(int id)
         {
@@ -157,6 +160,10 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
                 splitOn: "Id"
             );
             return new PaginatedResult<AreaViewModel>(areasDictionary.Values, currentPage, currentRecordsPerPage, totalRecords);
+
+    
+
+        
         }
     }
 }

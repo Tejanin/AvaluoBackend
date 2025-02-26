@@ -1,16 +1,9 @@
-
-
 using AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EstadosRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TiposCompetenciasRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.TipoMetodoEvaluacionRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.SOEvaluacionRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.MapaCompetenciaRepositories;
@@ -23,6 +16,18 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.AreaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AulaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.EdificioRepositories;
 
+using AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasCarrerasRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories;
+
+using AvaluoAPI.Infrastructure.Persistence.Repositories.ConfiguracionRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.CarreraRubricaRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.HistorialIncumplimientoRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.InformesRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositories;
+
+
+
 
 namespace Avaluo.Infrastructure.Persistence.UnitOfWork
 {
@@ -30,10 +35,14 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
     {
         IUsuarioRepository Usuarios { get; }
         IMetodoEvaluacionRepository MetodoEvaluacion { get; }
+        IProfesorCarreraRepository ProfesoresCarreras { get; }
         ITipoInformeRepository TiposInformes { get; }
         ITipoCompetenciaRepository TiposCompetencias { get; }
         IEdificioRespository Edificios { get; }
-
+        IDesempeñoRepository Desempeños { get; }
+        ICarreraRubricaRepository CarrerasRubricas { get; }
+        IConfiguracionRepository Configuraciones { get; }
+        IInformeRepository Informes { get; }
         ICompetenciaRepository Competencias { get; }
         ISOEvaluacionRepository SOEvaluaciones { get; }
         IMapaCompetenciaRepository MapaCompetencias { get; }
@@ -42,11 +51,13 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         IEvidenciaRepository Evidencias { get; }
         IResumenRepository Resumenes { get; }
 
+
+        IHistorialIncumplimientoRepository HistorialIncumplimientos { get; }
         IAsignaturaRepository Asignaturas { get;}
         IAreaRepository Areas { get;}
-
         IAulaRepository Aulas { get; }
-
+        ICarreraRepository Carreras { get; }
+        IAsignaturaCarreraRepository AsignaturasCarreras { get; }
 
 
         Task<int> SaveChangesAsync();
