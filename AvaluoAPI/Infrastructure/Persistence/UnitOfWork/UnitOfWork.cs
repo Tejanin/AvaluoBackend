@@ -65,8 +65,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
 
             Asignaturas = new AsignaturaRepository(_context, _dapperContext);
-            Areas = new AreaRepository(_context);
-=======
+            Areas = new AreaRepository(_context, _dapperContext);
 
             Aulas = new AulaRepository(_context, _dapperContext);
 
