@@ -20,7 +20,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepos
             get { return _context as AvaluoDbContext; }
         }
 
-        public async Task<ProfesorCarrerasResult> GetProfesorWithCarreras(int profesorId)
+        public async Task<ProfesorCarrerasDTO> GetProfesorWithCarreras(int profesorId)
         {
             using var connection = _dapperContext.CreateConnection();
 
@@ -34,10 +34,10 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepos
                                     LEFT JOIN carreras c ON pc.Carrera_Id = c.Id
                                     WHERE u.Id = @Id";
 
-            var result = new ProfesorCarrerasResult();
+            var result = new ProfesorCarrerasDTO();
             var carrerasIds = new List<int>();
 
-            await connection.QueryAsync<ProfesorCarrerasResult, int?, ProfesorCarrerasResult>(
+            await connection.QueryAsync<ProfesorCarrerasDTO, int?, ProfesorCarrerasDTO>(
                 query,
                 (profesor, carreraId) =>
                 {

@@ -92,11 +92,12 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
 
         public async Task ChangePassword( string newPassword)
         {
-            string id = _jwtService.GetClaimValue(_tokens.JwtToken, "id")!;
+            string id = _jwtService.GetClaimValue("Id")!;
             var user = await _unitOfWork.Usuarios.GetByIdAsync(int.Parse(id));
             if (user == null) throw new KeyNotFoundException("El usuario no existe");
             user.Salt = DateTime.Now.ToString();
             user.HashedPassword = Hasher.Hash(newPassword, user.Salt);
+            await _unitOfWork.Usuarios.Update(user);
             _unitOfWork.SaveChanges();
         }
 
@@ -181,7 +182,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             if (!exito) throw new Exception(mensaje);
 
             usuario.Foto = ruta;
-            _unitOfWork.Usuarios.Update(usuario);
+            await _unitOfWork.Usuarios.Update(usuario);
             _unitOfWork.SaveChanges();
         }
 
@@ -209,15 +210,15 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             if (!exito) throw new Exception(mensaje);
 
             usuario.CV = ruta;
-            _unitOfWork.Usuarios.Update(usuario);
+            await _unitOfWork.Usuarios.Update(usuario);
             _unitOfWork.SaveChanges();
         }
 
         public async Task RequestPasswordChange()
         {
-            string email = _jwtService.GetClaimValue(_tokens.JwtToken, "Lmail")!;
-            string nombre = _jwtService.GetClaimValue(_tokens.JwtToken, "Name")!;
-            string apellido = _jwtService.GetClaimValue(_tokens.JwtToken, "Lname")!;
+            string email = _jwtService.GetClaimValue( "Email")!;
+            string nombre = _jwtService.GetClaimValue( "Name")!;
+            string apellido = _jwtService.GetClaimValue( "Lname")!;
             await _emailService.SendEmailAsync(email,"Cuenta Avalúo - Solicitud de cambio de contraseña","",true);
         }
     }

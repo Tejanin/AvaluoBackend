@@ -45,7 +45,18 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok(new { mensaje = "Operacion exitosa", data = new { inicio = Inicio, cierre = Cierre } });
         }
 
-        
+        [HttpGet("supervisor")]
+        public async Task<IActionResult> GetRubricasBySupervisor()
+        {
+            await _rubricaService.GetRubricasBySupervisor();
+            return Ok();
+        }
+
+        [HttpGet("secciones")]
+        public async Task<IActionResult> GetSeccionesByProfesor()
+        {
+            return Ok(await _rubricaService.GetProfesorSecciones());
+        }
 
 
     }

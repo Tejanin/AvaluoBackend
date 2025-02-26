@@ -10,6 +10,7 @@ namespace Avaluo.Infrastructure.Data.Models
         public DateTime? UltimaEdicion { get; set; } 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public virtual ICollection<SOEvaluacion> SOEvaluaciones { get; set; }
+        public virtual ICollection<Rubrica> Rubricas { get; set; }  
     }
 
 
