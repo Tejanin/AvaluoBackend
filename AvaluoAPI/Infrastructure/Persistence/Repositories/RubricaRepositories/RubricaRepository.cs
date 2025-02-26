@@ -23,7 +23,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
         }
 
 
-        public async Task<PaginatedResult<RubricaViewModel>> GetRubricasFiltered(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null, int? page = null, int? recordsPerPage = null)
 
         public async Task<List<SeccionRubricasViewModel>> GetProfesorSeccionesWithRubricas(int profesor, int activo, int activoSinEntregar)
         {
@@ -208,7 +207,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
 
             return asignaturas.ToList();
         }
-        public async Task<IEnumerable<RubricaViewModel>> GetRubricasFiltered(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null)
+        public async Task<PaginatedResult<RubricaViewModel>> GetRubricasFiltered(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null, int? page = null, int? recordsPerPage = null)
+
 
         {
             using var connection = _dapperContext.CreateConnection();
@@ -236,6 +236,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                            r.Evidencia,
                            r.EvaluacionesFormativas,
                            r.Estrategias,
+                            CONCAT(u.Nombre, ' ', u.Apellido) AS Profesor,
                            c.Id,
                            c.NombreCarrera as Nombre,
                            comp.Id,
@@ -251,9 +252,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                            rs.CantExperto,
                            rs.CantSatisfactorio,
                            rs.CantPrincipiante,
-                           rs.CantDesarrollo,
-                           u.Id,
-                           u.Nombre
+                           rs.CantDesarrollo
                        FROM rubricas r
                        INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
                        INNER JOIN carreras c ON cr.Id_Carrera = c.Id
