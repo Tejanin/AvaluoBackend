@@ -75,11 +75,5 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok(new { mensaje = "La carrera ha sido eliminada con éxito." });
         }
 
-        [HttpGet("mapa-competencias/{carrera}/{tipo}")]
-        public async Task<IActionResult> GetMapaCompetencias(int carrera, int tipo)
-        {
-            var mapaCompetencias = await _carreraService.GetMapaCompetencias(carrera, tipo);
-            return Ok(new { mensaje = "Mapa de competencias obtenido exitosamente.", data = mapaCompetencias });
-        }
     }
 }

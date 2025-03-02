@@ -59,7 +59,6 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             _unitOfWork.SaveChanges();
         }
 
-
         public async Task Update(int id, CompetenciaModifyDTO competenciaDTO)
         {
             var competencia = await _unitOfWork.Competencias.GetByIdAsync(id);
@@ -92,6 +91,28 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
 
             _unitOfWork.Competencias.Delete(competencia);
             _unitOfWork.SaveChanges();
+        }
+
+        public async Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia)
+        {
+            return await _unitOfWork.Competencias.GetMapaCompetencias(idCarrera, idTipoCompetencia);
+        }
+
+        public async Task<bool> UpdateEstadoMapaCompetencia(int idAsignatura, int idCompetencia, UpdateEstadoMapaCompetenciaDTO dto)
+        {
+            var asignatura = await _unitOfWork.Asignaturas.GetByIdAsync(idAsignatura);
+            if (asignatura == null)
+                throw new KeyNotFoundException("La asignatura especificada no existe.");
+
+            var competencia = await _unitOfWork.Competencias.GetByIdAsync(idCompetencia);
+            if (competencia == null)
+                throw new KeyNotFoundException("La competencia especificada no existe.");
+
+            var estado = await _unitOfWork.Estados.GetByIdAsync(dto.IdEstado);
+            if (estado == null || estado.IdTabla != "MapaCompetencia")
+                throw new ValidationException("El estado especificado no es válido para Mapa_Competencias.");
+
+            return await _unitOfWork.Competencias.UpdateEstadoMapaCompetencia(idAsignatura, idCompetencia, dto.IdEstado);
         }
     }
 }

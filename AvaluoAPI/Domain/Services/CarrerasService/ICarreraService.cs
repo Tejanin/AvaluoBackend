@@ -11,7 +11,6 @@ namespace AvaluoAPI.Domain.Services.CarreraService
         Task Update(int id, CarreraModifyDTO CarreraDTO); // Actualiza una carrera existente con base en su ID.
         Task Delete(int id);  // Elimina una carrera por su ID.
         Task UpdatePEOs(int id, string nuevosPEOs);  // Actualiza los PEOs (Program Educational Objectives) de una carrera específica.
-        Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia); // Obtiene el mapa de competencias de una carrera.
     }
 
 }
