@@ -93,9 +93,9 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             _unitOfWork.SaveChanges();
         }
 
-        public async Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia)
+        public async Task<IEnumerable<AsignaturaConCompetenciasConEstadosViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia)
         {
-            return await _unitOfWork.Competencias.GetMapaCompetencias(idCarrera, idTipoCompetencia);
+            return await _unitOfWork.Competencias.GetMapaCompetenciasWithEstados(idCarrera, idTipoCompetencia);
         }
 
         public async Task<bool> UpdateEstadoMapaCompetencia(int idAsignatura, int idCompetencia, UpdateEstadoMapaCompetenciaDTO dto)

@@ -171,7 +171,56 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
             );
             return new PaginatedResult<CompetenciaViewModel>(competenciasDictionary.Values, currentPage, currentRecordsPerPage, totalRecords);
         }
-        public async Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int? idTipoCompetencia)
+        public async Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia)
+        {
+            using var connection = _dapperContext.CreateConnection();
+
+            const string sql = @"
+                                SELECT 
+                                    a.Id,
+                                    a.Codigo,
+                                    a.Nombre,
+                                    ea.Descripcion as Estado,
+                                    c.Id,
+                                    c.Nombre,
+                                    c.Acron,
+                                    ec.Descripcion as Estado
+                                FROM asignatura_carrera ac
+                                INNER JOIN asignaturas a ON ac.Id_Asignatura = a.Id
+                                INNER JOIN estado ea ON a.IdEstado = ea.Id
+                                LEFT JOIN mapa_competencias mc ON a.Id = mc.Id_Asignatura
+                                LEFT JOIN competencia c ON mc.Id_Competencia = c.Id AND c.Id_Tipo = @IdTipoCompetencia
+                                LEFT JOIN estado ec ON mc.Id_Estado = ec.Id
+                                WHERE ac.Id_Carrera = @IdCarrera
+                                ORDER BY a.Codigo";
+
+            var asignaturasDict = new Dictionary<int, AsignaturaConCompetenciasViewModel>();
+
+            await connection.QueryAsync<AsignaturaConCompetenciasViewModel, CompetenciaResumenViewModel, AsignaturaConCompetenciasViewModel>(
+                sql,
+                (asignatura, competencia) =>
+                {
+                    if (!asignaturasDict.TryGetValue(asignatura.Id, out var asignaturaEntry))
+                    {
+                        asignaturaEntry = asignatura;
+                        asignaturaEntry.Competencias = new List<CompetenciaResumenViewModel>();
+                        asignaturasDict.Add(asignatura.Id, asignaturaEntry);
+                    }
+
+                    if (competencia != null)
+                    {
+                        asignaturaEntry.Competencias.Add(competencia);
+                    }
+
+                    return asignaturaEntry;
+                },
+                new { IdCarrera = idCarrera, IdTipoCompetencia = idTipoCompetencia },
+                splitOn: "Id");
+
+            return asignaturasDict.Values;
+        }
+
+        public async Task<IEnumerable<AsignaturaConCompetenciasConEstadosViewModel>> GetMapaCompetenciasWithEstados(int idCarrera, int? idTipoCompetencia)
         {
             using var connection = _dapperContext.CreateConnection();
 
@@ -202,9 +251,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
             AND (@IdTipoCompetencia IS NULL OR c.Id_Tipo = @IdTipoCompetencia)
             ORDER BY a.Codigo";
 
-            var asignaturasDict = new Dictionary<int, AsignaturaConCompetenciasViewModel>();
+            var asignaturasDict = new Dictionary<int, AsignaturaConCompetenciasConEstadosViewModel>();
 
-            await connection.QueryAsync<AsignaturaConCompetenciasViewModel, EstadoViewModel, CompetenciaResumenViewModel, EstadoViewModel, AsignaturaConCompetenciasViewModel>(
+            await connection.QueryAsync<AsignaturaConCompetenciasConEstadosViewModel, EstadoViewModel, CompetenciaResumenConEstadosViewModel, EstadoViewModel, AsignaturaConCompetenciasConEstadosViewModel>(
                 sql,
                 (asignatura, estadoAsignatura, competencia, estadoCompetencia) =>
                 {
@@ -212,7 +261,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
                     {
                         asignaturaEntry = asignatura;
                         asignaturaEntry.Estado = estadoAsignatura;
-                        asignaturaEntry.Competencias = new List<CompetenciaResumenViewModel>();
+                        asignaturaEntry.Competencias = new List<CompetenciaResumenConEstadosViewModel>();
                         asignaturasDict.Add(asignatura.Id, asignaturaEntry);
                     }
 
