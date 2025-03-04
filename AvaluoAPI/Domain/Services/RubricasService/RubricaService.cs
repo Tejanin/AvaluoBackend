@@ -37,8 +37,9 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var rubrica = await _unitOfWork.Rubricas.FindAsync(r => r.Id == rubricaDTO.Id);
             var estadoRubricaCompletada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
 
-
+            
             rubrica.IdEstado = estadoRubricaCompletada.Id;
+            
             rubrica.Comentario = rubricaDTO.Comentario;
             rubrica.Problematica = rubricaDTO.Problematica;
             rubrica.Solucion = rubricaDTO.Solucion;
@@ -115,7 +116,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             }
 
             rubrica.UltimaEdicion = DateTime.Now;
-            
+            rubrica.IdMetodoEvaluacion = rubricaDTO.MetodoEvaluacion;
             rubrica.Comentario = rubricaDTO.Comentario;
             rubrica.Problematica = rubricaDTO.Problematica;
             rubrica.Solucion = rubricaDTO.Solucion;
@@ -253,14 +254,20 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var resumenList = new List<Resumen>();
             foreach (var resumen in resumenes)
             {
+                // Contar estudiantes por categoría
+                int cantPrincipiante = resumen.Estudiantes.Count(e => e.Calificacion == 1);
+                int cantDesarrollo = resumen.Estudiantes.Count(e => e.Calificacion == 2);
+                int cantSatisfactorio = resumen.Estudiantes.Count(e => e.Calificacion == 3);
+                int cantExperto = resumen.Estudiantes.Count(e => e.Calificacion == 4);
+
                 resumenList.Add(new Resumen
                 {
                     IdRubrica = idRubrica,
                     IdPI = resumen.IdPI,
-                    CantDesarrollo = resumen.CantDesarrollo,
-                    CantPrincipiante = resumen.CantPrincipiante,
-                    CantSatisfactorio = resumen.CantSatisfactorio,
-                    CantExperto = resumen.CantExperto,
+                    CantPrincipiante = cantPrincipiante,
+                    CantDesarrollo = cantDesarrollo,
+                    CantSatisfactorio = cantSatisfactorio,
+                    CantExperto = cantExperto
                 });
             }
             return resumenList;
@@ -273,10 +280,10 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             foreach (var resumen in resumenes)
             {
                 var resumenDTO = resumenesDTO.FirstOrDefault(r => r.IdPI == resumen.IdPI)!;
-                resumen.CantDesarrollo = resumenDTO.CantDesarrollo;
-                resumen.CantPrincipiante = resumenDTO.CantPrincipiante;
-                resumen.CantSatisfactorio = resumenDTO.CantSatisfactorio;
-                resumen.CantExperto = resumenDTO.CantExperto;
+                resumen.CantDesarrollo = resumenDTO.Estudiantes.Count(e => e.Calificacion == 1);
+                resumen.CantPrincipiante = resumenDTO.Estudiantes.Count(e => e.Calificacion == 2);
+                resumen.CantSatisfactorio = resumenDTO.Estudiantes.Count(e => e.Calificacion == 3);
+                resumen.CantExperto = resumenDTO.Estudiantes.Count(e => e.Calificacion == 4);
 
             }
 
