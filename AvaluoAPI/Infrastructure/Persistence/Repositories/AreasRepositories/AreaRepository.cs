@@ -36,7 +36,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
                             a.Descripcion,
 
                             u.Id,
-                            u.Username,
                             u.Nombre,
                             u.Apellido
 
@@ -50,9 +49,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
                 query,
                 (area, usuario) =>
                 {
-                    area.NombreUsuario = usuario.Nombre;
-                    area.ApellidoUsuario = usuario.Apellido;
-                    area.Username = usuario.Username;
+                    if (usuario != null)
+                        area.Coordinador = usuario.Nombre + " " + usuario.Apellido;
                     return area;
                 },
                 parametros,
@@ -91,7 +89,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
                             a.Descripcion,
 
                             u.Id,
-                            u.Username,
                             u.Nombre,
                             u.Apellido
 
@@ -119,8 +116,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
                     if (!areasDictionary.TryGetValue(area.Id, out var areaEntry))
                     {
                         areaEntry = area;
-                        areaEntry.NombreUsuario = usuario.Nombre;
-                        areaEntry.ApellidoUsuario = usuario.Apellido;
+                        if (usuario != null)
+                            areaEntry.Coordinador = usuario.Nombre + " " + usuario.Apellido;
                         areasDictionary.Add(area.Id, areaEntry);
                     }
                     return areaEntry;
