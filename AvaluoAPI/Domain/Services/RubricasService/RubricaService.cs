@@ -39,7 +39,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
             
             rubrica.IdEstado = estadoRubricaCompletada.Id;
-            
+            rubrica.IdMetodoEvaluacion = rubricaDTO.MetodoEvaluacion;
             rubrica.Comentario = rubricaDTO.Comentario;
             rubrica.Problematica = rubricaDTO.Problematica;
             rubrica.Solucion = rubricaDTO.Solucion;
@@ -255,19 +255,16 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             foreach (var resumen in resumenes)
             {
                 // Contar estudiantes por categoría
-                int cantPrincipiante = resumen.Estudiantes.Count(e => e.Calificacion == 1);
-                int cantDesarrollo = resumen.Estudiantes.Count(e => e.Calificacion == 2);
-                int cantSatisfactorio = resumen.Estudiantes.Count(e => e.Calificacion == 3);
-                int cantExperto = resumen.Estudiantes.Count(e => e.Calificacion == 4);
+             
 
                 resumenList.Add(new Resumen
                 {
                     IdRubrica = idRubrica,
                     IdPI = resumen.IdPI,
-                    CantPrincipiante = cantPrincipiante,
-                    CantDesarrollo = cantDesarrollo,
-                    CantSatisfactorio = cantSatisfactorio,
-                    CantExperto = cantExperto
+                    CantPrincipiante = resumen.Estudiantes.Count(e => e.Calificacion == 2),
+                    CantDesarrollo = resumen.Estudiantes.Count(e => e.Calificacion == 1),
+                    CantSatisfactorio = resumen.Estudiantes.Count(e => e.Calificacion == 3),
+                    CantExperto = resumen.Estudiantes.Count(e => e.Calificacion == 4)
                 });
             }
             return resumenList;
