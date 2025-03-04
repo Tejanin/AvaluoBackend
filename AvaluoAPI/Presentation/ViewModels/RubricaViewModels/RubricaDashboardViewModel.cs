@@ -21,6 +21,6 @@ namespace AvaluoAPI.Presentation.ViewModels.RubricaViewModels
         public string Evidencia { get; set; }
         public string EvaluacionesFormativas { get; set; }
         public string Estrategias { get; set; }
-        public List<ResumenViewModel> Resumenes { get; set; }
+        public List<ResumenViewModelMixed> Resumenes { get; set; }
     }
 }

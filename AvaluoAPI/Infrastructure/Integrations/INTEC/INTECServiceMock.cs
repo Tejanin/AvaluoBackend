@@ -6,7 +6,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
     {
         Task<List<SeccionModel>> GetSeccionesByProfesor(string id);
         Task<List<SeccionModel>> GetSecciones();
-        Task<List<ProfesorModel>> GetProfesores();
+        Task<List<ProfesorModel>> GetProfesores(string seccion = null, string asignatura = null);
     }
     public class INTECServiceMock : IintecService
     {
@@ -265,10 +265,53 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     };
         }
 
-        public async Task<List<ProfesorModel>> GetProfesores()
+        public async Task<List<ProfesorModel>> GetProfesores(string? seccion, string? asignatura )
         {
-            await Task.Delay(100);
-            return _profesores;
+            return await Task.Run(() =>
+            {
+                // Crear una lista para almacenar los resultados
+                var profesoresFiltrados = new List<ProfesorModel>();
+
+                // Recorrer todos los profesores
+                foreach (var profesor in _profesores)
+                {
+                    // Obtener las secciones que coinciden con los criterios de filtrado
+                    var seccionesFiltradas = new List<SeccionModel>();
+
+                    // Recorrer las secciones del profesor y aplicar filtros
+                    foreach (var seccionProf in profesor.Secciones)
+                    {
+                        bool coincideSeccion = string.IsNullOrEmpty(seccion) || seccionProf.Numero == seccion;
+                        bool coincideAsignatura = string.IsNullOrEmpty(asignatura) || seccionProf.Asignatura == asignatura;
+
+                        // Si ambos filtros coinciden (o no se han especificado), añadir la sección
+                        if (coincideSeccion && coincideAsignatura)
+                        {
+                            seccionesFiltradas.Add(seccionProf);
+                        }
+                    }
+
+                    // Si el profesor tiene secciones que cumplen con los criterios
+                    if (seccionesFiltradas.Any())
+                    {
+                        // Crear una copia del profesor
+                        var profesorFiltrado = new ProfesorModel
+                        {
+                            Id = profesor.Id,
+                            Nombre = profesor.Nombre,
+                            Apellido = profesor.Apellido,
+                            Email = profesor.Email,
+                            Cargo = profesor.Cargo,
+                            // Asignar solo las secciones filtradas
+                            Secciones = seccionesFiltradas
+                        };
+
+                        profesoresFiltrados.Add(profesorFiltrado);
+                    }
+                }
+
+                return profesoresFiltrados;
+            });
         }
 
         public Task<List<SeccionModel>> GetSecciones()

@@ -3,6 +3,7 @@ using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Presentation.ViewModels;
+using AvaluoAPI.Presentation.ViewModels.MapaCompetenciasViewModels;
 using Dapper;
 using System.Data;
 
@@ -171,7 +172,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
             );
             return new PaginatedResult<CompetenciaViewModel>(competenciasDictionary.Values, currentPage, currentRecordsPerPage, totalRecords);
         }
-        public async Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int? idTipoCompetencia)
+        public async Task<IEnumerable<MapaCompetenciaViewModel>> GetMapaCompetencias(int idCarrera, int? idTipoCompetencia)
         {
             using var connection = _dapperContext.CreateConnection();
 
@@ -202,9 +203,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
             AND (@IdTipoCompetencia IS NULL OR c.Id_Tipo = @IdTipoCompetencia)
             ORDER BY a.Codigo";
 
-            var asignaturasDict = new Dictionary<int, AsignaturaConCompetenciasViewModel>();
+            var asignaturasDict = new Dictionary<int, MapaCompetenciaViewModel>();
 
-            await connection.QueryAsync<AsignaturaConCompetenciasViewModel, EstadoViewModel, CompetenciaResumenViewModel, EstadoViewModel, AsignaturaConCompetenciasViewModel>(
+            await connection.QueryAsync<MapaCompetenciaViewModel, EstadoViewModel, MapaCompetenciaResumenViewModel, EstadoViewModel,MapaCompetenciaViewModel>(
                 sql,
                 (asignatura, estadoAsignatura, competencia, estadoCompetencia) =>
                 {
@@ -212,7 +213,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
                     {
                         asignaturaEntry = asignatura;
                         asignaturaEntry.Estado = estadoAsignatura;
-                        asignaturaEntry.Competencias = new List<CompetenciaResumenViewModel>();
+                        asignaturaEntry.Competencias = new List<MapaCompetenciaResumenViewModel>();
                         asignaturasDict.Add(asignatura.Id, asignaturaEntry);
                     }
 

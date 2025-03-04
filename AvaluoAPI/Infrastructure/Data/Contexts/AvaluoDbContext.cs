@@ -372,7 +372,7 @@ namespace Avaluo.Infrastructure.Data
                 // Clave primaria
                 entity.HasKey(r => r.Id).HasName("PK_Rol");
                 entity.ToTable("roles");
-                
+
                 entity.Property(r => r.Id).HasDefaultValueSql("NEXT VALUE FOR RolSequence"); // Id con valor por defecto
                 // Configuración de propiedades
                 entity.Property(r => r.Descripcion)
@@ -423,8 +423,8 @@ namespace Avaluo.Infrastructure.Data
                 // Relación con Usuario (uno a muchos)
                 entity.HasMany(r => r.Usuarios)
                     .WithOne()
-                    .HasForeignKey(u => u.IdRol)  
-                    .OnDelete(DeleteBehavior.ClientSetNull); 
+                    .HasForeignKey(u => u.IdRol)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 // Índice único en la Descripción (opcional)
                 entity.HasIndex(r => r.Descripcion)
@@ -500,7 +500,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.Acron).IsRequired();
                 entity.Property(e => e.Ubicacion).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
-                
+
                 entity.HasOne(d => d.Area).WithMany(p => p.Edificios)
                     .HasForeignKey(d => d.IdArea)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -517,7 +517,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.HasKey(e => new { e.IdProfesor, e.IdCarrera }).HasName("PK_ProfesorCarrera");
                 entity.ToTable("profesor_carrera");
                 entity.HasIndex(e => e.IdCarrera, "Carrera_Id");
-                
+
                 entity.Property(e => e.IdProfesor).HasColumnName("Profesor_Id");
                 entity.Property(e => e.IdCarrera).HasColumnName("Carrera_Id");
                 entity.HasOne(d => d.Carrera).WithMany(p => p.ProfesoresCarreras)

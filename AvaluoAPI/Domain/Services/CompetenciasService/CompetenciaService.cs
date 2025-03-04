@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using Avaluo.Infrastructure.Persistence.Repositories.Base;
+using AvaluoAPI.Presentation.ViewModels.MapaCompetenciasViewModels;
 
 namespace AvaluoAPI.Domain.Services.CompetenciasService
 {
@@ -93,7 +94,7 @@ namespace AvaluoAPI.Domain.Services.CompetenciasService
             _unitOfWork.SaveChanges();
         }
 
-        public async Task<IEnumerable<AsignaturaConCompetenciasViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia)
+        public async Task<IEnumerable<MapaCompetenciaViewModel>> GetMapaCompetencias(int idCarrera, int idTipoCompetencia)
         {
             return await _unitOfWork.Competencias.GetMapaCompetencias(idCarrera, idTipoCompetencia);
         }

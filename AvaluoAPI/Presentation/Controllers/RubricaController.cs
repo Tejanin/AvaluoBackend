@@ -57,6 +57,11 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok(await _rubricaService.GetProfesorSecciones());
         }
 
-
+        [HttpPost("insert")]
+        public async Task<IActionResult> InseertRubricas()
+        {
+            await _rubricaService.InsertRubricas();
+            return Ok();
+        }
     }
 }

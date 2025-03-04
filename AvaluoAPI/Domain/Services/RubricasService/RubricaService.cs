@@ -9,6 +9,7 @@ using AvaluoAPI.Presentation.ViewModels;
 using AvaluoAPI.Presentation.ViewModels.RubricaViewModels;
 using AvaluoAPI.Utilities;
 using AvaluoAPI.Utilities.JWT;
+using MapsterMapper;
 using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
 
 namespace AvaluoAPI.Domain.Services.RubricasService
@@ -19,15 +20,16 @@ namespace AvaluoAPI.Domain.Services.RubricasService
         private readonly FileHandler _fileHandler;
         private readonly IintecService _intecService;
         private readonly IJwtService _jwtService;
-        private TokenConfig _tokens;
-        private IHttpContextAccessor _httpContextAccessor;
-        public RubricaService(IUnitOfWork unitOfWork, IintecService intecService, FileHandler fileHandler, IJwtService jwtService, IHttpContextAccessor httpContextAccessor)
+        private readonly IMapper _mapper;
+
+        public RubricaService(IUnitOfWork unitOfWork, IintecService intecService, FileHandler fileHandler, IJwtService jwtService, IMapper mapper)
         {
             _jwtService = jwtService;
             _fileHandler = fileHandler;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
             _intecService = intecService;
-            _httpContextAccessor = httpContextAccessor;
+           
         }
 
         public async Task CompleteRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras)
@@ -174,6 +176,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
                                 IdAsignatura = asignaturaConCompetencias.Id,
                                 IdEstado = estado.Id,
                                 Año = año,
+                                IdMetodoEvaluacion = 1, // Por defecto
                                 Periodo = trimestre.ToString(),
                                 Seccion = seccion.Numero,
                                 CantEstudiantes = seccion.Estudiantes.Count,
@@ -308,7 +311,34 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var activo = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
             var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
             var secciones = await _unitOfWork.Rubricas.GetProfesorSeccionesWithRubricas(int.Parse(id), activo.Id, activoEntregado.Id);
-            return secciones; 
+
+            foreach (var seccion in secciones)
+            {
+                // Obtenemos el profesor para esta sección/asignatura específica
+                var profesores = await _intecService.GetProfesores(seccion.Seccion, seccion.Asignatura);
+
+                if (profesores.Count > 0 && profesores[0].Secciones?.Count > 0)
+                {
+                    // Mapear estudiantes usando IMapper
+                    var estudiantes = _mapper.Map<List<EstudianteDTO>>(profesores[0].Secciones[0].Estudiantes);
+
+                    // Ahora procesamos cada rúbrica de la sección
+                    if (seccion.Rubricas != null)
+                    {
+                        foreach (var rubrica in seccion.Rubricas)
+                        {
+                            foreach (var resumen in rubrica.Resumenes)
+                            {
+                               resumen.Estudiantes = estudiantes;
+                            }
+                            
+                        }
+                    }
+                    
+                }
+            }
+
+            return secciones;
         }
     }
 }

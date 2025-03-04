@@ -30,26 +30,26 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
 
             // Obtener rúbricas básicas
             var rubricasQuery = @"
-        SELECT 
-            r.Id,
-            r.IdSO,
-            r.Seccion,
-            r.IdAsignatura,
-            a.Codigo AS AsignaturaCodigo,
-            a.Nombre AS AsignaturaNombre,
-            e.Descripcion AS Estado,
-            r.Comentario,
-            r.Problematica,
-            r.Solucion,
-            r.Evidencia,
-            r.EvaluacionesFormativas,
-            r.Estrategias
-        FROM rubricas r
-        INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
-        INNER JOIN estado e ON r.IdEstado = e.Id
-        WHERE r.IdProfesor = @IdProfesor
-          AND r.IdEstado IN (@IdEstado1, @IdEstado2)
-        ORDER BY r.IdAsignatura, r.Seccion";
+                        SELECT 
+                            r.Id,
+                            r.IdSO,
+                            r.Seccion,
+                            r.IdAsignatura,
+                            a.Codigo AS AsignaturaCodigo,
+                            a.Nombre AS AsignaturaNombre,
+                            e.Descripcion AS Estado,
+                            r.Comentario,
+                            r.Problematica,
+                            r.Solucion,
+                            r.Evidencia,
+                            r.EvaluacionesFormativas,
+                            r.Estrategias
+                        FROM rubricas r
+                        INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
+                        INNER JOIN estado e ON r.IdEstado = e.Id
+                        WHERE r.IdProfesor = @IdProfesor
+                          AND r.IdEstado IN (@IdEstado1, @IdEstado2)
+                        ORDER BY r.IdAsignatura, r.Seccion";
 
             var parameters = new
             {
@@ -146,7 +146,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                     }
 
                     // Inicializar lista de resúmenes vacía
-                    rubrica.Resumenes = new List<ResumenViewModel>();
+                    rubrica.Resumenes = new List<ResumenViewModelMixed>();
                 }
 
                 // Obtener resúmenes para cada rúbrica
@@ -172,7 +172,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
 
                     if (rubrica != null)
                     {
-                        rubrica.Resumenes.Add(new ResumenViewModel
+                        rubrica.Resumenes.Add(new ResumenViewModelMixed
                         {
                             IdPI = (int)resumen.IdPI,
                             CantExperto = (int)resumen.CantExperto,

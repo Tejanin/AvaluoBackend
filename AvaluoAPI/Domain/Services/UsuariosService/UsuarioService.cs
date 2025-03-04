@@ -78,7 +78,15 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             return user;
 
         }
+        public async Task RegisterRange(List<UsuarioDTO> usuarios)
+        {
+            var users = new List<Usuario>();
 
+            foreach (var u in usuarios)
+            {
+                await Register(u);
+            }
+        }
         public async Task ChangePassword(ChangePasswordDTO changePasswordDTO)
         {
            

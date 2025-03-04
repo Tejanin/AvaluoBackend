@@ -9,7 +9,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
     {
         Task<TokenConfig> Login(LoginDTO user);
         Task Register(UsuarioDTO userDTO);
-        Task Update(int id,ModifyUsuarioDTO user);
+        Task Update(int id, ModifyUsuarioDTO user);
         Task Desactivate(int id);
         Task RequestPasswordChange();
         Task ChangePassword(string newPassword);
@@ -20,6 +20,8 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         Task<UsuarioViewModel> GetById(int id);
         Task<PaginatedResult<UsuarioViewModel>> GetAll(int? estado, int? area, int? rol, int? page, int? recordsPerPage);
         Task<UsuarioViewModel> Find();
+        Task RegisterRange(List<UsuarioDTO> usuarios);
+
 
     }
 }
