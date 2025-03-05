@@ -1,6 +1,7 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
 using AvaluoAPI.Domain;
 using AvaluoAPI.Infrastructure.Integrations.INTEC.Models;
+using AvaluoAPI.Presentation.DTOs.RubricaDTOs;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using Mapster;
@@ -27,6 +28,10 @@ namespace AvaluoAPI.Utilities
                 .Map(dest => dest.Nombre, src => src.Nombre)
                 .Map(dest => dest.Apellido, src => src.Apellido)
                 .Map(dest => dest.Matricula, src => src.Id);
+
+            config.NewConfig<ResumenDTO, ResumenViewModelMixed>()
+                .Map(dest => dest.Estudiantes, src => src.Estudiantes)
+                .Map(dest => dest.IdPI, src => src.IdPI);
 
             // Agregar Mapster a la inyección de dependencias
             services.AddSingleton(config);

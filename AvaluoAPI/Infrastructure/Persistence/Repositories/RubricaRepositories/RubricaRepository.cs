@@ -1,12 +1,12 @@
 ﻿using Avaluo.Infrastructure.Data;
-using Avaluo.Infrastructure.Data.Models;
+
 using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Presentation.ViewModels;
 using AvaluoAPI.Presentation.ViewModels.RubricaViewModels;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+
+
 
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
 {
