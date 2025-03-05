@@ -67,5 +67,23 @@ namespace AvaluoAPI.Presentation.Controllers
             await _competenciaService.Delete(id);
             return Ok(new { mensaje = "La competencia ha sido eliminada con éxito." });
         }
+
+        [HttpGet("MapaCompetencia/{idCarrera}/{idTipoCompetencia}")]
+        public async Task<IActionResult> GetMapaCompetencias(int idCarrera, int idTipoCompetencia)
+        {
+            var mapaCompetencias = await _competenciaService.GetMapaCompetencias(idCarrera, idTipoCompetencia);
+            return Ok(new { mensaje = "Mapa de competencias obtenido exitosamente.", data = mapaCompetencias });
+        }
+
+        [HttpPut("MapaCompetencia/{idAsignatura}/{idCompetencia}")]
+        public async Task<IActionResult> UpdateEstadoMapaCompetencia(int idAsignatura, int idCompetencia, [FromBody] UpdateEstadoMapaCompetenciaDTO dto)
+        {
+            bool actualizado = await _competenciaService.UpdateEstadoMapaCompetencia(idAsignatura, idCompetencia, dto);
+
+            if (!actualizado)
+                return BadRequest(new { mensaje = "No se pudo actualizar el estado del SO en Mapa_Competencias." });
+
+            return Ok(new { mensaje = "Estado actualizado correctamente." });
+        }
     }
 }

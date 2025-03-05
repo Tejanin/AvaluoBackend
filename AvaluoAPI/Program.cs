@@ -32,7 +32,12 @@ using AvaluoAPI.Infrastructure.Jobs.Configuration;
 using AvaluoAPI.Domain.Services.AsignaturaService;
 
 using AvaluoAPI.Domain.Services.AulaService;
+
+using AvaluoAPI.Domain.Services.AreaService;
+
 using AvaluoAPI.Domain.Services.CarreraService;
+using StackExchange.Redis;
+
 
 
 
@@ -136,7 +141,11 @@ builder.Services.AddScoped<IAsignaturaService, AsignaturaService>();
 
 builder.Services.AddScoped<IAulaService, AulaService>();
 
+
+builder.Services.AddScoped<IAreaService, AreaService>();
+
 builder.Services.AddScoped<ICarreraService, CarreraService>();
+
 
 
 // FileHandler
@@ -149,7 +158,18 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 // Jobs
 //builder.Services.ConfigureQuartz();
 
-
+// Redis
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "ResumenInstance_";
+});
+builder.Services.AddScoped<IResumenRedisService, ResumenRedisService>();
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Redis");
+    return ConnectionMultiplexer.Connect(connectionString!);
+});
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -166,6 +186,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 }
 );
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSingleton<IJwtService, JwtService>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -192,17 +214,16 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AvaluoDbContext>();
-    context.Database.Migrate();
-}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty; // Esto hace que Swagger UI sea la página raíz
+    });
 }
 
 // Middlewares

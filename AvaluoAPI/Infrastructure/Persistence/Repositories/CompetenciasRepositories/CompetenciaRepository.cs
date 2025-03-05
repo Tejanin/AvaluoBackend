@@ -3,6 +3,7 @@ using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Presentation.ViewModels;
+using AvaluoAPI.Presentation.ViewModels.MapaCompetenciasViewModels;
 using Dapper;
 using System.Data;
 
@@ -97,6 +98,12 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
                 IdEstado = idEstado
             });
 
+
+            if (totalRecords == 0)
+            {
+                return new PaginatedResult<CompetenciaViewModel>(Enumerable.Empty<CompetenciaViewModel>(), 1, 0, 0);
+            }
+
             int currentRecordsPerPage = recordsPerPage.HasValue && recordsPerPage > 0 ? recordsPerPage.Value : totalRecords;
 
             int currentPage = page.HasValue && page > 0 ? page.Value : 1;
@@ -165,5 +172,100 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
             );
             return new PaginatedResult<CompetenciaViewModel>(competenciasDictionary.Values, currentPage, currentRecordsPerPage, totalRecords);
         }
+        public async Task<IEnumerable<MapaCompetenciaViewModel>> GetMapaCompetencias(int idCarrera, int? idTipoCompetencia)
+        {
+            using var connection = _dapperContext.CreateConnection();
+
+            const string sql = @"
+            SELECT 
+                a.Id,
+                a.Codigo,
+                a.Nombre,
+
+                ea.Id, 
+                ea.IdTabla,
+                ea.Descripcion,
+
+                c.Id,
+                c.Nombre,
+                c.Acron,
+
+                ec.Id,
+                ec.IdTabla,
+                ec.Descripcion
+            FROM asignatura_carrera ac
+            INNER JOIN asignaturas a ON ac.Id_Asignatura = a.Id
+            INNER JOIN estado ea ON a.IdEstado = ea.Id
+            LEFT JOIN mapa_competencias mc ON a.Id = mc.Id_Asignatura
+            LEFT JOIN competencia c ON mc.Id_Competencia = c.Id
+            LEFT JOIN estado ec ON mc.Id_Estado = ec.Id
+            WHERE ac.Id_Carrera = @IdCarrera
+            AND (@IdTipoCompetencia IS NULL OR c.Id_Tipo = @IdTipoCompetencia)
+            ORDER BY a.Codigo";
+
+            var asignaturasDict = new Dictionary<int, MapaCompetenciaViewModel>();
+
+            await connection.QueryAsync<MapaCompetenciaViewModel, EstadoViewModel, MapaCompetenciaResumenViewModel, EstadoViewModel,MapaCompetenciaViewModel>(
+                sql,
+                (asignatura, estadoAsignatura, competencia, estadoCompetencia) =>
+                {
+                    if (!asignaturasDict.TryGetValue(asignatura.Id, out var asignaturaEntry))
+                    {
+                        asignaturaEntry = asignatura;
+                        asignaturaEntry.Estado = estadoAsignatura;
+                        asignaturaEntry.Competencias = new List<MapaCompetenciaResumenViewModel>();
+                        asignaturasDict.Add(asignatura.Id, asignaturaEntry);
+                    }
+
+                    if (competencia != null)
+                    {
+                        competencia.Estado = estadoCompetencia;
+                        asignaturaEntry.Competencias.Add(competencia);
+                    }
+
+                    return asignaturaEntry;
+                },
+                new { IdCarrera = idCarrera, IdTipoCompetencia = idTipoCompetencia },
+                splitOn: "Id,Id,Id,Id");
+
+            return asignaturasDict.Values;
+        }
+
+
+        public async Task<bool> UpdateEstadoMapaCompetencia(int idAsignatura, int idCompetencia, int idNuevoEstado)
+        {
+            using var connection = _dapperContext.CreateConnection();
+
+            const string checkSql = @"
+            SELECT COUNT(*) 
+            FROM mapa_competencias
+            WHERE Id_Asignatura = @IdAsignatura AND Id_Competencia = @IdCompetencia";
+
+            var exists = await connection.ExecuteScalarAsync<int>(checkSql, new
+            {
+                IdAsignatura = idAsignatura,
+                IdCompetencia = idCompetencia
+            });
+
+            if (exists == 0)
+            {
+                throw new KeyNotFoundException("No existe un registro en mapa de competencias con la asignatura y competencia proporcionadas.");
+            }
+
+            const string updateSql = @"
+            UPDATE mapa_competencias
+            SET Id_Estado = @IdNuevoEstado
+            WHERE Id_Asignatura = @IdAsignatura AND Id_Competencia = @IdCompetencia";
+
+            var affectedRows = await connection.ExecuteAsync(updateSql, new
+            {
+                IdAsignatura = idAsignatura,
+                IdCompetencia = idCompetencia,
+                IdNuevoEstado = idNuevoEstado
+            });
+
+            return affectedRows > 0;
+        }
+
     }
 }

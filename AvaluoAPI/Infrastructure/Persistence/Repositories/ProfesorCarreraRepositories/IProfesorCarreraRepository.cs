@@ -6,6 +6,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepos
 {
     public interface IProfesorCarreraRepository: IRepository<ProfesorCarrera>
     {
-        Task<ProfesorCarrerasResult> GetProfesorWithCarreras(int profesorId);
+        Task<ProfesorCarrerasDTO> GetProfesorWithCarreras(int profesorId);
     }
 }

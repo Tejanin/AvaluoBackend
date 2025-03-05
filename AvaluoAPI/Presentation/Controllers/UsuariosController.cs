@@ -2,15 +2,10 @@
 using AvaluoAPI.Domain.Helper;
 using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Infrastructure.Integrations.INTEC;
-using AvaluoAPI.Infrastructure.Integrations.Moodle;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
-using AvaluoAPI.Presentation.ViewModels;
-using AvaluoAPI.Swagger.Usuarios;
 using AvaluoAPI.Utilities.JWT;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Filters;
+
 
 
 
@@ -33,9 +28,9 @@ namespace AvaluoAPI.Presentation.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> Get(int? estado, int? area, int? rol)
+        public async Task<ActionResult> Get(int? estado, int? area, int? rol, int? page, int? recordsPerPage)
         {
-            return Ok(new { message = "Operación exitosa", data = await _usuarioService.GetAll(estado, area, rol) });
+            return Ok(new { message = "Operación exitosa", data = await _usuarioService.GetAll(estado, area, rol, page, recordsPerPage) });
         }
 
         [HttpGet("{id}")]
@@ -107,6 +102,13 @@ namespace AvaluoAPI.Presentation.Controllers
             return Accepted(new { message = "Usuario activado exitosamente" });
         }
 
+        [HttpPost("registerManyUsers")]
+        public async Task<IActionResult> RegisterRange(List<UsuarioDTO> usuarios)
+        {
+            await _usuarioService.RegisterRange(usuarios);
+            return Created();
+        }
+
         [HttpGet("test-permissions")]
         public IActionResult TestPermissions()
         {
@@ -165,10 +167,10 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
         [HttpGet("testMocks")]
-        public async Task<ActionResult> Test()
+        public async Task<ActionResult> Test(string? seccion, string? asignatura)
         {
             var mock = new INTECServiceMock();
-            var evidencias = await mock.GetProfesores();
+            var evidencias = await mock.GetProfesores(seccion, asignatura);
             return Ok(new { message = "Datos de prueba obtenidos exitosamente", data = evidencias });
         }
 

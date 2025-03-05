@@ -20,23 +20,17 @@ namespace AvaluoAPI.Presentation.Controllers
         // GET: api/Carreras?nombreCarrera=Ingeniería&idEstado=1&idArea=2&idCoordinador=5&page=1&recordsPerPage=10
         [HttpGet]
         public async Task<ActionResult<PaginatedResult<CarreraViewModel>>> Get(
-            [FromQuery] string? nombreCarrera = null,
-            [FromQuery] int? idEstado = null,
-            [FromQuery] int? idArea = null,
-            [FromQuery] int? idCoordinador = null,
-            [FromQuery] int? page = null,
-            [FromQuery] int? recordsPerPage = null)
+            [FromQuery] string? nombreCarrera,
+            [FromQuery] int? año,
+            [FromQuery] string? peos,
+            [FromQuery] int? idEstado,
+            [FromQuery] int? idArea,
+            [FromQuery] int? idCoordinador,
+            [FromQuery] int? page,
+            [FromQuery] int? recordsPerPage)
         {
-            var carreras = await _carreraService.GetAll(nombreCarrera, idEstado, idArea, idCoordinador, page, recordsPerPage);
+            var carreras = await _carreraService.GetAll(nombreCarrera, idEstado, idArea, idCoordinador,año, peos, page, recordsPerPage);
             return Ok(new { mensaje = "Carreras obtenidas exitosamente.", data = carreras });
-        }
-
-        [HttpGet("asignaturas")]
-        public async Task<ActionResult<IEnumerable<AsignaturaCarreraViewModel>>> GetSubject(
-        [FromQuery] int? idCarrera)
-        {
-            var asignaturasCarreras = await _carreraService.GetSubjectByCareer(idCarrera);
-            return Ok(new { mensaje = "Asignaturas por carrera obtenidas exitosamente.", data = asignaturasCarreras });
         }
 
         // GET: api/Carreras/{id}
@@ -63,7 +57,7 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok(new { mensaje = "La carrera ha sido actualizada con éxito." });
         }
 
-        [HttpPatch("{id}/peos")]
+        [HttpPatch("peos/{id}")]
         public async Task<IActionResult> UpdatePEOs(int id, [FromBody] string nuevosPEOs)
         {
             if (string.IsNullOrWhiteSpace(nuevosPEOs))
@@ -81,11 +75,5 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok(new { mensaje = "La carrera ha sido eliminada con éxito." });
         }
 
-        [HttpGet("mapa-competencias/{carrera}/{tipo}")]
-        public async Task<IActionResult> GetMapaCompetencias(int carrera, int tipo)
-        {
-            var mapaCompetencias = await _carreraService.GetMapaCompetencias(carrera, tipo);
-            return Ok(new { mensaje = "Mapa de competencias obtenido exitosamente.", data = mapaCompetencias });
-        }
     }
 }

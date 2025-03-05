@@ -10,6 +10,7 @@ namespace Avaluo.Infrastructure.Data.Models
     {
         public int Id { get; set; }
         public int IdSO { get; set; }
+        public int IdPI { get; set; }
         public int IdAsignatura { get; set; }
         public bool Satisfactorio { get; set; } = false;
         public char Trimestre { get; set; }
@@ -17,6 +18,7 @@ namespace Avaluo.Infrastructure.Data.Models
         public decimal Porcentaje { get; set; }
         public virtual Asignatura Asignatura { get; set; }
         public virtual Competencia SO { get; set; }
+        public virtual PI PI { get; set; }
         public virtual ICollection<ActionPlan> ActionPlan { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasCarrerasR
 {
     public interface IAsignaturaCarreraRepository : IRepository<AsignaturaCarrera>
     {
-        Task<IEnumerable<AsignaturaCarreraViewModel>> GetAllByCareer(int? idCarrera);
+        Task<PaginatedResult<AsignaturaViewModel>> GetAllByCareer(int idCarrera, int? page, int? recordsPerPage);
         Task<List<int>> GetCarrerasIdsByAsignaturaId(int asignatura);
     }
 }

@@ -23,6 +23,8 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.ConfiguracionRepositorie
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ProfesorCarreraRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.CarreraRubricaRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.HistorialIncumplimientoRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.InformesRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositories;
 
 
 
@@ -37,10 +39,10 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         ITipoInformeRepository TiposInformes { get; }
         ITipoCompetenciaRepository TiposCompetencias { get; }
         IEdificioRespository Edificios { get; }
-
+        IDesempeñoRepository Desempeños { get; }
         ICarreraRubricaRepository CarrerasRubricas { get; }
         IConfiguracionRepository Configuraciones { get; }
-
+        IInformeRepository Informes { get; }
         ICompetenciaRepository Competencias { get; }
         ISOEvaluacionRepository SOEvaluaciones { get; }
         IMapaCompetenciaRepository MapaCompetencias { get; }

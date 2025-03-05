@@ -10,8 +10,8 @@ INSERT INTO Estado (idtabla, descripcion) VALUES
 ('Asignatura', 'Desactivada'),
 ('Competencia', 'Activa'),
 ('Competencia', 'Desactivada'),
-('MapaCompetencia','Activada'),
-('MapaCompetencia','Desactivada'),
+('MapaCompetencia','Evaluando'),
+('MapaCompetencia','No Evaluando'),
 ('Configuracion','Activa'),
 ('Configuracion','Desactivada'),
 ('Carrera', 'Activa'),
@@ -23,13 +23,25 @@ INSERT INTO metodo_evaluacion (descripcionES, descripcionEN) VALUES
 ('Proyecto', 'Project'),
 ('Presentación', 'Presentation');
 
-INSERT INTO Roles (Descripcion) VALUES
-('Profesor'),
-('Administrador'),
-('Coordinador'),
-('Supervisor'),
-('Auxiliar'),
-('Prueba')
+INSERT INTO roles (
+    Descripcion, 
+    EsProfesor, 
+    EsSupervisor, 
+    EsCoordinadorArea, 
+    EsCoordinadorCarrera, 
+    EsAdmin, 
+    EsAux, 
+    VerInformes, 
+    VerListaDeRubricas, 
+    ConfigurarFechas, 
+    VerManejoCurriculum
+) VALUES
+('Profesor', 1, 0, 0, 0, 0, 0, 1, 1, 0, 1),
+('Administrador', 0, 0, 0, 0, 1, 0, 1, 1, 1, 1),
+('Coordinador', 0, 0, 1, 1, 0, 0, 1, 1, 1, 1),
+('Supervisor', 0, 1, 0, 0, 0, 0, 1, 1, 1, 1),
+('Auxiliar', 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+('Prueba', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 INSERT INTO tipo_competencia (Nombre) VALUES
 ('Específica'),

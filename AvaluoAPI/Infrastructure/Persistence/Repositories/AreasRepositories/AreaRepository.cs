@@ -6,6 +6,10 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.AreaRepositories;
 using AvaluoAPI.Presentation.ViewModels;
 using Dapper;
 
+using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
 {
     public class AreaRepository : Repository<Area>, IAreaRepository
@@ -21,74 +25,111 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
             get { return _context as AvaluoDbContext; }
         }
 
-    
 
-        public async Task<IEnumerable<AreaViewModel>> GetAllAreas()
+        public async Task<AreaViewModel> GetAreaById(int id)
         {
             using var connection = _dapperContext.CreateConnection();
 
-            const string query = @"
-            SELECT 
-                a.Id,
-                a.Descripcion,
-                a.FechaCreacion,
-                a.UltimaEdicion,
-                u.Id,
-                u.Username,
-                u.Email,
-                u.Nombre,
-                u.Apellido,
-                e.Descripcion as Estado,
-                ar.Descripcion as Area,
-                r.Descripcion as Rol,
-                so.Descripcion as SO,
-                u.CV,
-                u.Foto,
-                c.Id,
-                c.NumeroContacto
+            var query = @"
+                        SELECT 
+                            a.Id, 
+                            a.Descripcion,
+
+                            u.Id,
+                            u.Nombre,
+                            u.Apellido
+
+                        FROM areas a
+                        LEFT JOIN usuario u ON u.Id = a.IdCoordinador 
+                        WHERE a.Id = @Id";
+
+            var parametros = new { Id = id };
+
+            var areas = await connection.QueryAsync<AreaViewModel, UsuarioViewModel, AreaViewModel>(
+                query,
+                (area, usuario) =>
+                {
+                    if (usuario != null)
+                        area.Coordinador = usuario.Nombre + " " + usuario.Apellido;
+                    return area;
+                },
+                parametros,
+                splitOn: "Id"
+            );
+
+            return areas.FirstOrDefault();
+        }
+
+        public async Task<PaginatedResult<AreaViewModel>> GetAreas(string? descripcion, int? idCoordinador, int? page, int? recordsPerPage)
+        {
+            using var connection = _dapperContext.CreateConnection();
+
+            var countQuery = @"
+            SELECT COUNT(*)
             FROM areas a
             LEFT JOIN usuario u ON a.IdCoordinador = u.Id
-            LEFT JOIN estado e ON u.IdEstado = e.Id
-            LEFT JOIN areas ar ON u.IdArea = ar.Id
-            LEFT JOIN rol r ON u.IdRol = r.Id
-            LEFT JOIN so ON u.IdSO = so.Id
-            LEFT JOIN contacto c ON u.Id = c.Id_Usuario
-            ORDER BY a.Id";
+            WHERE (@Descripcion IS NULL OR a.Descripcion LIKE '%' + @Descripcion + '%')
+            AND (@IdCoordinador IS NULL OR a.IdCoordinador = @IdCoordinador)";
 
-            var areaDict = new Dictionary<int, AreaViewModel>();
-            var userDict = new Dictionary<int, UsuarioViewModel>();
+            int totalRecords = await connection.ExecuteScalarAsync<int>(countQuery, new
+            {
+                Descripcion = descripcion,
+                IdCoordinador = idCoordinador
+            });
 
-            await connection.QueryAsync<AreaViewModel, UsuarioViewModel, ContactoViewModel, AreaViewModel>(
+            int currentRecordsPerPage = recordsPerPage.HasValue && recordsPerPage > 0 ? recordsPerPage.Value : totalRecords;
+
+            int currentPage = page.HasValue && page > 0 ? page.Value : 1;
+
+            int offset = (currentPage - 1) * currentRecordsPerPage;
+
+            var query = $@"
+                        SELECT 
+                            a.Id, 
+                            a.Descripcion,
+
+                            u.Id,
+                            u.Nombre,
+                            u.Apellido
+
+                        FROM areas a
+                        LEFT JOIN usuario u ON u.Id = a.IdCoordinador
+                        WHERE (@Descripcion IS NULL OR a.Descripcion LIKE '%' + @Descripcion + '%')
+                        AND (@IdCoordinador IS NULL OR a.IdCoordinador = @IdCoordinador)
+                        ORDER BY u.Id
+                        OFFSET @Offset ROWS FETCH NEXT @RecordsPerPage ROWS ONLY";
+
+            var parametros = new
+            {
+                Descripcion = descripcion,
+                IdCoordinador = idCoordinador,
+                Offset = offset,
+                RecordsPerPage = currentRecordsPerPage
+            };
+
+            var areasDictionary = new Dictionary<int, AreaViewModel>();
+
+            var areas = await connection.QueryAsync<AreaViewModel, UsuarioViewModel, AreaViewModel>(
                 query,
-                (area, usuario, contacto) =>
+                (area, usuario) =>
                 {
-                    if (!areaDict.TryGetValue(area.Id, out var areaEntry))
+                    if (!areasDictionary.TryGetValue(area.Id, out var areaEntry))
                     {
                         areaEntry = area;
-                        areaDict.Add(area.Id, areaEntry);
+                        if (usuario != null)
+                            areaEntry.Coordinador = usuario.Nombre + " " + usuario.Apellido;
+                        areasDictionary.Add(area.Id, areaEntry);
                     }
-
-                    if (usuario != null)
-                    {
-                        if (!userDict.TryGetValue(usuario.Id, out var userEntry))
-                        {
-                            userEntry = usuario;
-                            userEntry.Contactos = new List<ContactoViewModel>();
-                            userDict.Add(usuario.Id, userEntry);
-                            areaEntry.Coordinador = userEntry;
-                        }
-
-                        if (contacto != null)
-                        {
-                            userEntry.Contactos.Add(contacto);
-                        }
-                    }
-
                     return areaEntry;
                 },
-                splitOn: "Id,Id");
+                parametros,
+                splitOn: "Id"
+            );
+            return new PaginatedResult<AreaViewModel>(areasDictionary.Values, currentPage, currentRecordsPerPage, totalRecords);
 
-            return areaDict.Values;
+    
+
+        
         }
     }
 }
