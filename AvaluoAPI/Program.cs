@@ -36,6 +36,7 @@ using AvaluoAPI.Domain.Services.AulaService;
 using AvaluoAPI.Domain.Services.AreaService;
 
 using AvaluoAPI.Domain.Services.CarreraService;
+using StackExchange.Redis;
 
 
 
@@ -157,7 +158,18 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 // Jobs
 //builder.Services.ConfigureQuartz();
 
-
+// Redis
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "ResumenInstance_";
+});
+builder.Services.AddScoped<IResumenRedisService, ResumenRedisService>();
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Redis");
+    return ConnectionMultiplexer.Connect(connectionString!);
+});
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

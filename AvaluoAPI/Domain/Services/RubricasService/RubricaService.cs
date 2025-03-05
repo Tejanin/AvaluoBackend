@@ -21,15 +21,17 @@ namespace AvaluoAPI.Domain.Services.RubricasService
         private readonly IintecService _intecService;
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
+        private readonly IResumenRedisService _redisService;
 
-        public RubricaService(IUnitOfWork unitOfWork, IintecService intecService, FileHandler fileHandler, IJwtService jwtService, IMapper mapper)
+        public RubricaService(IUnitOfWork unitOfWork, IintecService intecService, FileHandler fileHandler, IJwtService jwtService, IMapper mapper, IResumenRedisService redisService)
         {
             _jwtService = jwtService;
             _fileHandler = fileHandler;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _intecService = intecService;
-           
+            _redisService = redisService;
+            _redisService = redisService;
         }
 
         public async Task CompleteRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras)
@@ -37,7 +39,6 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var rubrica = await _unitOfWork.Rubricas.FindAsync(r => r.Id == rubricaDTO.Id);
             var estadoRubricaCompletada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
 
-            
             rubrica.IdEstado = estadoRubricaCompletada.Id;
             rubrica.IdMetodoEvaluacion = rubricaDTO.MetodoEvaluacion;
             rubrica.Comentario = rubricaDTO.Comentario;
@@ -48,19 +49,18 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             rubrica.Evidencia = rubricaDTO.Evidencia;
             rubrica.FechaCompletado = DateTime.Now;
 
+           
+             
 
-
+            // Continuamos con el proceso normal de base de datos
             var resumenes = await PrepareResumenesForInsert(rubricaDTO.Resumenes, rubrica.Id);
             var evidencias = await PrepareEvidenciasForInsert(evidenciasExtras, rubrica.Año, rubrica.Periodo, rubrica.Id);
-
-
-
-
             await Task.WhenAll(
                 _unitOfWork.Rubricas.Update(rubrica),
                 _unitOfWork.Evidencias.AddRangeAsync(evidencias),
-                _unitOfWork.Resumenes.AddRangeAsync(resumenes)
-             );
+                _unitOfWork.Resumenes.AddRangeAsync(resumenes),
+                _redisService.SaveResumenListAsync($"rubrica:{rubrica.Id}:resumenes", rubricaDTO.Resumenes)
+            );
             _unitOfWork.SaveChanges();
         }
 
@@ -106,8 +106,6 @@ namespace AvaluoAPI.Domain.Services.RubricasService
         public async Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras)
         {
             var rubrica = await _unitOfWork.Rubricas.FindAsync(r => r.Id == rubricaDTO.Id);
-            
-
 
             var estadoRubricaCompletada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
             if (rubrica.IdEstado != estadoRubricaCompletada.Id)
@@ -124,20 +122,18 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             rubrica.Estrategias = rubricaDTO.Estrategias;
             rubrica.Evidencia = rubricaDTO.Evidencia;
 
-
+            
             var evidenciasBeforeUpdate = await _unitOfWork.Evidencias.FindAllAsync(r => r.IdRubrica == rubrica.Id);
-
             var resumenes = await PrepareResumenesForUpdate(rubricaDTO.Resumenes, rubrica.Id);
             var evidencias = await PrepareEvidenciasForInsert(evidenciasExtras, rubrica.Año, rubrica.Periodo, rubrica.Id);
 
-
-
-
             await Task.WhenAll(
                 _unitOfWork.Rubricas.Update(rubrica),
+                _redisService.SaveResumenListAsync($"rubrica:{rubrica.Id}:resumenes", rubricaDTO.Resumenes),
                 _unitOfWork.Evidencias.AddRangeAsync(evidencias),
                 _unitOfWork.Resumenes.UpdateRangeAsync(resumenes)
-             );
+            );
+
             _unitOfWork.SaveChanges();
         }
 
@@ -164,7 +160,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
                 foreach (var seccion in profesor.Secciones!)
                 {
                     var asignaturaConCompetencias = asignaturasConCompetencias
-                        .FirstOrDefault(a => a.Codigo == seccion.Asignatura);
+                        .FirstOrDefault(a => $"{a.Codigo} - {a.Nombre}" == seccion.Asignatura);
 
                     if (asignaturaConCompetencias != null && asignaturaConCompetencias.Competencias != null)
                     {
@@ -318,27 +314,32 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
             foreach (var seccion in secciones)
             {
-                // Obtenemos el profesor para esta sección/asignatura específica
                 var profesores = await _intecService.GetProfesores(seccion.Seccion, seccion.Asignatura);
+                var estudiantes = _mapper.Map<List<EstudianteDTO>>(profesores[0].Secciones[0].Estudiantes);
+                seccion.Estudiantes = estudiantes;
 
-                if (profesores.Count > 0 && profesores[0].Secciones?.Count > 0)
+                if (profesores.Count > 0 && profesores[0].Secciones?.Count > 0 && seccion.Rubricas != null)
                 {
-                    // Mapear estudiantes usando IMapper
-                    var estudiantes = _mapper.Map<List<EstudianteDTO>>(profesores[0].Secciones[0].Estudiantes);
-
-                    // Ahora procesamos cada rúbrica de la sección
-                    if (seccion.Rubricas != null)
+                    foreach (var rubrica in seccion.Rubricas)
                     {
-                        foreach (var rubrica in seccion.Rubricas)
+                        // Intentar recuperar los resumenes desde Redis
+                        string claveRedis = $"rubrica:{rubrica.Id}:resumenes";
+                        var resumenesFromRedis = await _redisService.GetResumenListAsync(claveRedis);
+
+                        if (resumenesFromRedis != null && resumenesFromRedis.Count > 0)
                         {
+                            // Si hay datos en Redis, usamos esos
+                            rubrica.Resumenes = _mapper.Map<List<ResumenViewModelMixed>>(resumenesFromRedis);
+                        }
+                        else if (rubrica.Resumenes != null)
+                        {
+                            // Si no hay datos en Redis, asignar estudiantes a los resumenes existentes
                             foreach (var resumen in rubrica.Resumenes)
                             {
-                               resumen.Estudiantes = estudiantes;
+                                resumen.Estudiantes = estudiantes;
                             }
-                            
                         }
                     }
-                    
                 }
             }
 
