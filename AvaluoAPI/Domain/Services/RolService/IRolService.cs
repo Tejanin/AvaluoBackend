@@ -8,7 +8,7 @@ namespace AvaluoAPI.Domain.Services.RolService
         Task<PaginatedResult<RolViewModel>> GetAll(string? descripcion, int? page, int? recordsPerPage);
         Task<RolViewModel> GetById(int id);
         Task Register(RolDTO rolDTO);
-        Task Update(int id, RolModifyDTO rolDTO);
+        Task Update(int id, RolDTO rolDTO);
         Task Delete(int id);
     }
 }

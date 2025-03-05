@@ -41,7 +41,7 @@ namespace AvaluoAPI.Domain.Services.RolService
             _unitOfWork.SaveChanges();
         }
 
-        public async Task Update(int id, RolModifyDTO rolDTO)
+        public async Task Update(int id, RolDTO rolDTO)
         {
             var rol = await _unitOfWork.Roles.GetByIdAsync(id);
             if (rol == null)

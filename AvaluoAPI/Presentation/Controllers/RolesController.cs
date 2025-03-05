@@ -46,7 +46,7 @@ namespace AvaluoAPI.Presentation.Controllers
 
         // PUT: api/Roles/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] RolModifyDTO rolDTO)
+        public async Task<IActionResult> Put(int id, [FromBody] RolDTO rolDTO)
         {
             await _rolService.Update(id, rolDTO);
             return Ok(new { mensaje = "El rol ha sido actualizado con éxito." });

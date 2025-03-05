@@ -149,7 +149,7 @@ builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<ICarreraService, CarreraService>();
 
 builder.Services.AddScoped<IRolService, RolService>();
-builder.Services.AddScoped<IRolRepository, RolRepository>();
+
 
 
 
