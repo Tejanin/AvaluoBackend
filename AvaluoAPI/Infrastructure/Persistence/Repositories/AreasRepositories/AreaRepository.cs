@@ -36,38 +36,21 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
                             a.Descripcion,
 
                             u.Id,
-                            u.Username,
-                            u.Email,
                             u.Nombre,
-                            u.Apellido,
-                            u.CV,
-                            u.Foto,
-
-                            e.Descripcion Estado,
-                            ar.Descripcion Area,
-                            r.Descripcion Rol,
-                            c.Nombre SO
-
-                            co.Id,
-                            co.NumeroContacto
+                            u.Apellido
 
                         FROM areas a
                         LEFT JOIN usuario u ON u.Id = a.IdCoordinador 
-                        LEFT JOIN estado e ON u.IdEstado = e.Id
-                        LEFT JOIN areas ar ON u.IdArea = ar.Id
-                        LEFT JOIN roles r ON u.IdRol = r.Id
-                        LEFT JOIN competencia c ON u.IdSO = c.Id
-                        LEFT JOIN contacto co ON co.Id_Usuario = u.Id
                         WHERE a.Id = @Id";
 
             var parametros = new { Id = id };
 
-            var areas = await connection.QueryAsync<AreaViewModel, UsuarioViewModel, List<ContactoViewModel>, AreaViewModel>(
+            var areas = await connection.QueryAsync<AreaViewModel, UsuarioViewModel, AreaViewModel>(
                 query,
-                (area, usuario, contacto) =>
+                (area, usuario) =>
                 {
-                    area.Usuario = usuario;
-                    area.Usuario.Contactos = contacto;
+                    if (usuario != null)
+                        area.Coordinador = usuario.Nombre + " " + usuario.Apellido;
                     return area;
                 },
                 parametros,
@@ -106,31 +89,14 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
                             a.Descripcion,
 
                             u.Id,
-                            u.Username,
-                            u.Email,
                             u.Nombre,
-                            u.Apellido,
-                            u.CV,
-                            u.Foto,
-
-                            e.Descripcion Estado,
-                            ar.Descripcion Area,
-                            r.Descripcion Rol,
-                            c.Nombre SO
-
-                            co.Id,
-                            co.NumeroContacto
+                            u.Apellido
 
                         FROM areas a
-                        LEFT JOIN usuario u ON u.Id = a.IdCoordinador 
-                        LEFT JOIN estado e ON u.IdEstado = e.Id
-                        LEFT JOIN areas ar ON u.IdArea = ar.Id
-                        LEFT JOIN roles r ON u.IdRol = r.Id
-                        LEFT JOIN competencia c ON u.IdSO = c.Id
-                        LEFT JOIN contacto co ON co.Id_Usuario = u.Id
+                        LEFT JOIN usuario u ON u.Id = a.IdCoordinador
                         WHERE (@Descripcion IS NULL OR a.Descripcion LIKE '%' + @Descripcion + '%')
                         AND (@IdCoordinador IS NULL OR a.IdCoordinador = @IdCoordinador)
-                        ORDER BY c.Id
+                        ORDER BY u.Id
                         OFFSET @Offset ROWS FETCH NEXT @RecordsPerPage ROWS ONLY";
 
             var parametros = new
@@ -143,15 +109,15 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
 
             var areasDictionary = new Dictionary<int, AreaViewModel>();
 
-            var areas = await connection.QueryAsync<AreaViewModel, UsuarioViewModel, List<ContactoViewModel>, AreaViewModel>(
+            var areas = await connection.QueryAsync<AreaViewModel, UsuarioViewModel, AreaViewModel>(
                 query,
-                (area, usuario, contacto) =>
+                (area, usuario) =>
                 {
                     if (!areasDictionary.TryGetValue(area.Id, out var areaEntry))
                     {
                         areaEntry = area;
-                        areaEntry.Usuario = usuario;
-                        areaEntry.Usuario.Contactos = contacto;
+                        if (usuario != null)
+                            areaEntry.Coordinador = usuario.Nombre + " " + usuario.Apellido;
                         areasDictionary.Add(area.Id, areaEntry);
                     }
                     return areaEntry;
