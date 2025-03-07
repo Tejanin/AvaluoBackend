@@ -36,6 +36,7 @@ using AvaluoAPI.Domain.Services.AulaService;
 using AvaluoAPI.Domain.Services.AreaService;
 
 using AvaluoAPI.Domain.Services.CarreraService;
+using AvaluoAPI.Domain.Services.DesempeñoService;
 
 
 
@@ -144,6 +145,7 @@ builder.Services.AddScoped<IAulaService, AulaService>();
 builder.Services.AddScoped<IAreaService, AreaService>();
 
 builder.Services.AddScoped<ICarreraService, CarreraService>();
+builder.Services.AddScoped<IDesempeñoService, DesempeñoService>();
 
 
 
@@ -199,6 +201,8 @@ builder.Services.AddCors(options =>
 
 
 });
+
+builder.Services.AddControllersWithViews(); //Para poder ver las views de los informes en las rutas
 
 var app = builder.Build();
 

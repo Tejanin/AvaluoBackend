@@ -1,0 +1,211 @@
+﻿@model IEnumerable<AvaluoAPI.Presentation.ViewModels.InformeDesempeñoViewModel>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Evaluación ABET</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="container mx-auto p-6 max-w-4xl">
+        @foreach (var asignatura in Model)
+        {
+            <div class="text-center pb-6 border-b-2 border-blue-800 mb-8">
+                <img src="https://www.idc-latinamerica.com/sites/default/files/2021-07/INTEC%20Logo.png" alt="Logo Institucional" class="mx-auto h-16 mb-4">
+                <h1 class="text-3xl font-bold text-blue-800">Informe de Evaluación ABET</h1>
+                <h2 class="text-xl text-gray-700 mt-2">@asignatura.CodigoAsignatura - @asignatura.NombreAsignatura</h2>
+                <h3 class="text-lg text-gray-600 mt-1">Año: @asignatura.Año | Periodo: @asignatura.Periodo</h3>
+            </div>
+
+            @foreach (var outcome in asignatura.StudentOutcomes)
+            {
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <div class="mb-4">
+                        <span class="font-bold text-blue-800 w-48 inline-block">Student Outcome (SO):</span>
+                        <span>@outcome.NombreSO</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="font-bold text-blue-800 w-48 inline-block">Descripción:</span>
+                        <span>@outcome.DescripcionSO</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="font-bold text-blue-800 w-48 inline-block">Total de Estudiantes:</span>
+                        <span>@asignatura.TotalEstudiantes</span>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-blue-800 border-b border-gray-300 pb-2 mb-6">Resultados por Indicador de Desempeño</h2>
+
+                @foreach (var indicador in outcome.PerformanceIndicators)
+                {
+                    var chartId = $"chart-pi-{outcome.NombreSO}-{indicador.IdPI}".Replace(" ", "");
+
+                    <div class="mb-10 rounded-lg overflow-hidden shadow-md">
+                        <div class="bg-blue-800 text-white p-4">
+                            <h3 class="text-xl font-bold">Performance Indicator (PI) #@indicador.IdPI</h3>
+                        </div>
+                        <div class="bg-white p-6">
+                            <p class="mb-4"><span class="font-bold">Descripción:</span> @indicador.DescripcionPI</p>
+
+                            <div class="mb-4">
+                                <span class="font-bold text-blue-800 w-48 inline-block">¿Alcanzó nivel satisfactorio?</span>
+                                <span class="px-3 py-1 rounded-md @(indicador.EsSatisfactorio ? "bg-green-600" : "bg-red-600") text-white font-bold">
+                                    @(indicador.EsSatisfactorio ? "Sí" : "No") (@indicador.PorcentajeSatisfactorio%)
+                                </span>
+                            </div>
+
+                            <div class="flex flex-wrap justify-between mt-6">
+                                <div class="w-1/4 px-2 mb-4">
+                                    <div class="bg-green-600 text-white rounded-md p-3 text-center">
+                                        <h4 class="font-bold mb-1">Experto</h4>
+                                        <p class="text-xl font-bold">@indicador.CantExperto</p>
+                                        <p class="text-sm">estudiantes</p>
+                                    </div>
+                                </div>
+                                <div class="w-1/4 px-2 mb-4">
+                                    <div class="bg-blue-500 text-white rounded-md p-3 text-center">
+                                        <h4 class="font-bold mb-1">Satisfactorio</h4>
+                                        <p class="text-xl font-bold">@indicador.CantSatisfactorio</p>
+                                        <p class="text-sm">estudiantes</p>
+                                    </div>
+                                </div>
+                                <div class="w-1/4 px-2 mb-4">
+                                    <div class="bg-yellow-400 text-gray-800 rounded-md p-3 text-center">
+                                        <h4 class="font-bold mb-1">En Desarrollo</h4>
+                                        <p class="text-xl font-bold">@indicador.CantDesarrollo</p>
+                                        <p class="text-sm">estudiantes</p>
+                                    </div>
+                                </div>
+                                <div class="w-1/4 px-2 mb-4">
+                                    <div class="bg-red-600 text-white rounded-md p-3 text-center">
+                                        <h4 class="font-bold mb-1">Principiante</h4>
+                                        <p class="text-xl font-bold">@indicador.CantPrincipiante</p>
+                                        <p class="text-sm">estudiantes</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="h-64 mt-6">
+                                <canvas id="@chartId"></canvas>
+                            </div>
+
+                            <!-- Script para este indicador específico -->
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    var ctx = document.getElementById('@chartId').getContext('2d');
+                                    new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: ['Principiante', 'En Desarrollo', 'Satisfactorio', 'Experto'],
+                                            datasets: [{
+                                                label: 'Cantidad de Estudiantes',
+                                                data: [@indicador.CantPrincipiante, @indicador.CantDesarrollo, @indicador.CantSatisfactorio, @indicador.CantExperto],
+                                                backgroundColor: [
+                                                    '#dc2626', // red-600
+                                                    '#facc15', // yellow-400
+                                                    '#0ea5e9', // blue-500
+                                                    '#16a34a'  // green-600
+                                                ]
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    max: Math.max(@indicador.CantPrincipiante, @indicador.CantDesarrollo, @indicador.CantSatisfactorio, @indicador.CantExperto) * 1.2
+                                                }
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                }
+            }
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 class="text-2xl font-bold text-blue-800 border-b border-gray-300 pb-2 mb-6">Resumen de Resultados</h2>
+
+                <div class="mb-4">
+                    <span class="font-bold text-blue-800 w-48 inline-block">Total de PIs evaluados:</span>
+                    <span>@asignatura.StudentOutcomes.SelectMany(so => so.PerformanceIndicators).Count()</span>
+                </div>
+                <div class="mb-4">
+                    <span class="font-bold text-blue-800 w-48 inline-block">PIs que alcanzaron nivel satisfactorio:</span>
+                    <span>@asignatura.StudentOutcomes.SelectMany(so => so.PerformanceIndicators).Count(pi => pi.EsSatisfactorio) (@(Math.Round((double)asignatura.StudentOutcomes.SelectMany(so => so.PerformanceIndicators).Count(pi => pi.EsSatisfactorio) / asignatura.StudentOutcomes.SelectMany(so => so.PerformanceIndicators).Count() * 100, 1))%)</span>
+                </div>
+
+                <div class="h-72 mt-6">
+                    <canvas id="chart-summary-@asignatura.CodigoAsignatura"></canvas>
+                </div>
+
+                <!-- Leyenda para el gráfico de resumen -->
+                <div class="flex justify-center items-center mt-4">
+                    <div class="flex items-center mr-6">
+                        <div class="w-4 h-4 bg-green-600 mr-2"></div>
+                        <span>Satisfactorio</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-red-600 mr-2"></div>
+                        <span>No Satisfactorio</span>
+                    </div>
+                </div>
+
+                <!-- Script para el gráfico resumen -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var ctx = document.getElementById('chart-summary-@asignatura.CodigoAsignatura').getContext('2d');
+
+                        // Calcular los porcentajes reales basados en los datos
+                        var totalPIs = @asignatura.StudentOutcomes.SelectMany(so => so.PerformanceIndicators).Count();
+                        var satisfactoryPIs = @asignatura.StudentOutcomes.SelectMany(so => so.PerformanceIndicators).Count(pi => pi.EsSatisfactorio);
+                        var satisfactoryPercentage = (satisfactoryPIs / totalPIs * 100).toFixed(1);
+                        var nonSatisfactoryPercentage = (100 - satisfactoryPercentage).toFixed(1);
+
+                        new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Satisfactorio', 'No Satisfactorio'],
+                                datasets: [{
+                                    data: [satisfactoryPercentage, nonSatisfactoryPercentage],
+                                    backgroundColor: [
+                                        '#22c55e', // verde
+                                        '#ef4444'  // rojo
+                                    ]
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                cutout: '65%',
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function (context) {
+                                                return context.label + ': ' + context.raw + '%';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
+                </script>
+            </div>
+        }
+
+        <div class="text-center text-gray-500 text-sm mt-10 pt-4 border-t border-gray-300">
+            <p>Informe generado el @DateTime.Now.ToString("dd/MM/yyyy")</p>
+            <p>Sistema de Gestión de Evaluaciones ABET</p>
+        </div>
+    </div>
+</body>
+</html>
