@@ -39,6 +39,8 @@ using AvaluoAPI.Domain.Services.CarreraService;
 using StackExchange.Redis;
 using AvaluoAPI.Domain.Services.RolService;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.RolRepositories;
+using AvaluoAPI.Domain.Services.InventarioService;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
 
 
 
@@ -149,6 +151,11 @@ builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<ICarreraService, CarreraService>();
 
 builder.Services.AddScoped<IRolService, RolService>();
+
+builder.Services.AddScoped<IInventarioService, InventarioService>();
+
+builder.Services.AddScoped<IInventarioRepository, InventarioRepository>();
+
 
 
 
