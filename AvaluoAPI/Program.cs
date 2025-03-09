@@ -204,6 +204,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllersWithViews(); //Para poder ver las views de los informes en las rutas
 
+builder.Services.AddScoped<PdfHelper>(); // Registra PdfHelper como un servicio
+
 var app = builder.Build();
 
 
