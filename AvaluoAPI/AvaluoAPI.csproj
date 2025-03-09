@@ -43,8 +43,8 @@
 
   <ItemGroup>
     <Folder Include="Domain\Services\MapaCompetenciaService\" />
-    <Folder Include="Domain\Services\PIService\" />
     <Folder Include="Domain\Services\SOEvaluacionesService\" />
+    <Folder Include="Presentation\ViewModels\InformeViewModels\" />
   </ItemGroup>
 
 </Project>

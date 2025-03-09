@@ -31,9 +31,9 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRubricas([FromQuery] int? so = null, [FromQuery] List<int>? carreras = null, [FromQuery] int? estado = null, [FromQuery] int? asignatura = null, [FromQuery] int? page = null, [FromQuery] int? recordsPerPage = null)
+        public async Task<IActionResult> GetAllRubricas([FromQuery] int? so = null, [FromQuery] List<int>? carreras = null, [FromQuery] List<int>? estados = null, [FromQuery] int? asignatura = null, [FromQuery] int? page = null, [FromQuery] int? recordsPerPage = null)
         {
-            return Ok(new { mensaje = "Operación exitosa", data = await _rubricaService.GetAllRubricas(so, carreras, estado, asignatura, page, recordsPerPage) });
+            return Ok(new { mensaje = "Operación exitosa", data = await _rubricaService.GetAllRubricas(so, carreras, estados, asignatura, page, recordsPerPage) });
         }
 
         [HttpGet("fechas")]

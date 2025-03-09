@@ -3,8 +3,11 @@
 using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Presentation.ViewModels;
+using AvaluoAPI.Presentation.ViewModels.DashboardsViewModels.AvaluoAPI.Presentation.ViewModels;
 using AvaluoAPI.Presentation.ViewModels.RubricaViewModels;
 using Dapper;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 
 
@@ -207,61 +210,65 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
 
             return asignaturas.ToList();
         }
-        public async Task<PaginatedResult<RubricaViewModel>> GetRubricasFiltered(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null, int? page = null, int? recordsPerPage = null)
-
-
+        public async Task<PaginatedResult<RubricaViewModel>> GetRubricasFiltered(
+                int? idSO = null,
+                List<int>? carrerasIds = null,
+                List<int>? estadosIds = null,  // Cambiado de int? idEstado a List<int>? estadosIds
+                int? idAsignatura = null,
+                int? page = null,
+                int? recordsPerPage = null)
         {
             using var connection = _dapperContext.CreateConnection();
 
             // Base del query para contar el total de registros
             var countQuery = @"
-        SELECT COUNT(*)
-        FROM rubricas r
-        INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
-        INNER JOIN carreras c ON cr.Id_Carrera = c.Id
-        INNER JOIN usuario u ON r.IdProfesor = u.Id
-        INNER JOIN competencia comp ON r.IdSO = comp.Id
-        INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
-        INNER JOIN estado e ON r.IdEstado = e.Id
-        LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
-        WHERE 1=1 ";
+SELECT COUNT(*)
+FROM rubricas r
+INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
+INNER JOIN carreras c ON cr.Id_Carrera = c.Id
+INNER JOIN usuario u ON r.IdProfesor = u.Id
+INNER JOIN competencia comp ON r.IdSO = comp.Id
+INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
+INNER JOIN estado e ON r.IdEstado = e.Id
+LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
+WHERE 1=1 ";
 
             // Query principal con JOINs y datos detallados
             var query = @"
-                       SELECT 
-                           r.Id,
-                           r.Comentario,
-                           r.Problematica,
-                           r.Solucion,
-                           r.Evidencia,
-                           r.EvaluacionesFormativas,
-                           r.Estrategias,
-                            CONCAT(u.Nombre, ' ', u.Apellido) AS Profesor,
-                           c.Id,
-                           c.NombreCarrera as Nombre,
-                           comp.Id,
-                           comp.Nombre,
-                           comp.Acron,
-                           a.Id,
-                           a.Codigo,
-                           a.Nombre,
-                           e.Id,
-                           e.IdTabla,
-                           e.Descripcion,
-                           rs.Id_PI as IdPI,
-                           rs.CantExperto,
-                           rs.CantSatisfactorio,
-                           rs.CantPrincipiante,
-                           rs.CantDesarrollo
-                       FROM rubricas r
-                       INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
-                       INNER JOIN carreras c ON cr.Id_Carrera = c.Id
-                       INNER JOIN usuario u ON r.IdProfesor = u.Id
-                       INNER JOIN competencia comp ON r.IdSO = comp.Id
-                       INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
-                       INNER JOIN estado e ON r.IdEstado = e.Id
-                       LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
-                       WHERE 1=1 ";  // Inicio de condiciones WHERE
+               SELECT 
+                   r.Id,
+                   r.Comentario,
+                   r.Problematica,
+                   r.Solucion,
+                   r.Evidencia,
+                   r.EvaluacionesFormativas,
+                   r.Estrategias,
+                    CONCAT(u.Nombre, ' ', u.Apellido) AS Profesor,
+                   c.Id,
+                   c.NombreCarrera as Nombre,
+                   comp.Id,
+                   comp.Nombre,
+                   comp.Acron,
+                   a.Id,
+                   a.Codigo,
+                   a.Nombre,
+                   e.Id,
+                   e.IdTabla,
+                   e.Descripcion,
+                   rs.Id_PI as IdPI,
+                   rs.CantExperto,
+                   rs.CantSatisfactorio,
+                   rs.CantPrincipiante,
+                   rs.CantDesarrollo
+               FROM rubricas r
+               INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
+               INNER JOIN carreras c ON cr.Id_Carrera = c.Id
+               INNER JOIN usuario u ON r.IdProfesor = u.Id
+               INNER JOIN competencia comp ON r.IdSO = comp.Id
+               INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
+               INNER JOIN estado e ON r.IdEstado = e.Id
+               LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
+               WHERE 1=1 ";  // Inicio de condiciones WHERE
 
             var parameters = new DynamicParameters();
 
@@ -279,11 +286,12 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                 parameters.Add("CarrerasIds", carrerasIds);
             }
 
-            if (idEstado.HasValue)
+            // Filtrado para múltiples estados
+            if (estadosIds != null && estadosIds.Any())
             {
-                countQuery += " AND r.IdEstado = @IdEstado";
-                query += " AND r.IdEstado = @IdEstado";
-                parameters.Add("IdEstado", idEstado.Value);
+                countQuery += " AND r.IdEstado IN @EstadosIds";
+                query += " AND r.IdEstado IN @EstadosIds";
+                parameters.Add("EstadosIds", estadosIds);
             }
 
             if (idAsignatura.HasValue)
@@ -339,6 +347,150 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                 splitOn: "Id,Id,Id,Id,Id,IdPI");
 
             return new PaginatedResult<RubricaViewModel>(rubricaDict.Values, currentPage, currentRecordsPerPage, totalRecords);
+        }
+
+        public async Task<List<ReporteSOViewModel>> ObtenerTableroDeSO(int idCarrera, int año, string periodo)
+        {
+            using var connection = _dapperContext.CreateConnection();
+            {
+                var query = @"
+                    SELECT 
+                        car.Id AS CarreraId,
+                        car.NombreCarrera AS Carrera,
+                        c.Id AS SO_Id,
+                        c.Nombre AS SO_Nombre,
+                        p.Id AS PI_Id,
+                        p.Nombre AS PI_Nombre,
+                        SUM(r.CantEstudiantes) AS CantidadTotalEstudiantes,
+                        SUM(res.CantPrincipiante) AS CantPrincipiante,
+                        SUM(res.CantDesarrollo) AS CantDesarrollo,
+                        SUM(res.CantSatisfactorio) AS CantSatisfactorio,
+                        SUM(res.CantExperto) AS CantExperto,
+                        CAST(SUM(res.CantPrincipiante) AS FLOAT) / NULLIF(SUM(r.CantEstudiantes), 0) * 100 AS PorcentajePrincipiante,
+                        CAST(SUM(res.CantDesarrollo) AS FLOAT) / NULLIF(SUM(r.CantEstudiantes), 0) * 100 AS PorcentajeDesarrollo,
+                        CAST(SUM(res.CantSatisfactorio) AS FLOAT) / NULLIF(SUM(r.CantEstudiantes), 0) * 100 AS PorcentajeSatisfactorio,
+                        CAST(SUM(res.CantExperto) AS FLOAT) / NULLIF(SUM(r.CantEstudiantes), 0) * 100 AS PorcentajeExperto
+                    FROM 
+                        rubricas r
+                    INNER JOIN 
+                        resumen res ON r.Id = res.Id_Rubrica
+                    INNER JOIN 
+                        competencia c ON r.IdSO = c.Id
+                    INNER JOIN 
+                        pi p ON res.Id_PI = p.Id AND p.SO_Id = c.Id
+                    INNER JOIN 
+                        asignatura_carrera ac ON r.IdAsignatura = ac.Id_Asignatura
+                    INNER JOIN 
+                        carreras car ON ac.Id_Carrera = car.Id
+                    WHERE 
+                        r.IdEstado = 2
+                        AND r.Año = @Año
+                        AND r.Periodo = @Periodo
+                        AND ac.Id_Carrera = @IdCarrera
+                    GROUP BY 
+                        car.Id,
+                        car.NombreCarrera,
+                        c.Id, 
+                        c.Nombre,
+                        p.Id,
+                        p.Nombre
+                    ORDER BY 
+                        c.Id, 
+                        p.Id;";
+
+                var parameters = new
+                {
+                    IdCarrera = idCarrera,
+                    Año = año,
+                    Periodo = periodo
+                };
+
+                // Ejecutamos la consulta y obtenemos los resultados sin procesar
+                var rawData = await connection.QueryAsync<dynamic>(query, parameters);
+
+                // Si no hay datos, devolvemos un objeto vacío
+                if (!rawData.Any())
+                {
+                    return new List<ReporteSOViewModel> {
+                        new ReporteSOViewModel
+                        {
+                            Carrera = "No hay datos disponibles",
+                            Resumen = new List<SOResumenViewModel>()
+                        }
+                    };
+                }
+
+                // Construimos la estructura jerárquica
+                var reporte = new ReporteSOViewModel
+                {
+                    Carrera = rawData.First().Carrera
+                };
+
+                // Agrupar por SO
+                var soGroups = rawData.GroupBy(r => new { Id = (int)r.SO_Id, Nombre = (string)r.SO_Nombre });
+
+                foreach (var soGroup in soGroups)
+                {
+                    var soResumen = new SOResumenViewModel
+                    {
+                        SO = soGroup.Key.Nombre,
+                        // Sumamos el total de estudiantes de todos los PIs para este SO
+                        CantidadTotalEstudiantes = soGroup.Sum(r => (int)r.CantidadTotalEstudiantes)
+                    };
+
+                    // Procesamos cada PI dentro de este SO
+                    foreach (var row in soGroup)
+                    {
+                        var piResumen = new PIResumenViewModel
+                        {
+                            PI = row.PI_Nombre,
+                            CantidadTotalEstudiantes = row.CantidadTotalEstudiantes,
+                            CantPrincipiante = row.CantPrincipiante,
+                            CantDesarrollo = row.CantDesarrollo,
+                            CantSatisfactorio = row.CantSatisfactorio,
+                            CantExperto = row.CantExperto,
+                            PorcentajePrincipiante = Math.Round((decimal)row.PorcentajePrincipiante, 2),
+                            PorcentajeDesarrollo = Math.Round((decimal)row.PorcentajeDesarrollo, 2),
+                            PorcentajeSatisfactorio = Math.Round((decimal)row.PorcentajeSatisfactorio, 2),
+                            PorcentajeExperto = Math.Round((decimal)row.PorcentajeExperto, 2)
+                        };
+
+                        soResumen.PIs.Add(piResumen);
+                    }
+
+                    reporte.Resumen.Add(soResumen);
+                }
+
+                return new List<ReporteSOViewModel> { reporte };
+            }
+        }
+
+        public async Task<List<ReporteSOViewModel>> ObtenerTableroDeSOPorArea(int area, int año, string periodo)
+        {
+            // Consulta para obtener los IDs de carreras que pertenecen a un área específica
+            var query = "SELECT Id FROM carreras WHERE IdArea = @Area AND IdEstado = 1"; // Asumiendo IdEstado = 1 para carreras activas
+
+            // Obtener los IDs de carreras usando el DapperContext inyectado
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                // Ejecutar la consulta para obtener los IDs de carreras
+                var carrerasIds = await connection.QueryAsync<int>(query, new { Area = area });
+
+                // Crear la lista para almacenar los resultados
+                var tablasSO = new List<ReporteSOViewModel>();
+
+                // Procesar cada carrera
+                foreach (int id in carrerasIds)
+                {
+                    var reporte = await ObtenerTableroDeSO(id, año, periodo);
+                    if (reporte != null)
+                    {
+                        tablasSO.AddRange(reporte);
+                    }
+                }
+
+                return tablasSO;
+            }
         }
     }
 }

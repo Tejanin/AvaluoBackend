@@ -10,7 +10,7 @@ using AvaluoAPI.Presentation.ViewModels.RubricaViewModels;
 using AvaluoAPI.Utilities;
 using AvaluoAPI.Utilities.JWT;
 using MapsterMapper;
-using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
+
 
 namespace AvaluoAPI.Domain.Services.RubricasService
 {
@@ -64,9 +64,9 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             _unitOfWork.SaveChanges();
         }
 
-        public async Task<PaginatedResult<RubricaViewModel>> GetAllRubricas(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null, int? page = null, int? recordsPerPage = null)
+        public async Task<PaginatedResult<RubricaViewModel>> GetAllRubricas(int? idSO = null, List<int>? carreras = null, List<int>? estado = null, int? idAsignatura = null, int? page = null, int? recordsPerPage = null)
         {
-            return await _unitOfWork.Rubricas.GetRubricasFiltered(idSO, carrerasIds, idEstado, idAsignatura, page, recordsPerPage);
+            return await _unitOfWork.Rubricas.GetRubricasFiltered(idSO, carreras, estado, idAsignatura, page, recordsPerPage);
         }
 
         public async Task DesactivateRubricas()
@@ -300,7 +300,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var activaEntregada = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
             var carrerasDelSupervisor = await _unitOfWork.ProfesoresCarreras.GetProfesorWithCarreras(int.Parse(id));
 
-            var rubricas = await _unitOfWork.Rubricas.GetRubricasFiltered(carrerasDelSupervisor.IdSO,carrerasDelSupervisor.CarrerasIds);
+            var rubricas = await _unitOfWork.Rubricas.GetRubricasFiltered(idSO: carrerasDelSupervisor.IdSO,carrerasIds: carrerasDelSupervisor.CarrerasIds, estadosIds: new List<int>{ activaEntregada.Id, activaSinEntrega.Id});
 
             throw new NotImplementedException();
         }

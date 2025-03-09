@@ -2,6 +2,9 @@
 using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Infrastructure.Data.Contexts;
+using AvaluoAPI.Presentation.ViewModels;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.InformesRepositories
 {
@@ -17,5 +20,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.InformesRepositories
         {
             get { return _context as AvaluoDbContext; }
         }
+
+       
+        
     }
 }
