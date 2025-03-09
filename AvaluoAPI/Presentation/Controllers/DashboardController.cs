@@ -15,10 +15,16 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("studentOutcomes")]
         public async Task<IActionResult> GetSOTable()
         {
             return Ok(await _dashboardService.MostrarResumenSODashboardCoordinador());
+        }
+
+        [HttpGet("evaluaciones")]
+        public async Task<IActionResult> GetEvaluaciones(int? recordsPerPage, int? page)
+        {
+            return Ok(await _dashboardService.MostrarListaEvaluacionesDeCarrera(recordsPerPage,page));
         }
     }
 }

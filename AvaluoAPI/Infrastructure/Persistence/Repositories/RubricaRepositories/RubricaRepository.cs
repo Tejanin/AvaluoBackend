@@ -210,61 +210,65 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
 
             return asignaturas.ToList();
         }
-        public async Task<PaginatedResult<RubricaViewModel>> GetRubricasFiltered(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null, int? page = null, int? recordsPerPage = null)
-
-
+        public async Task<PaginatedResult<RubricaViewModel>> GetRubricasFiltered(
+                int? idSO = null,
+                List<int>? carrerasIds = null,
+                List<int>? estadosIds = null,  // Cambiado de int? idEstado a List<int>? estadosIds
+                int? idAsignatura = null,
+                int? page = null,
+                int? recordsPerPage = null)
         {
             using var connection = _dapperContext.CreateConnection();
 
             // Base del query para contar el total de registros
             var countQuery = @"
-        SELECT COUNT(*)
-        FROM rubricas r
-        INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
-        INNER JOIN carreras c ON cr.Id_Carrera = c.Id
-        INNER JOIN usuario u ON r.IdProfesor = u.Id
-        INNER JOIN competencia comp ON r.IdSO = comp.Id
-        INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
-        INNER JOIN estado e ON r.IdEstado = e.Id
-        LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
-        WHERE 1=1 ";
+SELECT COUNT(*)
+FROM rubricas r
+INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
+INNER JOIN carreras c ON cr.Id_Carrera = c.Id
+INNER JOIN usuario u ON r.IdProfesor = u.Id
+INNER JOIN competencia comp ON r.IdSO = comp.Id
+INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
+INNER JOIN estado e ON r.IdEstado = e.Id
+LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
+WHERE 1=1 ";
 
             // Query principal con JOINs y datos detallados
             var query = @"
-                       SELECT 
-                           r.Id,
-                           r.Comentario,
-                           r.Problematica,
-                           r.Solucion,
-                           r.Evidencia,
-                           r.EvaluacionesFormativas,
-                           r.Estrategias,
-                            CONCAT(u.Nombre, ' ', u.Apellido) AS Profesor,
-                           c.Id,
-                           c.NombreCarrera as Nombre,
-                           comp.Id,
-                           comp.Nombre,
-                           comp.Acron,
-                           a.Id,
-                           a.Codigo,
-                           a.Nombre,
-                           e.Id,
-                           e.IdTabla,
-                           e.Descripcion,
-                           rs.Id_PI as IdPI,
-                           rs.CantExperto,
-                           rs.CantSatisfactorio,
-                           rs.CantPrincipiante,
-                           rs.CantDesarrollo
-                       FROM rubricas r
-                       INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
-                       INNER JOIN carreras c ON cr.Id_Carrera = c.Id
-                       INNER JOIN usuario u ON r.IdProfesor = u.Id
-                       INNER JOIN competencia comp ON r.IdSO = comp.Id
-                       INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
-                       INNER JOIN estado e ON r.IdEstado = e.Id
-                       LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
-                       WHERE 1=1 ";  // Inicio de condiciones WHERE
+               SELECT 
+                   r.Id,
+                   r.Comentario,
+                   r.Problematica,
+                   r.Solucion,
+                   r.Evidencia,
+                   r.EvaluacionesFormativas,
+                   r.Estrategias,
+                    CONCAT(u.Nombre, ' ', u.Apellido) AS Profesor,
+                   c.Id,
+                   c.NombreCarrera as Nombre,
+                   comp.Id,
+                   comp.Nombre,
+                   comp.Acron,
+                   a.Id,
+                   a.Codigo,
+                   a.Nombre,
+                   e.Id,
+                   e.IdTabla,
+                   e.Descripcion,
+                   rs.Id_PI as IdPI,
+                   rs.CantExperto,
+                   rs.CantSatisfactorio,
+                   rs.CantPrincipiante,
+                   rs.CantDesarrollo
+               FROM rubricas r
+               INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
+               INNER JOIN carreras c ON cr.Id_Carrera = c.Id
+               INNER JOIN usuario u ON r.IdProfesor = u.Id
+               INNER JOIN competencia comp ON r.IdSO = comp.Id
+               INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
+               INNER JOIN estado e ON r.IdEstado = e.Id
+               LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
+               WHERE 1=1 ";  // Inicio de condiciones WHERE
 
             var parameters = new DynamicParameters();
 
@@ -282,11 +286,12 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                 parameters.Add("CarrerasIds", carrerasIds);
             }
 
-            if (idEstado.HasValue)
+            // Filtrado para múltiples estados
+            if (estadosIds != null && estadosIds.Any())
             {
-                countQuery += " AND r.IdEstado = @IdEstado";
-                query += " AND r.IdEstado = @IdEstado";
-                parameters.Add("IdEstado", idEstado.Value);
+                countQuery += " AND r.IdEstado IN @EstadosIds";
+                query += " AND r.IdEstado IN @EstadosIds";
+                parameters.Add("EstadosIds", estadosIds);
             }
 
             if (idAsignatura.HasValue)

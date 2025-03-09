@@ -33,6 +33,7 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.HistorialIncumplimientoR
 using AvaluoAPI.Infrastructure.Persistence.Repositories.InformesRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.RolRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.PIRepositories;
 
 
 
@@ -58,7 +59,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             Competencias = new CompetenciaRepository(_context, _dapperContext);
             Estados = new EstadoRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
-
+            PIs = new PIRepository(_context);
             Edificios = new EdificioRepository(_context, _dapperContext);
 
             CarrerasRubricas = new CarreraRubricaRepository(_context);
@@ -105,7 +106,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public IAsignaturaRepository Asignaturas { get; private set; }
         public IAreaRepository Areas { get; private set; }
         public IRolRepository Roles { get; private set; }
-
+        public IPIRepository PIs { get; private set; }
         public IAulaRepository Aulas { get; private set; }
         public ICarreraRepository Carreras { get; private set; }
         
