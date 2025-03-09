@@ -44,6 +44,7 @@ using AvaluoAPI.Domain.Services.InventarioService;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
 
 using AvaluoAPI.Domain.Services.DashboardService;
+using AvaluoAPI.Domain.Services.PIService;
 
 
 
@@ -137,7 +138,7 @@ builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
 
 builder.Services.AddScoped<IEdificioService,  EdificioService>();
 
-
+builder.Services.AddScoped<IPiService, IPiService>();
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
 builder.Services.AddScoped<IEstadoService, EstadoService>();
