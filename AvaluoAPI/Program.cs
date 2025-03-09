@@ -38,7 +38,8 @@ using AvaluoAPI.Domain.Services.AreaService;
 using AvaluoAPI.Domain.Services.CarreraService;
 using StackExchange.Redis;
 using AvaluoAPI.Domain.Services.RolService;
-using AvaluoAPI.Infrastructure.Persistence.Repositories.RolRepositories;
+using AvaluoAPI.Domain.Services.DashboardService;
+
 
 
 
@@ -140,15 +141,13 @@ builder.Services.AddScoped<IRubricaService, RubricaService>();
 builder.Services.AddScoped<IintecService,INTECServiceMock>();
 
 builder.Services.AddScoped<IAsignaturaService, AsignaturaService>();
-
 builder.Services.AddScoped<IAulaService, AulaService>();
-
-
 builder.Services.AddScoped<IAreaService, AreaService>();
 
 builder.Services.AddScoped<ICarreraService, CarreraService>();
 
 builder.Services.AddScoped<IRolService, RolService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 
 
