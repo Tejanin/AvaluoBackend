@@ -1,19 +1,5 @@
-﻿
-using AvaluoAPI.Domain.Services.DesempeñoService;
-using AvaluoAPI.Domain.Services.MetodoEvaluacionService;
-using AvaluoAPI.Presentation.DTOs.EdificioDTOs;
-using AvaluoAPI.Presentation.ViewModels;
-using AvaluoAPI.Utilities;
-using Microsoft.AspNetCore.Hosting;
+﻿using AvaluoAPI.Domain.Services.DesempeñoService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using System.Text;
-using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AvaluoAPI.Presentation.Controllers
@@ -23,12 +9,10 @@ namespace AvaluoAPI.Presentation.Controllers
     public class DesempenoController : Controller
     {
         private readonly IDesempeñoService _desempeñoService;
-        private readonly PdfHelper _pdfHelper;
 
-        public DesempenoController(IDesempeñoService DesempeñoService, PdfHelper pdfHelper)
+        public DesempenoController(IDesempeñoService desempeñoService)
         {
-            _desempeñoService = DesempeñoService;
-            _pdfHelper = pdfHelper;
+            _desempeñoService = desempeñoService;
         }
 
         [HttpGet("informe")]
@@ -51,13 +35,9 @@ namespace AvaluoAPI.Presentation.Controllers
         {
             var informe = await _desempeñoService.GenerarInformeDesempeño(año, periodo, idAsignatura, idSO);
 
-            if (!informe.Any())
-            {
-                return Content("<h1>No hay datos para el informe solicitado.</h1>", "text/html");
-            }
-
             return View("InformeDesempeño", informe);
         }
+
         [HttpGet("informe/generarPDF")]
         public async Task<IActionResult> GenerarInformeDesempeñoPdf(
             [FromQuery] int? año,
@@ -66,23 +46,8 @@ namespace AvaluoAPI.Presentation.Controllers
             [FromQuery] int? idSO)
         {
             var informe = await _desempeñoService.GenerarInformeDesempeño(año, periodo, idAsignatura, idSO);
+            string pdfPath = await _desempeñoService.GenerarYGuardarPdfInforme(informe, año, periodo, idAsignatura, idSO);
 
-            if (!informe.Any())
-            {
-                return BadRequest(new { mensaje = "No hay datos para generar el informe." });
-            }
-
-            // 1. Construir la ruta de almacenamiento
-            string añoStr = año?.ToString() ?? "Desconocido";
-            var rutaBuilder = new RutaInformeBuilder("Desempeño", añoStr);
-
-            // 2. Construir el nombre del archivo
-            string fileName = $"Informe_Desempeño_{añoStr}_{periodo ?? "Todos"}_{idAsignatura ?? 0}_{idSO ?? 0}";
-
-            // 3. Generar y guardar el PDF
-            string pdfPath = await _pdfHelper.GenerarYGuardarPdfAsync("Desempeno/InformeDesempeño", informe, rutaBuilder, fileName);
-
-            // 4. Retornar la ruta del archivo generado
             return Ok(new { mensaje = "Informe generado y guardado exitosamente", ruta = pdfPath });
         }
     }
