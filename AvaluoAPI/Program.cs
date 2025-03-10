@@ -138,7 +138,7 @@ builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
 
 builder.Services.AddScoped<IEdificioService,  EdificioService>();
 
-builder.Services.AddScoped<IPiService, IPiService>();
+builder.Services.AddScoped<IPiService, PiService>();
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
 builder.Services.AddScoped<IEstadoService, EstadoService>();
