@@ -38,7 +38,10 @@ using AvaluoAPI.Domain.Services.AreaService;
 using AvaluoAPI.Domain.Services.CarreraService;
 using StackExchange.Redis;
 using AvaluoAPI.Domain.Services.RolService;
+using AvaluoAPI.Domain.Services.ContactoService;
 using AvaluoAPI.Domain.Services.DashboardService;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.ContactoRepositories;
+
 
 
 
@@ -148,7 +151,7 @@ builder.Services.AddScoped<ICarreraService, CarreraService>();
 
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
-
+builder.Services.AddScoped<IContactoRepository, ContactoRepository>();
 
 
 
