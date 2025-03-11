@@ -38,7 +38,14 @@ using AvaluoAPI.Domain.Services.AreaService;
 using AvaluoAPI.Domain.Services.CarreraService;
 using StackExchange.Redis;
 using AvaluoAPI.Domain.Services.RolService;
+
+using AvaluoAPI.Infrastructure.Persistence.Repositories.RolRepositories;
+using AvaluoAPI.Domain.Services.InventarioService;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
+
 using AvaluoAPI.Domain.Services.DashboardService;
+using AvaluoAPI.Domain.Services.PIService;
+
 
 
 
@@ -131,7 +138,7 @@ builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
 
 builder.Services.AddScoped<IEdificioService,  EdificioService>();
 
-
+builder.Services.AddScoped<IPiService, PiService>();
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
 builder.Services.AddScoped<IEstadoService, EstadoService>();
@@ -148,6 +155,11 @@ builder.Services.AddScoped<ICarreraService, CarreraService>();
 
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+builder.Services.AddScoped<IInventarioService, InventarioService>();
+
+builder.Services.AddScoped<IInventarioRepository, InventarioRepository>();
+
 
 
 

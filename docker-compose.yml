@@ -1,14 +1,4 @@
-services:
-  avaluoapi:
-    image: ${DOCKER_REGISTRY-}avaluoapi
-    build:
-      context: .
-      dockerfile: AvaluoAPI/Dockerfile
-    ports:
-      - 8001:443
-    depends_on:
-      - redis
-    
+services:  
   redis:
     image: redis:latest
     ports:
