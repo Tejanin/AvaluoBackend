@@ -19,24 +19,28 @@ using AvaluoAPI.Domain.Services.EdificioService;
 using AvaluoAPI.Domain.Services.CompetenciasService;
 using AvaluoAPI.Application.Handlers;
 using AvaluoAPI.Utilities.JWT;
-
 using AvaluoAPI.Domain.Services.EstadoService;
-
 using Swashbuckle.AspNetCore.Filters;
 using AvaluoAPI.Swagger;
 using AvaluoAPI.Infrastructure.Integrations.INTEC;
 using AvaluoAPI.Domain.Services.RubricasService;
 using Quartz;
 using AvaluoAPI.Infrastructure.Jobs.Configuration;
-
 using AvaluoAPI.Domain.Services.AsignaturaService;
-
 using AvaluoAPI.Domain.Services.AulaService;
-
 using AvaluoAPI.Domain.Services.AreaService;
-
 using AvaluoAPI.Domain.Services.CarreraService;
 using AvaluoAPI.Domain.Services.DesempeñoService;
+using StackExchange.Redis;
+using AvaluoAPI.Domain.Services.RolService;
+
+using AvaluoAPI.Infrastructure.Persistence.Repositories.RolRepositories;
+using AvaluoAPI.Domain.Services.InventarioService;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
+
+using AvaluoAPI.Domain.Services.DashboardService;
+using AvaluoAPI.Domain.Services.PIService;
+
 
 
 
@@ -128,7 +132,7 @@ builder.Services.AddScoped<ITipoCompetenciaService, TipoCompetenciaService>();
 
 builder.Services.AddScoped<IEdificioService,  EdificioService>();
 
-
+builder.Services.AddScoped<IPiService, PiService>();
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 
 builder.Services.AddScoped<IEstadoService, EstadoService>();
@@ -138,14 +142,21 @@ builder.Services.AddScoped<IRubricaService, RubricaService>();
 builder.Services.AddScoped<IintecService,INTECServiceMock>();
 
 builder.Services.AddScoped<IAsignaturaService, AsignaturaService>();
-
 builder.Services.AddScoped<IAulaService, AulaService>();
-
-
 builder.Services.AddScoped<IAreaService, AreaService>();
 
 builder.Services.AddScoped<ICarreraService, CarreraService>();
 builder.Services.AddScoped<IDesempeñoService, DesempeñoService>();
+
+builder.Services.AddScoped<IRolService, RolService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+builder.Services.AddScoped<IInventarioService, InventarioService>();
+
+builder.Services.AddScoped<IInventarioRepository, InventarioRepository>();
+
+
+
 
 
 
@@ -159,7 +170,18 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 // Jobs
 //builder.Services.ConfigureQuartz();
 
-
+// Redis
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "ResumenInstance_";
+});
+builder.Services.AddScoped<IResumenRedisService, ResumenRedisService>();
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Redis");
+    return ConnectionMultiplexer.Connect(connectionString!);
+});
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

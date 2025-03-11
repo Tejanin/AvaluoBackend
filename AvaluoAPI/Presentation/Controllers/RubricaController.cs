@@ -31,9 +31,9 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRubricas([FromQuery] int? so = null, [FromQuery] List<int>? carreras = null, [FromQuery] int? estado = null, [FromQuery] int? asignatura = null, [FromQuery] int? page = null, [FromQuery] int? recordsPerPage = null)
+        public async Task<IActionResult> GetAllRubricas([FromQuery] int? so = null, [FromQuery] List<int>? carreras = null, [FromQuery] List<int>? estados = null, [FromQuery] int? asignatura = null, [FromQuery] int? page = null, [FromQuery] int? recordsPerPage = null)
         {
-            return Ok(new { mensaje = "Operación exitosa", data = await _rubricaService.GetAllRubricas(so, carreras, estado, asignatura, page, recordsPerPage) });
+            return Ok(new { mensaje = "Operación exitosa", data = await _rubricaService.GetAllRubricas(so, carreras, estados, asignatura, page, recordsPerPage) });
         }
 
         [HttpGet("fechas")]
@@ -47,14 +47,14 @@ namespace AvaluoAPI.Presentation.Controllers
         [HttpGet("supervisor")]
         public async Task<IActionResult> GetRubricasBySupervisor()
         {
-            await _rubricaService.GetRubricasBySupervisor();
-            return Ok();
+            
+            return Ok(new {data = await _rubricaService.GetRubricasBySupervisor() , message = "Operacion Exitosa"});
         }
 
         [HttpGet("secciones")]
         public async Task<IActionResult> GetSeccionesByProfesor()
         {
-            return Ok(await _rubricaService.GetProfesorSecciones());
+            return Ok(new { data = await _rubricaService.GetProfesorSecciones(), mensaje = "Operacion Exitosa" });
         }
 
         [HttpPost("insert")]

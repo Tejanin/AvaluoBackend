@@ -6,10 +6,9 @@ namespace AvaluoAPI.Presentation.ViewModels
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }
+        public string Coordinador { get; set; }
 
-        public UsuarioViewModel Usuario { get; set; }
 
 
-       
     }
 }
