@@ -47,5 +47,7 @@ namespace AvaluoAPI.Domain.Services.DesempeñoService
             // 3. Generar y guardar el PDF
             return await _pdfHelper.GenerarYGuardarPdfAsync("Desempeno/InformeDesempeño", informe, rutaBuilder, fileName);
         }
+
+
     }
 }
