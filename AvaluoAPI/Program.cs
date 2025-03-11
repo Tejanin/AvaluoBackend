@@ -19,23 +19,18 @@ using AvaluoAPI.Domain.Services.EdificioService;
 using AvaluoAPI.Domain.Services.CompetenciasService;
 using AvaluoAPI.Application.Handlers;
 using AvaluoAPI.Utilities.JWT;
-
 using AvaluoAPI.Domain.Services.EstadoService;
-
 using Swashbuckle.AspNetCore.Filters;
 using AvaluoAPI.Swagger;
 using AvaluoAPI.Infrastructure.Integrations.INTEC;
 using AvaluoAPI.Domain.Services.RubricasService;
 using Quartz;
 using AvaluoAPI.Infrastructure.Jobs.Configuration;
-
 using AvaluoAPI.Domain.Services.AsignaturaService;
-
 using AvaluoAPI.Domain.Services.AulaService;
-
 using AvaluoAPI.Domain.Services.AreaService;
-
 using AvaluoAPI.Domain.Services.CarreraService;
+using AvaluoAPI.Domain.Services.DesempeñoService;
 using StackExchange.Redis;
 using AvaluoAPI.Domain.Services.RolService;
 
@@ -45,7 +40,6 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
 
 using AvaluoAPI.Domain.Services.DashboardService;
 using AvaluoAPI.Domain.Services.PIService;
-
 
 
 
@@ -152,6 +146,7 @@ builder.Services.AddScoped<IAulaService, AulaService>();
 builder.Services.AddScoped<IAreaService, AreaService>();
 
 builder.Services.AddScoped<ICarreraService, CarreraService>();
+builder.Services.AddScoped<IDesempeñoService, DesempeñoService>();
 
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
@@ -228,6 +223,10 @@ builder.Services.AddCors(options =>
 
 
 });
+
+builder.Services.AddControllersWithViews(); //Para poder ver las views de los informes en las rutas
+
+builder.Services.AddScoped<PdfHelper>(); // Registra PdfHelper como un servicio
 
 var app = builder.Build();
 
