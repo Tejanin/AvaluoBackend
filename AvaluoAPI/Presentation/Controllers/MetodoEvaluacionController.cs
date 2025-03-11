@@ -56,5 +56,29 @@ namespace AvaluoAPI.Presentation.Controllers
             await _metodoEvaluacionService.Delete(id);
             return Ok(new { mensaje = "El metodo de evaluacion ha sido eliminado con éxito." });
         }
+
+        // GET: api/MetodoEvaluacion/Competencia/{idSO}
+        [HttpGet("Competencia/{idSO}")]
+        public async Task<ActionResult<IEnumerable<MetodoEvaluacionViewModel>>> GetMetodosEvaluacionPorSO(int idSO)
+        {
+            var metodos = await _metodoEvaluacionService.GetMetodosEvaluacionPorSO(idSO);
+            return Ok(new { mensaje = "Métodos de evaluación obtenidos exitosamente para el Student Outcome.", data = metodos });
+        }
+
+        // POST: api/MetodoEvaluacion/Competencia
+        [HttpPost("Competencia")]
+        public async Task<IActionResult> AsignarMetodoEvaluacionASO([FromQuery] int idSO, [FromQuery] int idMetodoEvaluacion)
+        {
+            await _metodoEvaluacionService.RegisterSOEvaluacion(idSO, idMetodoEvaluacion);
+            return Ok(new { mensaje = "Método de evaluación asignado exitosamente al Student Outcome." });
+        }
+
+        // DELETE: api/MetodoEvaluacion/Competencia
+        [HttpDelete("Competencia")]
+        public async Task<IActionResult> EliminarMetodoEvaluacionDeSO([FromQuery] int idSO, [FromQuery] int idMetodoEvaluacion)
+        {
+            await _metodoEvaluacionService.DeleteSOEvaluacion(idSO, idMetodoEvaluacion);
+            return Ok(new { mensaje = "La relación entre el método de evaluación y el Student Outcome ha sido eliminada con éxito." });
+        }
     }
 }

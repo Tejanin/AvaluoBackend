@@ -1,6 +1,7 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Presentation.DTOs.MetodoEvaluacionDTOs;
+using AvaluoAPI.Presentation.ViewModels;
 using MapsterMapper;
 
 namespace AvaluoAPI.Domain.Services.MetodoEvaluacionService
@@ -25,20 +26,20 @@ namespace AvaluoAPI.Domain.Services.MetodoEvaluacionService
             _unitOfWork.SaveChanges();
         }
 
-        public async Task<IEnumerable<MetodoEvaluacion>> GetAll()
+        public async Task<IEnumerable<MetodoEvaluacionViewModel>> GetAll()
         {
 
             var metodoEvaluacions = await _unitOfWork.MetodoEvaluacion.GetAllAsync();
-            return _mapper.Map<IEnumerable<MetodoEvaluacion>>(metodoEvaluacions);
+            return _mapper.Map<IEnumerable<MetodoEvaluacionViewModel>>(metodoEvaluacions);
         }
 
-        public async Task<MetodoEvaluacion> GetById(int id)
+        public async Task<MetodoEvaluacionViewModel> GetById(int id)
         {
             var metodoEvaluacion = await _unitOfWork.MetodoEvaluacion.GetByIdAsync(id);
             if (metodoEvaluacion == null)
                 throw new KeyNotFoundException("Metodo de Evaluacion no encontrado.");
 
-            return _mapper.Map<MetodoEvaluacion>(metodoEvaluacion);
+            return _mapper.Map<MetodoEvaluacionViewModel>(metodoEvaluacion);
         }
 
         public async Task Register(MetodoEvaluacionDTO metodoEvaluacionDTO)
@@ -83,5 +84,51 @@ namespace AvaluoAPI.Domain.Services.MetodoEvaluacionService
             await _unitOfWork.MetodoEvaluacion.Update(metodoEvaluacion);
             _unitOfWork.SaveChanges();
         }
+        public async Task<IEnumerable<MetodoEvaluacionViewModel>> GetMetodosEvaluacionPorSO(int idSO)
+        {
+            var so = await _unitOfWork.Competencias.GetByIdAsync(idSO);
+            if (so == null)
+                throw new KeyNotFoundException("Student Outcome (SO) no encontrado.");
+
+            var metodosEvaluacion = await _unitOfWork.SOEvaluaciones.GetMetodosEvaluacionPorSO(idSO);
+            if (metodosEvaluacion == null || !metodosEvaluacion.Any())
+                throw new KeyNotFoundException("No se encontraron métodos de evaluación para el Student Outcome especificado.");
+
+            return _mapper.Map<IEnumerable<MetodoEvaluacionViewModel>>(metodosEvaluacion);
+        }
+
+        public async Task RegisterSOEvaluacion(int idSO, int idMetodoEvaluacion)
+        {
+            var so = await _unitOfWork.Competencias.GetByIdAsync(idSO);
+            if (so == null)
+                throw new KeyNotFoundException($"El Student Outcome con ID {idSO} no existe.");
+
+            var metodoEvaluacion = await _unitOfWork.MetodoEvaluacion.GetByIdAsync(idMetodoEvaluacion);
+            if (metodoEvaluacion == null)
+                throw new KeyNotFoundException($"El Método de Evaluación con ID {idMetodoEvaluacion} no existe.");
+
+            var relacionesExistentes = await _unitOfWork.SOEvaluaciones.GetAllAsync();
+            bool existeRelacion = relacionesExistentes.Any(r => r.IdSO == idSO && r.IdMetodoEvaluacion == idMetodoEvaluacion);
+            if (existeRelacion)
+                throw new ArgumentException("Ya existe una relación entre el SO y el Método de Evaluación especificados.");
+
+            var soEvaluacion = new SOEvaluacion { IdSO = idSO, IdMetodoEvaluacion = idMetodoEvaluacion };
+
+            await _unitOfWork.SOEvaluaciones.AddAsync(soEvaluacion);
+            _unitOfWork.SaveChanges();
+        }
+
+        public async Task DeleteSOEvaluacion(int idSO, int idMetodoEvaluacion)
+        {
+            var relacionesExistentes = await _unitOfWork.SOEvaluaciones.GetAllAsync();
+            var soEvaluacion = relacionesExistentes.FirstOrDefault(r => r.IdSO == idSO && r.IdMetodoEvaluacion == idMetodoEvaluacion);
+            if (soEvaluacion == null)
+                throw new KeyNotFoundException("No se encontró una relación SO - Método de Evaluación para eliminar.");
+
+            _unitOfWork.SOEvaluaciones.Delete(soEvaluacion);
+            _unitOfWork.SaveChanges();
+        }
+
+
     }
 }
