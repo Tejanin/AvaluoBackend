@@ -222,16 +222,16 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
 
             // Base del query para contar el total de registros
             var countQuery = @"
-SELECT COUNT(*)
-FROM rubricas r
-INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
-INNER JOIN carreras c ON cr.Id_Carrera = c.Id
-INNER JOIN usuario u ON r.IdProfesor = u.Id
-INNER JOIN competencia comp ON r.IdSO = comp.Id
-INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
-INNER JOIN estado e ON r.IdEstado = e.Id
-LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
-WHERE 1=1 ";
+                    SELECT COUNT(*)
+                    FROM rubricas r
+                    INNER JOIN carrera_rubrica cr ON r.Id = cr.Id_Rubrica
+                    INNER JOIN carreras c ON cr.Id_Carrera = c.Id
+                    INNER JOIN usuario u ON r.IdProfesor = u.Id
+                    INNER JOIN competencia comp ON r.IdSO = comp.Id
+                    INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
+                    INNER JOIN estado e ON r.IdEstado = e.Id
+                    LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica
+                    WHERE 1=1 ";
 
             // Query principal con JOINs y datos detallados
             var query = @"
