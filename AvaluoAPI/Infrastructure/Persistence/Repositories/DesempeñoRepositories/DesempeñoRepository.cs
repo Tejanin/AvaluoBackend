@@ -112,7 +112,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositor
     pi.DescripcionES AS DescripcionPI,
 
     d.Año,
-    d.Trimestre AS Periodo,
+    d.Trimestre,
 
     -- Total de estudiantes evaluados
     ISNULL(SUM(rs.CantExperto) + SUM(rs.CantSatisfactorio) + SUM(rs.CantPrincipiante) + SUM(rs.CantDesarrollo), 0) AS TotalEstudiantes,
@@ -137,9 +137,9 @@ INNER JOIN rubricas r ON d.Id_Asignatura = r.IdAsignatura
 LEFT JOIN resumen rs ON r.Id = rs.Id_Rubrica AND d.IdPI = rs.Id_PI
 
 WHERE (@Año IS NULL OR d.Año = @Año)
-AND (@Periodo IS NULL OR d.Trimestre = LEFT(@Periodo, 1))
+AND (@Trimestre IS NULL OR d.Trimestre = LEFT(@Trimestre, 1))
 AND (@IdAsignatura IS NULL OR d.Id_Asignatura = @IdAsignatura)
-AND (@IdSO IS NULL OR d.Id_SO = @IdSO) -- Nuevo filtro opcional por SO
+AND (@IdSO IS NULL OR d.Id_SO = @IdSO) 
 
 GROUP BY 
     d.Id_Asignatura, a.Codigo, a.Nombre, 
@@ -154,7 +154,7 @@ ORDER BY d.Año DESC, d.Trimestre DESC, a.Codigo, so.Nombre, pi.Id;
             var datosPlano = await connection.QueryAsync<dynamic>(sql, new
             {
                 Año = año,
-                Periodo = periodo,
+                Trimestre = periodo,
                 IdAsignatura = idAsignatura,
                 IdSO = idSO
             });
@@ -172,7 +172,7 @@ ORDER BY d.Año DESC, d.Trimestre DESC, a.Codigo, so.Nombre, pi.Id;
                         CodigoAsignatura = fila.CodigoAsignatura,
                         NombreAsignatura = fila.NombreAsignatura,
                         Año = fila.Año,
-                        Periodo = fila.Periodo,
+                        Trimestre = fila.Trimestre,
                         TotalEstudiantes = 0,
                         StudentOutcomes = new List<StudentOutcomeViewModel>()
                     };
