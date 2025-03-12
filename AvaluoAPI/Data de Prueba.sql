@@ -160,7 +160,11 @@ INSERT INTO mapa_competencias (Id_Asignatura, Id_Competencia, Id_Estado) VALUES
 (20,7,11),
 (20,3,11),
 (8,4,11),
-(8,3,11)
+(8,3,11),
+(16,2,11),
+(16,1,11),
+(18,3,11),
+(18,2,11)
 
 INSERT INTO so_evaluacion (Id_SO, Id_MetodoEvaluacion) VALUES
 (1, 2),
