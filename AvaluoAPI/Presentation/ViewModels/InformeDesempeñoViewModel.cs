@@ -6,7 +6,7 @@
         public string CodigoAsignatura { get; set; } = string.Empty;
         public string NombreAsignatura { get; set; } = string.Empty;
         public int Año { get; set; }
-        public string Periodo { get; set; } = string.Empty;
+        public string Trimestre { get; set; } = string.Empty;
         public int TotalEstudiantes { get; set; }
 
         public List<StudentOutcomeViewModel> StudentOutcomes { get; set; } = new List<StudentOutcomeViewModel>();

@@ -5,5 +5,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.TipoInformeRepositor
 {
     public interface ITipoInformeRepository:IRepository<TipoInforme>
     {
+        Task<TipoInforme?> GetTipoInformeByDescripcionAsync(string descripcion);
     }
 }

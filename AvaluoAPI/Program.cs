@@ -40,6 +40,7 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
 
 using AvaluoAPI.Domain.Services.DashboardService;
 using AvaluoAPI.Domain.Services.PIService;
+using AvaluoAPI.Domain.Services.InformeService;
 
 
 
@@ -155,6 +156,7 @@ builder.Services.AddScoped<IInventarioService, InventarioService>();
 
 builder.Services.AddScoped<IInventarioRepository, InventarioRepository>();
 
+builder.Services.AddScoped<IInformeService, InformeService>();
 
 
 
