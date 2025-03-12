@@ -48,7 +48,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         {
             _dapperContext = dapperContext;
             _context = context;
-            Configuraciones = new ConfiguracionRepository(_context);
+            Configuraciones = new ConfiguracionRepository(_context, _dapperContext);
             SOEvaluaciones = new SOEvaluacionRepository(_context, _dapperContext);
             MapaCompetencias = new MapaCompetenciaRepository(_context, _dapperContext);
             Rubricas = new RubricaRepository(_context, _dapperContext);

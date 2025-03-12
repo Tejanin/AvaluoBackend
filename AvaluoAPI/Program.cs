@@ -37,6 +37,7 @@ using AvaluoAPI.Domain.Services.AreaService;
 
 using AvaluoAPI.Domain.Services.CarreraService;
 using StackExchange.Redis;
+using AvaluoAPI.Domain.Services.ConfiguracionService;
 
 
 
@@ -141,6 +142,7 @@ builder.Services.AddScoped<IAsignaturaService, AsignaturaService>();
 
 builder.Services.AddScoped<IAulaService, AulaService>();
 
+builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 
 builder.Services.AddScoped<IAreaService, AreaService>();
 

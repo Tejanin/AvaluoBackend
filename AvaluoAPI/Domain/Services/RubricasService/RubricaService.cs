@@ -345,5 +345,10 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
             return secciones;
         }
+
+        public void DesactivateConfiguraciones()
+        {
+            _unitOfWork.Rubricas.DisableAllActiveConfiguracion();
+        }
     }
 }

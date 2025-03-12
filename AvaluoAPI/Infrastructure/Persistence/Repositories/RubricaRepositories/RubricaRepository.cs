@@ -3,6 +3,7 @@
 using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Presentation.ViewModels;
+using AvaluoAPI.Presentation.ViewModels.CofiguracionViewModels;
 using AvaluoAPI.Presentation.ViewModels.RubricaViewModels;
 using Dapper;
 
@@ -339,6 +340,43 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                 splitOn: "Id,Id,Id,Id,Id,IdPI");
 
             return new PaginatedResult<RubricaViewModel>(rubricaDict.Values, currentPage, currentRecordsPerPage, totalRecords);
+        }
+
+        public async void DisableAllActiveConfiguracion()
+        {
+            using var connection = _dapperContext.CreateConnection();
+
+            var query = @"
+                        SELECT 
+                            e.Id
+                        FROM estado e
+                        WHERE e.IdTabla = 'Configuracion'
+                        AND e.Descripcion = 'Activa'";
+
+            var idEstadoActivo = await connection.ExecuteScalarAsync<int>(query);
+
+            query = @"
+                        SELECT 
+                            e.Id
+                        FROM estado e
+                        WHERE e.IdTabla = 'Configuracion'
+                        AND e.Descripcion = 'Desactivada'";
+
+            var idEstadoDesactivado = await connection.ExecuteScalarAsync<int>(query);
+
+            query = @"
+                    UPDATE ConfiguracionEvaluaciones
+                    SET Id_Estado = @IdEstadoActivo
+                    WHERE Id_Estado = @IdEstadoDesactivado";
+
+            var configuracion = await connection.QueryAsync<FechaConfiguracionViewModel>(
+                query,
+                new
+                {
+                    IdEstadoActivo = idEstadoActivo,
+                    IdEstadoDesactivado = idEstadoDesactivado
+                }
+            );
         }
     }
 }

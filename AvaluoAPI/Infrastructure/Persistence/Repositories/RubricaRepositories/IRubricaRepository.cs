@@ -10,10 +10,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
     {
 
         Task<PaginatedResult<RubricaViewModel>> GetRubricasFiltered(int? idSO = null, List<int>? carrerasIds = null, int? idEstado = null, int? idAsignatura = null, int? page = null, int? recordsPerPage = null);
-
         Task<List<int>> ObtenerIdAsignaturasPorEstadoAsync(int idEstado);
         Task<List<SeccionRubricasViewModel>> GetProfesorSeccionesWithRubricas(int profesor, int activo, int activoSinEntregar);
-
+        void DisableAllActiveConfiguracion();
     }
 
 }
