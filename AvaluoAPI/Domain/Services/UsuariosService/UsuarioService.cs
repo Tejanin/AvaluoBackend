@@ -75,6 +75,18 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         {
             var user = await _unitOfWork.Usuarios.GetUsuarioById(id);
             if (user == null) throw new KeyNotFoundException("El usuario no existe");
+
+            // Verificar si el usuario tiene una foto y convertir la ruta a una URL accesible
+            if (!string.IsNullOrEmpty(user.Foto))
+            {
+                // Modificar la ruta del archivo para que sea una URL de API
+                // Extraer solo el nombre del archivo de la ruta completa
+                string fileName = Path.GetFileName(user.Foto);
+
+                // Construir la URL relativa para la API
+                user.Foto = $"/files/profile-photos/{fileName}";
+            }
+
             return user;
 
         }

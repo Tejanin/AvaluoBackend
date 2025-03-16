@@ -1,0 +1,45 @@
+{
+  "Username": "profe1",
+  "Email": "rmartinez@gmail.com",
+  "Password": "12345",
+  "Nombre": "Roberto",
+  "Apellido": "Martinez",
+  "IdArea": 1,
+  "IdRol": 1
+},
+{
+  "Username": "profe2",
+  "Email": "cvaquez@gmail.com",
+  "Password": "12345",
+  "Nombre": "Carmen",
+  "Apellido": "Vásquez",
+  "IdArea": 1,
+  "IdRol": 1
+},
+{
+  "Username": "profe3",
+  "Email": "jgarcia@gmail.com",
+  "Password": "12345",
+  "Nombre": "Jose",
+  "Apellido": "Garcia",
+  "IdArea": 1,
+  "IdRol": 1
+},
+{
+  "Username": "profe4",
+  "Email": "aramirez@gmail.com",
+  "Password": "12345",
+  "Nombre": "Ana",
+  "Apellido": "Ramirez",
+  "IdArea": 1,
+  "IdRol": 1
+},
+{
+  "Username": "profe5",
+  "Email": "mtorres@gmail.com",
+  "Password": "12345",
+  "Nombre": "Miguel",
+  "Apellido": "Torres",
+  "IdArea": 1,
+  "IdRol": 1
+}
