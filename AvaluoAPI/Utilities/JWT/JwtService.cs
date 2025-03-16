@@ -11,6 +11,7 @@ namespace AvaluoAPI.Utilities.JWT
     public class TokenConfig
     {
         public string JwtToken { get; set; } = null!;
+        // Podemos mantener esta propiedad para compatibilidad, pero ya no la usaremos como cookie
         public string PermissionToken { get; set; } = null!;
     }
 
@@ -29,15 +30,17 @@ namespace AvaluoAPI.Utilities.JWT
         public string RolDescripcion { get; set; } = null!;
         public Dictionary<string, bool> Permisos { get; set; } = null!;
     }
+
     public interface IJwtService
     {
         TokenConfig GenerateTokens(Usuario user, Rol rol, bool includeSOClaim = false);
         bool ValidateToken(string token);
         ClaimsPrincipal? GetClaimsPrincipal(string token);
         UserPermissions? ValidatePermissionCookie(string permissionToken);
-        string? GetClaimValue( string claim);
+        string? GetClaimValue(string claim);
         void BlacklistToken(string token);
         bool IsTokenBlacklisted(string token);
+        List<string> GetPermissionsFromToken(string token);
     }
 
     public class JwtService : IJwtService
@@ -49,6 +52,7 @@ namespace AvaluoAPI.Utilities.JWT
         private readonly IClaimsFactory _claimsFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HashSet<string> _blacklistedTokens = new();
+
         public JwtService(
         IConfiguration configuration,
         IDataProtectionProvider dataProtectionProvider,
@@ -68,6 +72,34 @@ namespace AvaluoAPI.Utilities.JWT
             // JWT con info no sensitiva
             var jwtClaims = _claimsFactory.CreateClaims(user, includeSOClaim);
 
+            // Crear diccionario con todos los permisos
+            var permissionsDict = new Dictionary<string, bool>
+            {
+                { "EsProfesor", rol.EsProfesor },
+                { "EsSupervisor", rol.EsSupervisor },
+                { "EsCoordinadorArea", rol.EsCoordinadorArea },
+                { "EsCoordinadorCarrera", rol.EsCoordinadorCarrera },
+                { "EsAdmin", rol.EsAdmin },
+                { "EsAux", rol.EsAux },
+                { "VerInformes", rol.VerInformes },
+                { "VerListaDeRubricas", rol.VerListaDeRubricas },
+                { "ConfigurarFechas", rol.ConfigurarFechas },
+                { "VerManejoCurriculum", rol.VerManejoCurriculum }
+            };
+
+            // Añadir información del rol
+            jwtClaims.Add(new Claim("rol_id", rol.Id.ToString()));
+            jwtClaims.Add(new Claim("rol_descripcion", rol.Descripcion ?? ""));
+
+            // Añadir permisos como claims individuales (solo los que son true)
+            foreach (var permission in permissionsDict)
+            {
+                if (permission.Value)
+                {
+                    jwtClaims.Add(new Claim("permission", permission.Key));
+                }
+            }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var jwtToken = new JwtSecurityToken(
@@ -78,24 +110,12 @@ namespace AvaluoAPI.Utilities.JWT
                 signingCredentials: creds
             );
 
-            // Token de permisos encriptado
+            // Mantenemos el token de permisos por compatibilidad, pero no lo usaremos como cookie
             var permissions = new UserPermissions
             {
                 RolId = rol.Id,
                 RolDescripcion = rol.Descripcion!,
-                Permisos = new Dictionary<string, bool>
-                {
-                    { "EsProfesor", rol.EsProfesor },
-                    { "EsSupervisor", rol.EsSupervisor },
-                    { "EsCoordinadorArea", rol.EsCoordinadorArea },
-                    { "EsCoordinadorCarrera", rol.EsCoordinadorCarrera },
-                    { "EsAdmin", rol.EsAdmin },
-                    { "EsAux", rol.EsAux },
-                    { "VerInformes", rol.VerInformes },
-                    { "VerListaDeRubricas", rol.VerListaDeRubricas },
-                    { "ConfigurarFechas", rol.ConfigurarFechas },
-                    { "VerManejoCurriculum", rol.VerManejoCurriculum }
-                }
+                Permisos = permissionsDict
             };
 
             var permissionJson = JsonSerializer.Serialize(permissions);
@@ -194,6 +214,28 @@ namespace AvaluoAPI.Utilities.JWT
         public bool IsTokenBlacklisted(string token)
         {
             return _blacklistedTokens.Contains(token);
+        }
+
+        // Implementación del método para obtener permisos del token JWT
+        public List<string> GetPermissionsFromToken(string token)
+        {
+            try
+            {
+                var principal = GetClaimsPrincipal(token);
+                if (principal == null)
+                {
+                    return new List<string>();
+                }
+
+                // Obtener todos los claims de tipo "permission"
+                var permissionClaims = principal.FindAll("permission");
+                return permissionClaims.Select(c => c.Value).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo permisos del token: {ex.Message}");
+                return new List<string>();
+            }
         }
     }
 }

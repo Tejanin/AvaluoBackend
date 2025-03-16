@@ -4,7 +4,10 @@ using AvaluoAPI.Domain.Services.UsuariosService;
 using AvaluoAPI.Infrastructure.Integrations.INTEC;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Utilities.JWT;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 
 
@@ -18,11 +21,13 @@ namespace AvaluoAPI.Presentation.Controllers
     {
         private readonly IUsuarioService _usuarioService;
         private readonly IJwtService _jwtService;
+        private readonly IDataProtectionProvider _dataProtectionProvider;
         private readonly IEmailService _emailService;
-        public UsuariosController(IUsuarioService usuarioService, IJwtService jwtService, IEmailService emailService)
+        public UsuariosController(IUsuarioService usuarioService, IJwtService jwtService, IEmailService emailService, IDataProtectionProvider dataProtectionProvider)
         {
             _emailService = emailService;
             _usuarioService = usuarioService;
+            _dataProtectionProvider = dataProtectionProvider;
             _jwtService = jwtService;
         }
 
@@ -64,12 +69,12 @@ namespace AvaluoAPI.Presentation.Controllers
         public async Task<ActionResult> Login([FromBody] LoginDTO loginDTO)
         {
             var tokens = await _usuarioService.Login(loginDTO);
-
+            Console.WriteLine($"PermissionToken: {tokens.PermissionToken?.Substring(0, 20)}...");
             Response.Cookies.Append("X-Permissions", tokens.PermissionToken, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict
+                SameSite = SameSiteMode.Lax
             });
 
             return Ok(new { message = "Login exitoso", data = new { token = tokens.JwtToken } });
@@ -166,22 +171,30 @@ namespace AvaluoAPI.Presentation.Controllers
             return Accepted(new { message = "Contraseña actualizada exitosamente" });
         }
 
-        [HttpGet("testMocks")]
-        public async Task<ActionResult> Test(string? seccion, string? asignatura)
+        [HttpGet("my-permissions")]
+        [Authorize]
+        public ActionResult GetMyPermissions()
         {
-            var mock = new INTECServiceMock();
-            var evidencias = await mock.GetProfesores(seccion, asignatura);
-            return Ok(new { message = "Datos de prueba obtenidos exitosamente", data = evidencias });
-        }
+            try
+            {
+                // Obtener el token JWT del encabezado de autorización
+                var authHeader = Request.Headers["Authorization"].FirstOrDefault();
+                if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(new { message = "Token no proporcionado" });
+                }
 
+                var token = authHeader.Substring("Bearer ".Length).Trim();
 
-        [HttpGet("testFehcas")]
-        public async Task<ActionResult> TestFechas()
-        {
-            var trimestre = Trimestre.NoviembreEnero;
-            var (inicio, fin) = trimestre.GetFechas(2024);
+                // Obtener permisos del token JWT
+                var permissions = _jwtService.GetPermissionsFromToken(token);
 
-            return Ok(new { message = "Datos de prueba obtenidos exitosamente", data = $"Trimestre actual: {inicio:d} - {fin:d}" });
+                return Ok(new { permissions });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error al obtener permisos", error = ex.Message });
+            }
         }
     }
 }

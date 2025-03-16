@@ -5,13 +5,13 @@ namespace AvaluoAPI.Utilities.JWT
 {
     public interface IClaimsFactory
     {
-        IEnumerable<Claim> CreateClaims(Usuario user, bool includeSOClaim);
+        List<Claim> CreateClaims(Usuario user, bool includeSOClaim);
     }
 
     // Implementación del factory
     public class ClaimsFactory : IClaimsFactory
     {
-        public IEnumerable<Claim> CreateClaims(Usuario user, bool includeSOClaim)
+        public List<Claim> CreateClaims(Usuario user, bool includeSOClaim)
         {
             var claims = new List<Claim>
         {

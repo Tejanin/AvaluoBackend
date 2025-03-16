@@ -247,7 +247,8 @@ if (app.Environment.IsDevelopment())
 // Middlewares
 //app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthMiddleware();
-
+// En Program.cs
+app.UseStaticFiles(); // Esto habilita servir archivos desde wwwroot
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
