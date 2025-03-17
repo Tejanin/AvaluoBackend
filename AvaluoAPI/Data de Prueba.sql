@@ -553,13 +553,13 @@ VALUES
 INSERT INTO [dbo].[usuario] 
 ([Id], [Username], [Email], [HashedPassword], [Salt], [FechaCreacion], [UltimaEdicion], [FechaEliminacion], [Nombre], [Apellido], [Foto], [CV], [IdSO], [IdEstado], [IdArea], [IdRol], [RolId]) 
 VALUES
-(1, 'jdoe', 'jdoe@email.com', 'hashedpassword123', 'salt123', GETDATE(), NULL, NULL, 'John', 'Doe', '/images/jdoe.jpg', '/cv/jdoe.pdf', 1, 1, 1, 1, 1),
-(2, 'asmith', 'asmith@email.com', 'hashedpassword456', 'salt456', GETDATE(), NULL, NULL, 'Alice', 'Smith', '/images/asmith.jpg', '/cv/asmith.pdf', 2, 1, 2, 2, 2),
-(3, 'prof_01', 'prof01@email.com', 'pass01', 'salt01', GETDATE(), NULL, NULL, 'Carlos', 'Gómez', '/images/prof01.jpg', '/cv/prof01.pdf', 1, 1, 1, 1, 1),
-(4, 'prof_02', 'prof02@email.com', 'pass02', 'salt02', GETDATE(), NULL, NULL, 'Laura', 'Fernández', '/images/prof02.jpg', '/cv/prof02.pdf', 2, 1, 2, 1, 1),
-(5, 'prof_03', 'prof03@email.com', 'pass03', 'salt03', GETDATE(), NULL, NULL, 'María', 'López', '/images/prof03.jpg', '/cv/prof03.pdf', 3, 1, 3, 1, 1),
-(6, 'prof_04', 'prof04@email.com', 'pass04', 'salt04', GETDATE(), NULL, NULL, 'Javier', 'Pérez', '/images/prof04.jpg', '/cv/prof04.pdf', 4, 1, 4, 1, 1),
-(7, 'prof_05', 'prof05@email.com', 'pass05', 'salt05', GETDATE(), NULL, NULL, 'Ana', 'Ramírez', '/images/prof05.jpg', '/cv/prof05.pdf', 5, 1, 5, 1, 1);
+( 'jdoe', 'jdoe@email.com', 'hashedpassword123', 'salt123', GETDATE(), NULL, NULL, 'John', 'Doe', '/images/jdoe.jpg', '/cv/jdoe.pdf', 1, 1, 1, 1, 1),
+( 'asmith', 'asmith@email.com', 'hashedpassword456', 'salt456', GETDATE(), NULL, NULL, 'Alice', 'Smith', '/images/asmith.jpg', '/cv/asmith.pdf', 2, 1, 2, 2, 2),
+( 'prof_01', 'prof01@email.com', 'pass01', 'salt01', GETDATE(), NULL, NULL, 'Carlos', 'Gómez', '/images/prof01.jpg', '/cv/prof01.pdf', 1, 1, 1, 1, 1),
+( 'prof_02', 'prof02@email.com', 'pass02', 'salt02', GETDATE(), NULL, NULL, 'Laura', 'Fernández', '/images/prof02.jpg', '/cv/prof02.pdf', 2, 1, 2, 1, 1),
+( 'prof_03', 'prof03@email.com', 'pass03', 'salt03', GETDATE(), NULL, NULL, 'María', 'López', '/images/prof03.jpg', '/cv/prof03.pdf', 3, 1, 3, 1, 1),
+( 'prof_04', 'prof04@email.com', 'pass04', 'salt04', GETDATE(), NULL, NULL, 'Javier', 'Pérez', '/images/prof04.jpg', '/cv/prof04.pdf', 4, 1, 4, 1, 1),
+( 'prof_05', 'prof05@email.com', 'pass05', 'salt05', GETDATE(), NULL, NULL, 'Ana', 'Ramírez', '/images/prof05.jpg', '/cv/prof05.pdf', 5, 1, 5, 1, 1);
 
 
 -- Datos de prueba para ConfiguracionEvaluaciones
