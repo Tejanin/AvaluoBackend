@@ -15,7 +15,17 @@ INSERT INTO Estado (idtabla, descripcion) VALUES
 ('Configuracion','Activa'),
 ('Configuracion','Desactivada'),
 ('Carrera', 'Activa'),
-('Carrera', 'Desactivada')
+('Carrera', 'Desactivada'),
+('Edificio', 'Activa'),
+('Edificio', 'En Mantenimiento'),
+('Edificio', 'Desactivada'),
+('Aula', 'Activa'),
+('Aula', 'En Mantenimiento'),
+('Aula', 'Desactivada'),
+('Inventario', 'Disponible'),
+('Inventario', 'En Uso'),
+('Inventario', 'En Mantenimiento'),
+('Inventario', 'Baja');
 
 INSERT INTO metodo_evaluacion (descripcionES, descripcionEN) VALUES
 ('Examen', 'Exam'),
@@ -23,19 +33,7 @@ INSERT INTO metodo_evaluacion (descripcionES, descripcionEN) VALUES
 ('Proyecto', 'Project'),
 ('Presentación', 'Presentation');
 
-INSERT INTO roles (
-    Descripcion, 
-    EsProfesor, 
-    EsSupervisor, 
-    EsCoordinadorArea, 
-    EsCoordinadorCarrera, 
-    EsAdmin, 
-    EsAux, 
-    VerInformes, 
-    VerListaDeRubricas, 
-    ConfigurarFechas, 
-    VerManejoCurriculum
-) VALUES
+INSERT INTO roles (Descripcion, EsProfesor, EsSupervisor, EsCoordinadorArea, EsCoordinadorCarrera, EsAdmin, EsAux, VerInformes, VerListaDeRubricas, ConfigurarFechas, VerManejoCurriculum) VALUES
 ('Profesor', 1, 0, 0, 0, 0, 0, 1, 1, 0, 1),
 ('Administrador', 0, 0, 0, 0, 1, 0, 1, 1, 1, 1),
 ('Coordinador', 0, 0, 1, 1, 0, 0, 1, 1, 1, 1),
@@ -151,20 +149,38 @@ INSERT INTO Competencia (Nombre, Acron, Titulo, DescripcionES, DescripcionEN, id
 ('PI 2', 7, 'Relationship between knowledge and learning strategy', 'Relación entre conocimiento y estrategia de aprendizaje'),
 ('PI 3', 7, 'Obtaining new concepts', 'Obtención de nuevos conceptos');
 
-INSERT INTO mapa_competencias (Id_Asignatura, Id_Competencia, Id_Estado) VALUES 
-(13,3,11),
-(13,1,11),
-(13,5,11),
-(15,2,11),
-(15,6,11),
-(20,7,11),
-(20,3,11),
-(8,4,11),
-(8,3,11),
-(16,2,11),
-(16,1,11),
-(18,3,11),
-(18,2,11)
+-- Datos de prueba para mapa competencias
+INSERT INTO [dbo].[mapa_competencias] ([Id_Asignatura], [Id_Competencia], [Id_Estado]) 
+VALUES
+(5, 1, 11),
+(8, 2, 11),
+(12, 3, 11),
+(15, 4, 11),
+(18, 5, 11),
+(21, 6, 11),
+(23, 7, 11),
+(25, 1, 11),
+(19, 2, 11),
+(26, 3, 11),
+-- Las asignaturas que no tienen rúbricas, las colocamos en "No Evaluando" (IdEstado 12)
+(1, 7, 12),  -- REDACCION
+(2, 7, 12),  -- ALGEBRA Y GEOMETRIA ANALITICA
+(3, 7, 12),  -- AMBIENTE Y CULTURA
+(4, 7, 12),  -- CREATIVIDAD
+(6, 7, 12),  -- ARGUMENTACION LINGUISTICA
+(7, 7, 12),  -- CALCULO DIFERENCIAL
+(9, 7, 12),  -- INTRODUCCION A LA PROGRAMACION
+(10, 7, 12), -- FISICA MECANICA I
+(11, 7, 12), -- CALCULO INTEGRAL
+(13, 7, 12), -- DESARROLLO DE SOFTWARE I
+(14, 7, 12), -- CALCULO VECTORIAL
+(16, 7, 12), -- TEAM BUILDING
+(17, 7, 12), -- ALGEBRA LINEAL
+(20, 7, 12), -- LABORATORIO ESTRUCTURAS DE DATOS Y ALGORITMOS I
+(22, 7, 12), -- LABORATORIO BASES DE DATOS I
+(24, 7, 12), -- LABORATORIO DE DESARROLLO DE SOFTWARE III
+(27, 7, 12), -- BASES DE DATOS II
+(28, 7, 12); -- LABORATORIO DE BASES DE DATOS II
 
 INSERT INTO so_evaluacion (Id_SO, Id_MetodoEvaluacion) VALUES
 (1, 2),
@@ -188,17 +204,7 @@ INSERT INTO so_evaluacion (Id_SO, Id_MetodoEvaluacion) VALUES
 (7, 3),
 (7, 4);
 
-
-INSERT INTO [dbo].[carreras]
-           ([IdArea]
-           ,[Año]
-           ,[NombreCarrera]
-           ,[IdCoordinadorCarrera]
-           ,[PEOs]
-           ,[FechaCreacion]
-           ,[UltimaEdicion]
-           ,[IdEstado])
-     VALUES
+INSERT INTO [dbo].[carreras] ([IdArea], [Año], [NombreCarrera], [IdCoordinadorCarrera], [PEOs], [FechaCreacion], [UltimaEdicion] ,[IdEstado]) VALUES
            (1,2020,'Ingeniería de Software',null,
 		   'Ser líderes en organizaciones locales e internacionales, ejerciendo la ingeniería industrial en un marco de integridad, excelencia y responsabilidad social.
 			Generar soluciones integradas y sustentables para la industria considerando la actualidad y el contexto global.
@@ -210,10 +216,7 @@ INSERT INTO [dbo].[carreras]
 			Lograr el desarrollo profesional y el crecimiento del conocimiento a través de certificaciones internacionales, estudios de posgrado, experiencia laboral y autoaprendizaje.',
 			GETDATE(),null,15);
 
-
-
-INSERT INTO [dbo].[asignatura_carrera] ([Id_Asignatura],[Id_Carrera])
-     VALUES
+INSERT INTO [dbo].[asignatura_carrera] ([Id_Asignatura],[Id_Carrera]) VALUES
            (5,1),
            (8,1),
            (12,1), 
@@ -234,236 +237,172 @@ INSERT INTO [dbo].[asignatura_carrera] ([Id_Asignatura],[Id_Carrera])
            (21,2), 
            (22,2), 
            (23,2), 
-           (24,2)
+           (24,2),
+		   (25, 1),
+		   (26, 1),
+		   (27, 2),
+		   (28, 2); 
 
-
--- Datos de prueba para desempeno
 INSERT INTO [dbo].[desempeno] 
-([Id], [Id_SO], [IdPI], [Id_Asignatura], [Satisfactorio], [Trimestre], [Año], [Porcentaje]) 
+([Id], [Id_SO], [IdPI], [Id_Asignatura], [Satisfactorio], [Trimestre], [Año], [Porcentaje])
 VALUES
-(1, 1, 1, 1, 1, '1', 2024, 85.5),
-(2, 2, 2, 2, 0, '2', 2024, 70.0),
-(3, 3, 3, 3, 1, '1', 2024, 88.0),
-(4, 4, 4, 4, 0, '2', 2024, 65.2),
-(5, 5, 5, 5, 1, '3', 2024, 92.4),
-(6, 6, 6, 6, 1, '1', 2023, 80.1),
-(7, 7, 7, 7, 0, '2', 2023, 69.8),
-(8, 1, 2, 8, 1, '3', 2023, 75.0),
-(9, 2, 3, 9, 1, '1', 2022, 85.7),
-(10, 3, 4, 10, 0, '2', 2022, 60.5),
-(11, 4, 5, 11, 1, '3', 2022, 90.2),
-(12, 5, 6, 12, 1, '1', 2021, 78.4),
-(13, 6, 7, 13, 0, '2', 2021, 62.3),
-(14, 7, 1, 14, 1, '3', 2021, 88.9),
-(15, 1, 3, 15, 1, '1', 2020, 94.6),
-(16, 2, 4, 16, 0, '2', 2020, 55.1),
-(17, 3, 5, 17, 1, '3', 2020, 79.5),
-(18, 4, 6, 18, 1, '1', 2024, 83.2),
-(19, 5, 7, 19, 0, '2', 2024, 66.7),
-(20, 6, 1, 20, 1, '3', 2024, 95.0),
-(21, 7, 2, 21, 1, '1', 2023, 87.3),
-(22, 1, 4, 22, 0, '2', 2023, 72.5),
-(23, 2, 5, 23, 1, '3', 2023, 91.1),
-(24, 3, 6, 24, 1, '1', 2022, 79.9),
-(25, 4, 7, 25, 0, '2', 2022, 64.8),
-(26, 5, 1, 26, 1, '3', 2022, 88.6),
-(27, 6, 2, 27, 1, '1', 2021, 90.0),
-(28, 7, 3, 28, 0, '2', 2021, 68.2),
-(29, 1, 5, 10, 1, '1', 2024, 91.2),
-(30, 2, 6, 12, 0, '2', 2024, 67.3),
-(31, 3, 7, 14, 1, '3', 2024, 89.8),
-(32, 4, 1, 16, 0, '1', 2023, 61.5),
-(33, 5, 2, 18, 1, '2', 2023, 77.9),
-(34, 6, 3, 20, 1, '3', 2023, 85.4),
-(35, 7, 4, 22, 0, '1', 2022, 69.1),
-(36, 1, 5, 24, 1, '2', 2022, 90.5),
-(37, 2, 6, 26, 1, '3', 2022, 81.3),
-(38, 3, 7, 28, 0, '1', 2021, 72.4),
-(39, 4, 1, 3, 1, '2', 2021, 88.7),
-(40, 5, 2, 2, 1, '3', 2021, 92.1),
-(41, 6, 3, 5, 0, '1', 2020, 65.4),
-(42, 7, 4, 8, 1, '2', 2020, 79.6),
-(43, 1, 6, 12, 1, '3', 2024, 94.2),
-(44, 2, 7, 16, 0, '1', 2023, 60.9),
-(45, 3, 1, 20, 1, '2', 2023, 87.5),
-(46, 4, 2, 24, 1, '3', 2023, 90.3),
-(47, 5, 3, 28, 0, '1', 2022, 73.4),
-(48, 6, 4, 17, 1, '2', 2022, 85.9),
-(49, 7, 5, 1, 1, '3', 2022, 92.5),
-(50, 1, 7, 3, 0, '1', 2021, 68.7),
-(51, 2, 1, 6, 1, '2', 2021, 84.3),
-(52, 3, 2, 9, 1, '3', 2021, 89.1),
-(53, 4, 3, 13, 0, '1', 2020, 66.8),
-(54, 5, 4, 17, 1, '2', 2020, 78.5),
-(55, 6, 5, 21, 1, '3', 2020, 91.7),
-(56, 7, 6, 25, 0, '1', 2024, 64.5),
-(57, 1, 3, 23, 1, '2', 2024, 86.2),
-(58, 2, 4, 1, 1, '3', 2024, 93.1),
-(59, 3, 5, 2, 0, '1', 2023, 71.3),
-(60, 4, 6, 4, 1, '2', 2023, 80.4),
-(61, 5, 7, 7, 1, '3', 2023, 95.0),
-(62, 6, 1, 10, 0, '1', 2022, 63.2),
-(63, 7, 2, 15, 1, '2', 2022, 90.9),
-(64, 1, 3, 19, 1, '3', 2022, 85.7),
-(65, 2, 4, 23, 0, '1', 2021, 70.8),
-(66, 3, 5, 27, 1, '2', 2021, 87.1),
-(67, 4, 6, 18, 1, '3', 2021, 94.5),
-(68, 5, 7, 3, 0, '1', 2020, 69.2),
-(69, 6, 1, 6, 1, '2', 2020, 83.8),
-(70, 7, 2, 9, 1, '3', 2020, 90.2),
-(71, 1, 4, 1, 1, '1', 2024, 82.5),
-(72, 2, 5, 1, 0, '2', 2024, 68.3),
-(73, 3, 6, 1, 1, '3', 2024, 90.1),
-(74, 4, 2, 2, 1, '1', 2024, 85.9),
-(75, 5, 3, 2, 0, '2', 2024, 72.4),
-(76, 6, 7, 2, 1, '3', 2024, 88.7),
-(77, 7, 1, 3, 1, '1', 2024, 92.3),
-(78, 1, 2, 3, 0, '2', 2024, 69.1),
-(79, 2, 3, 3, 1, '3', 2024, 86.8),
-(80, 3, 5, 4, 1, '1', 2024, 81.6),
-(81, 4, 6, 4, 0, '2', 2024, 70.5),
-(82, 5, 7, 4, 1, '3', 2024, 89.2),
-(83, 6, 1, 5, 1, '1', 2024, 94.0),
-(84, 7, 2, 5, 0, '2', 2024, 65.7),
-(85, 1, 3, 5, 1, '3', 2024, 83.5),
-(86, 2, 5, 6, 1, '1', 2024, 91.8),
-(87, 3, 6, 6, 0, '2', 2024, 67.2),
-(88, 4, 7, 6, 1, '3', 2024, 85.3),
-(89, 5, 1, 7, 1, '1', 2024, 93.6),
-(90, 6, 2, 7, 0, '2', 2024, 71.1),
-(91, 7, 3, 7, 1, '3', 2024, 88.0),
-(92, 1, 5, 8, 1, '1', 2024, 82.7),
-(93, 2, 6, 8, 0, '2', 2024, 69.4),
-(94, 3, 7, 8, 1, '3', 2024, 91.5),
-(95, 4, 2, 9, 1, '1', 2024, 86.3),
-(96, 5, 3, 9, 0, '2', 2024, 74.9),
-(97, 6, 5, 9, 1, '3', 2024, 87.1),
-(98, 7, 6, 10, 1, '1', 2024, 95.2),
-(99, 1, 7, 10, 0, '2', 2024, 68.5),
-(100, 2, 1, 10, 1, '3', 2024, 89.9),
-(101, 3, 2, 11, 1, '1', 2024, 90.4),
-(102, 4, 3, 11, 0, '2', 2024, 66.9),
-(103, 5, 5, 11, 1, '3', 2024, 83.0),
-(104, 6, 6, 12, 1, '1', 2024, 91.2),
-(105, 7, 7, 12, 0, '2', 2024, 72.0),
-(106, 1, 1, 12, 1, '3', 2024, 86.5),
-(107, 2, 2, 13, 1, '1', 2024, 92.8),
-(108, 3, 3, 13, 0, '2', 2024, 69.7),
-(109, 4, 5, 13, 1, '3', 2024, 87.9),
-(110, 5, 6, 14, 1, '1', 2024, 94.3),
-(111, 6, 7, 14, 0, '2', 2024, 67.6),
-(112, 7, 1, 14, 1, '3', 2024, 89.2),
-(113, 1, 2, 15, 1, '1', 2024, 85.6),
-(114, 2, 3, 15, 0, '2', 2024, 71.8),
-(115, 3, 5, 15, 1, '3', 2024, 90.7),
-(116, 4, 6, 16, 1, '1', 2024, 93.0),
-(117, 5, 7, 16, 0, '2', 2024, 69.2),
-(118, 6, 1, 16, 1, '3', 2024, 88.4),
-(119, 7, 2, 17, 1, '1', 2024, 92.1),
-(120, 1, 3, 17, 0, '2', 2024, 73.5);
+-- Rúbrica 1 (SO 1) - Asignatura 5 - CantEstudiantes: 30
+-- CantSatisfactorio + CantExperto:
+-- PI 1: 7 + 5 = 12 --> (12 / 30) * 100 = 40.00
+(1, 1, 1, 5, 0, 1, 2025, 40.00),  
+-- PI 2: 6 + 4 = 10 --> (10 / 30) * 100 = 33.33
+(2, 1, 2, 5, 0, 2, 2025, 33.33),  
+-- PI 3: 9 + 3 = 12 --> (12 / 30) * 100 = 40.00
+(3, 1, 3, 5, 0, 3, 2025, 40.00),
+-- PI 4: 8 + 6 = 14 --> (14 / 30) * 100 = 46.67
+(4, 1, 4, 5, 0, 4, 2025, 46.67),
+-- Rúbrica 2 (SO 2) - Asignatura 8 - CantEstudiantes: 25
+-- PI 5: 5 + 7 = 12 --> (12 / 25) * 100 = 48.00
+(5, 2, 5, 8, 0, 1, 2025, 48.00),
+-- PI 6: 7 + 5 = 12 --> (12 / 25) * 100 = 48.00
+(6, 2, 6, 8, 0, 2, 2025, 48.00),
+-- PI 7: 6 + 4 = 10 --> (10 / 25) * 100 = 40.00
+(7, 2, 7, 8, 0, 3, 2025, 40.00),
+-- PI 8: 8 + 6 = 14 --> (14 / 25) * 100 = 56.00
+(8, 2, 8, 8, 1, 4, 2025, 56.00),
+-- Rúbrica 3 (SO 3) - Asignatura 12 - CantEstudiantes: 28
+-- PI 9: 7 + 5 = 12 --> (12 / 28) * 100 ≈ 42.86
+(9, 3, 9, 12, 0, 1, 2025, 42.86),
+-- PI 10: 8 + 6 = 14 --> (14 / 28) * 100 = 50.00
+(10, 3, 10, 12, 1, 2, 2025, 50.00),
+-- PI 11: 6 + 7 = 13 --> (13 / 28) * 100 ≈ 46.43
+(11, 3, 11, 12, 0, 3, 2025, 46.43),
+-- PI 12: 5 + 4 = 9 --> (9 / 28) * 100 ≈ 32.14
+(12, 3, 12, 12, 0, 4, 2025, 32.14),
+-- Rúbrica 4 (SO 4) - Asignatura 15 - CantEstudiantes: 32
+-- PI 13: 6 + 7 = 13 --> (13 / 32) * 100 ≈ 40.63
+(13, 4, 13, 15, 0, 1, 2025, 40.63),
+-- PI 14: 7 + 3 = 10 --> (10 / 32) * 100 ≈ 31.25
+(14, 4, 14, 15, 0, 2, 2025, 31.25),
+-- PI 15: 8 + 6 = 14 --> (14 / 32) * 100 ≈ 43.75
+(15, 4, 15, 15, 0, 3, 2025, 43.75),
+-- Rúbrica 5 (SO 5) - Asignatura 18 - CantEstudiantes: 20
+-- PI 16: 7 + 5 = 12 --> (12 / 20) * 100 = 60.00
+(16, 5, 16, 18, 1, 1, 2025, 60.00),
+-- PI 17: 8 + 4 = 12 --> (12 / 20) * 100 = 60.00
+(17, 5, 17, 18, 1, 2, 2025, 60.00),
+-- PI 18: 7 + 6 = 13 --> (13 / 20) * 100 = 65.00
+(18, 5, 18, 18, 1, 3, 2025, 65.00),
+-- Rúbrica 6 (SO 6) - Asignatura 20 - CantEstudiantes: 35
+-- PI 19: 6 + 5 = 11 --> (11 / 35) * 100 ≈ 31.43
+(19, 6, 19, 20, 0, 1, 2025, 31.43),
+-- PI 20: 7 + 6 = 13 --> (13 / 35) * 100 ≈ 37.14
+(20, 6, 20, 20, 0, 2, 2025, 37.14),
+-- PI 21: 8 + 7 = 15 --> (15 / 35) * 100 ≈ 42.86
+(21, 6, 21, 20, 0, 3, 2025, 42.86),
+-- PI 22: 7 + 3 = 10 --> (10 / 35) * 100 ≈ 28.57
+(22, 6, 22, 20, 0, 4, 2025, 28.57),
+-- Rúbrica 7 (SO 7) - Asignatura 21 - CantEstudiantes: 27
+-- PI 23: 7 + 5 = 12 --> (12 / 27) * 100 ≈ 44.44
+(23, 7, 23, 21, 0, 1, 2024, 44.44),
+-- PI 24: 6 + 6 = 12 --> (12 / 27) * 100 ≈ 44.44
+(24, 7, 24, 21, 12, 2, 2024, 44.44),
+-- PI 25: 8 + 4 = 12 --> (12 / 27) * 100 ≈ 44.44
+(25, 7, 25, 21, 0, 3, 2024, 44.44);
 
 -- Datos de prueba para rubricas
 INSERT INTO [dbo].[rubricas]
-           ([Id], [IdSO], [IdProfesor], [IdAsignatura], [IdEstado], [IdMetodoEvaluacion], [FechaCompletado], 
+           ([IdSO], [IdProfesor], [IdAsignatura], [IdEstado], [IdMetodoEvaluacion], [FechaCompletado], 
             [UltimaEdicion], [CantEstudiantes], [Año], [Periodo], [Seccion], [Comentario], [Problematica], 
             [Solucion], [Evidencia], [EvaluacionesFormativas], [Estrategias]) 
 VALUES
-(1, 1, 3, 5, 1, 2, GETDATE(), NULL, 30, 2024, 'Primer Semestre', 'A', 'Buena participación', 
+(1, 3, 5, 1, 2, GETDATE(), GETDATE(), 30, 2025, '1', 'A', 'Buena participación', 
  'Dificultades con conceptos avanzados', 'Revisión grupal', 'Evidencia en informe final', 
  'Pruebas escritas', 'Tutorías individuales'),
 
-(2, 2, 4, 8, 2, 3, GETDATE(), NULL, 25, 2024, 'Primer Semestre', 'B', 'Evaluación regular', 
+(2, 4, 8, 2, 3, GETDATE(), GETDATE(), 25, 2025, '1', 'B', 'Evaluación regular', 
  'Problemas con la metodología de trabajo', 'Implementación de ejercicios guiados', 
  'Archivos PDF con análisis', 'Exámenes parciales', 'Uso de software especializado'),
 
-(3, 3, 5, 12, 3, 1, GETDATE(), NULL, 28, 2024, 'Segundo Semestre', 'C', 'Resultados mixtos', 
+(3, 5, 12, 3, 1, GETDATE(), GETDATE(), 28, 2025, '1', 'C', 'Resultados mixtos', 
  'Poca participación en debates', 'Integración de foros de discusión', 
  'Videos de presentaciones', 'Autoevaluaciones', 'Aprendizaje basado en proyectos'),
 
-(4, 4, 6, 15, 1, 4, GETDATE(), NULL, 32, 2024, 'Primer Semestre', 'D', 'Dificultad en aplicación práctica', 
+(4, 6, 15, 1, 4, GETDATE(), GETDATE(), 32, 2025, '1', 'D', 'Dificultad en aplicación práctica', 
  'Falta de experiencia con herramientas de desarrollo', 'Laboratorios adicionales', 
  'Reportes de pruebas', 'Pruebas en línea', 'Trabajo en equipo'),
 
-(5, 5, 7, 18, 4, 2, GETDATE(), NULL, 20, 2024, 'Segundo Semestre', 'E', 'Avance satisfactorio', 
+(5, 7, 18, 4, 2, GETDATE(), GETDATE(), 20, 2025, '1', 'E', 'Avance satisfactorio', 
  'Requieren más material de apoyo', 'Entrega de material complementario', 
  'Resúmenes escritos', 'Evaluaciones orales', 'Casos de estudio'),
 
-(6, 6, 3, 20, 1, 3, GETDATE(), NULL, 35, 2024, 'Primer Semestre', 'F', 'Excelente desempeño', 
+(6, 3, 20, 1, 3, GETDATE(), GETDATE(), 35, 2025, '1', 'F', 'Excelente desempeño', 
  'Algunos estudiantes no completan tareas', 'Refuerzo con sesiones de repaso', 
  'Videos explicativos', 'Cuestionarios en línea', 'Clases interactivas'),
 
-(7, 7, 4, 21, 3, 1, GETDATE(), NULL, 27, 2024, 'Tercer Semestre', 'G', 'Desempeño variado', 
+(7, 4, 21, 3, 1, GETDATE(), GETDATE(), 27, 2024, '1', 'G', 'Desempeño variado', 
  'Falta de estructura en respuestas escritas', 'Prácticas de redacción técnica', 
  'Ejercicios de escritura', 'Corrección de ensayos', 'Revisión por pares'),
 
-(8, 1, 5, 23, 2, 4, GETDATE(), NULL, 33, 2024, 'Cuarto Semestre', 'H', 'Alto interés en la asignatura', 
+(1, 5, 23, 2, 4, GETDATE(), GETDATE(), 33, 2024, '1', 'H', 'Alto interés en la asignatura', 
  'Necesidad de mayor práctica en código', 'Programación en vivo', 
  'Capturas de código', 'Proyectos individuales', 'Desarrollo de software en equipo'),
 
-(9, 2, 6, 25, 1, 2, GETDATE(), NULL, 29, 2024, 'Primer Semestre', 'I', 'Falta de enfoque en los detalles', 
+(2, 6, 25, 1, 2, GETDATE(), GETDATE(), 29, 2024, '1', 'I', 'Falta de enfoque en los detalles', 
  'Dificultad en depuración de código', 'Ejercicios específicos de depuración', 
  'Capturas de pantalla', 'Simulaciones', 'Tareas prácticas'),
 
-(10, 3, 7, 26, 3, 3, GETDATE(), NULL, 22, 2024, 'Segundo Semestre', 'J', 'Falta de dominio de ciertos temas', 
+(3, 7, 26, 3, 3, GETDATE(), GETDATE(), 22, 2024, '1', 'J', 'Falta de dominio de ciertos temas', 
  'Falta de práctica con algoritmos recursivos', 'Ejercicios guiados', 
  'Códigos de muestra', 'Exámenes abiertos', 'Uso de herramientas online');
 
--- Datos de prueba para resumen
-INSERT INTO [dbo].[resumen] ([Id_PI], [Id_Rubrica], [CantDesarrollo], [CantExperto], [CantPrincipiante], [CantSatisfactorio]) 
+INSERT INTO [dbo].[resumen] ([Id_PI], [Id_Rubrica], [CantDesarrollo], [CantExperto], [CantPrincipiante], [CantSatisfactorio])
 VALUES
+ -- Rúbrica 1 (SO 1, PI 1-4)
 (1, 1, 10, 5, 3, 7),
-(2, 2, 8, 6, 4, 5),
-(3, 3, 12, 4, 2, 9),
-(4, 4, 15, 2, 3, 10),
-(5, 5, 9, 7, 6, 4),
-(6, 6, 11, 8, 5, 6),
-(7, 7, 14, 3, 2, 8),
-(1, 8, 7, 9, 4, 6),
-(2, 9, 10, 6, 3, 7),
-(3, 10, 8, 7, 5, 5),
-(4, 1, 12, 5, 4, 9),
-(5, 2, 14, 3, 2, 8),
-(6, 3, 9, 6, 7, 5),
-(7, 4, 10, 5, 6, 7),
-(1, 5, 11, 4, 3, 8),
-(2, 6, 12, 7, 5, 9),
-(3, 7, 15, 3, 2, 10),
-(4, 8, 7, 8, 5, 6),
-(5, 9, 9, 6, 4, 7),
-(6, 10, 13, 4, 2, 9);
+(2, 1, 8, 4, 2, 6),
+(3, 1, 12, 3, 4, 9),
+(4, 1, 11, 6, 3, 8),
+--Rúbrica 2 (SO 2, PI 1-4)
+(5, 2, 9, 7, 4, 5),
+(6, 2, 13, 5, 3, 7),
+(7, 2, 12, 4, 2, 6),
+(8, 2, 10, 6, 5, 8),
+-- Rúbrica 3 (SO 3, PI 1-4)
+(9, 3, 11, 5, 4, 7),
+(10, 3, 12, 6, 3, 8),
+(11, 3, 8, 7, 5, 6),
+(12, 3, 9, 4, 6, 5),
+-- Rúbrica 4 (SO 4, PI 1-3)
+(13, 4, 10, 7, 3, 6),
+(14, 4, 15, 3, 4, 7),
+(15, 4, 11, 6, 5, 8),
+-- Rúbrica 5 (SO 5, PI 1-3)
+(16, 5, 12, 5, 4, 7),
+(17, 5, 14, 4, 3, 8),
+(18, 5, 10, 6, 5, 7),
+-- Rúbrica 6 (SO 6, PI 1-4)
+(19, 6, 13, 5, 3, 6),
+(20, 6, 12, 6, 4, 7),
+(21, 6, 11, 7, 5, 8),
+(22, 6, 14, 3, 2, 7),
+-- Rúbrica 7 (SO 7, PI 1-3)
+(23, 7, 12, 5, 3, 7),
+(24, 7, 11, 6, 4, 6),
+(25, 7, 13, 4, 2, 8),
+-- Rúbrica 8 (SO 1, PI 1-4) -> Vuelve a SO 1
+(1, 8, 10, 7, 3, 7),
+(2, 8, 9, 6, 4, 6),
+(3, 8, 11, 5, 3, 8),
+(4, 8, 12, 4, 2, 9),
+-- Rúbrica 9 (SO 2, PI 1-4)
+(5, 9, 12, 6, 4, 7),
+(6, 9, 10, 5, 3, 6),
+(7, 9, 13, 4, 2, 8),
+(8, 9, 11, 7, 5, 7),
+-- Rúbrica 10 (SO 3, PI 1-4)S
+(9, 10, 13, 5, 3, 7),
+(10, 10, 14, 6, 4, 8),
+(11, 10, 12, 7, 5, 6),
+(12, 10, 11, 4, 3, 7);
 
--- Datos de prueba para mapa_competencias
-INSERT INTO [dbo].[mapa_competencias] ([Id_Asignatura], [Id_Competencia], [Id_Estado]) 
-VALUES
-(1, 1, 11),
-(2, 2, 11),
-(3, 3, 11),
-(4, 4, 11),
-(5, 5, 11),
-(6, 6, 11),
-(7, 7, 11),
-(8, 1, 11),
-(9, 2, 11),
-(10, 3, 11),
-(11, 4, 11),
-(12, 5, 11),
-(13, 6, 11),
-(14, 7, 11),
-(15, 1, 11),
-(16, 2, 11),
-(17, 3, 11),
-(18, 4, 11),
-(19, 5, 11),
-(20, 6, 11),
-(21, 7, 11),
-(22, 1, 11),
-(23, 2, 11),
-(24, 3, 11),
-(25, 4, 11),
-(26, 5, 11),
-(27, 6, 11),
-(28, 7, 11);
 
+/* Estas tablas no se estan usando
 
 -- Datos de prueba para action_plan
 INSERT INTO [dbo].[action_plan] 
@@ -472,69 +411,6 @@ VALUES
 (1, 1, GETDATE(), NULL, 1, 'Mejorar la calidad de la enseñanza en Ingeniería', 1),
 (2, 2, GETDATE(), NULL, 2, 'Implementar estrategias para el desarrollo de software', 2);
 
--- Datos de prueba para aula
-INSERT INTO [dbo].[aula] 
-([Id], [Descripcion], [FechaCreacion], [UltimaEdicion], [Id_Edificio], [Id_Estado]) 
-VALUES
-(1, 'Laboratorio de Software', GETDATE(), NULL, 1, 1),
-(2, 'Aula de Matemáticas', GETDATE(), NULL, 2, 1);
-
--- Datos de prueba para contacto
-INSERT INTO [dbo].[contacto] 
-([Id], [NumeroContacto], [Id_Usuario]) 
-VALUES
-(1, '809-555-1234', 1),
-(2, '809-555-5678', 2);
-
--- Datos de prueba para edificios
-INSERT INTO [dbo].[edificios] 
-([Id], [Id_Area], [Nombre], [FechaCreacion], [UltimaEdicion], [Acron], [Id_Estado], [Ubicacion]) 
-VALUES
-(1, 1, 'Edificio de Ingeniería', GETDATE(), NULL, 'ING', 1, 'Campus Norte'),
-(2, 2, 'Edificio de Ciencias', GETDATE(), NULL, 'SCI', 1, 'Campus Central');
-
--- Datos de prueba para evidencia
-INSERT INTO [dbo].[evidencia] 
-([Id], [Id_Rubrica], [Nombre], [Ruta], [FechaCreacion]) 
-VALUES
-(1, 1, 'Reporte de Evaluación', '/evidencias/reporte1.pdf', GETDATE()),
-(2, 2, 'Presentación Final', '/evidencias/presentacion.pdf', GETDATE());
-
--- Datos de prueba para historial_incumplimiento
-INSERT INTO [dbo].[historial_incumplimiento] 
-([Id], [Descripcion], [Fecha], [Id_Usuario]) 
-VALUES
-(1, 'Entrega tardía de informe', GETDATE(), 1),
-(2, 'No cumplimiento de requisitos de evaluación', GETDATE(), 2);
-
--- Datos de prueba para informe
-INSERT INTO [dbo].[informe] 
-([Id], [Ruta], [FechaCreacion], [Nombre], [Tipo_Id], [Carrera_Id], [Año], [Trimestre], [Periodo]) 
-VALUES
-(1, '/informes/informe1.pdf', GETDATE(), 'Informe Anual Ingeniería', 1, 1, 2024, '1', 'Enero-Marzo'),
-(2, '/informes/informe2.pdf', GETDATE(), 'Informe Evaluación Software', 2, 2, 2024, '2', 'Abril-Junio');
-
--- Datos de prueba para inventario
-INSERT INTO [dbo].[inventario] 
-([Id], [Descripcion], [FechaCreacion], [UltimaEdicion], [Id_Estado]) 
-VALUES
-(1, 'Computadoras portátiles', GETDATE(), NULL, 1),
-(2, 'Proyectores multimedia', GETDATE(), NULL, 1);
-
--- Datos de prueba para objeto_aula
-INSERT INTO [dbo].[objeto_aula] 
-([Id_Objeto], [Id_Aula], [Cantidad]) 
-VALUES
-(1, 1, 10),
-(2, 2, 5);
-
--- Datos de prueba para profesor_carrera
-INSERT INTO [dbo].[profesor_carrera] 
-([Profesor_Id], [Carrera_Id]) 
-VALUES
-(1, 1),
-(2, 2);
-
 -- Datos de prueba para tarea
 INSERT INTO [dbo].[tarea] 
 ([Id], [Id_ActionPlan], [Id_Auxiliar], [Id_EstadoTarea], [FechaCreacion], [UltimaEdicion], [Descripcion]) 
@@ -542,37 +418,328 @@ VALUES
 (1, 1, 1, 1, GETDATE(), NULL, 'Revisión de informes de desempeño'),
 (2, 2, 2, 2, GETDATE(), NULL, 'Implementación de mejoras en evaluación');
 
+*/
+
+-- Datos de prueba para edificios
+INSERT INTO [dbo].[edificios] 
+([Id], [Id_Area], [Nombre], [FechaCreacion], [UltimaEdicion], [Acron], [Id_Estado], [Ubicacion]) 
+VALUES
+(1, 5, 'Edificio Ercilia Pepín', GETDATE(), GETDATE(), 'EP', 17, 'Campus INTEC, Santo Domingo'),
+(2, 1, 'Laboratorio de Máquinas Eléctricas', GETDATE(), GETDATE(), 'LME', 17, 'Campus INTEC, Santo Domingo'),
+(3, 3, 'Edificio De Ramón Picazo', GETDATE(), GETDATE(), 'DP', 17, 'Campus INTEC, Santo Domingo'),
+(4, 1, 'Edificio Osvaldo García de la Concha', GETDATE(), GETDATE(), 'GC', 17, 'Campus INTEC, Santo Domingo'),
+(5, 2, 'Edificio de Postgrado Eduardo Latorre', GETDATE(), GETDATE(), 'EL', 17, 'Campus INTEC, Santo Domingo'),
+(6, 2, 'Edificio Fernando Defilló', GETDATE(), GETDATE(), 'FD', 17, 'Campus INTEC, Santo Domingo'),
+(7, 4, 'Edificio Ana Mercedes Henríquez', GETDATE(), GETDATE(), 'AH', 17, 'Campus INTEC, Santo Domingo'),
+(8, 5, 'Edificio Evangelina Rodríguez', GETDATE(), GETDATE(), 'ER', 17, 'Campus INTEC, Santo Domingo'),
+(9, 2, 'Edificio Pedro Francisco Bonó', GETDATE(), GETDATE(), 'PB', 17, 'Campus INTEC, Santo Domingo'),
+(10, 5, 'Edificio Arturo Jiménez Sabater', GETDATE(), GETDATE(), 'AJ', 17, 'Campus INTEC, Santo Domingo'),
+(11, 3, 'Edificio Los Fundadores', GETDATE(), GETDATE(), 'LF', 17, 'Campus INTEC, Santo Domingo'),
+(12, 3, 'Los Fundadores Anexo', GETDATE(), GETDATE(), 'LFA', 17, 'Campus INTEC, Santo Domingo');
+
+-- Datos de prueba para aula
+INSERT INTO [dbo].[aula] 
+([Id], [Descripcion], [FechaCreacion], [UltimaEdicion], [Id_Edificio], [Id_Estado]) 
+VALUES
+-- Ercilia Pepín (EP)
+(1, 'Aula EP-101', GETDATE(), GETDATE(), 1, 20),
+(2, 'Aula EP-102', GETDATE(), GETDATE(), 1, 20),
+(3, 'Laboratorio de Automatización Industrial', GETDATE(), GETDATE(), 1, 20),
+-- Laboratorio Máquinas Eléctricas (LME)
+(4, 'Laboratorio Máquinas Eléctricas 1', GETDATE(), GETDATE(), 2, 20),
+-- De Ramón Picazo (DP)
+(5, 'Aula DP-201', GETDATE(), GETDATE(), 3, 20),
+(6, 'Taller MakerSpace', GETDATE(), GETDATE(), 3, 20),
+-- Osvaldo García de la Concha (GC)
+(7, 'Aula GC-301', GETDATE(), GETDATE(), 4, 20),
+(8, 'Auditorio Osvaldo García de la Concha', GETDATE(), GETDATE(), 4, 20),
+-- Postgrado Eduardo Latorre (EL)
+(9, 'Aula EL-401', GETDATE(), GETDATE(), 5, 20),
+(10, 'Sala de Conferencias EL', GETDATE(), GETDATE(), 5, 20),
+-- Fernando Defilló (FD)
+(11, 'Laboratorio de Biología', GETDATE(), GETDATE(), 6, 20),
+(12, 'Laboratorio de Microbiología', GETDATE(), GETDATE(), 6, 20),
+-- Ana Mercedes Henríquez (AH)
+(13, 'Salón Múltiple AH', GETDATE(), GETDATE(), 7, 20),
+(14, 'Salón de OSES', GETDATE(), GETDATE(), 7, 20),
+-- Evangelina Rodríguez (ER)
+(15, 'Aula ER-501', GETDATE(), GETDATE(), 8, 20),
+(16, 'Unidad de Atención Primaria y LAB INTEC', GETDATE(), GETDATE(), 8, 20),
+-- Pedro Francisco Bonó (PB)
+(17, 'Aula PB-601', GETDATE(), GETDATE(), 9, 20),
+(18, 'Laboratorio de Clínica Odontológica', GETDATE(), GETDATE(), 9, 20),
+-- Arturo Jiménez Sabater (AJ)
+(19, 'Aula AJ-701', GETDATE(), GETDATE(), 10, 20),
+(20, 'Laboratorio de Matemática Aplicada', GETDATE(), GETDATE(), 10, 20),
+-- Los Fundadores (LF)
+(21, 'Aula LF-801', GETDATE(), GETDATE(), 11, 20),
+(22, 'Sala de Videoconferencias', GETDATE(), GETDATE(), 11, 20),
+-- Los Fundadores Anexo (LFA)
+(23, 'Aula LFA-901', GETDATE(), GETDATE(), 12, 20),
+(24, 'Laboratorio de Genética', GETDATE(), GETDATE(), 12, 20);
+
+-- Datos de prueba para inventario
+INSERT INTO [dbo].[inventario] 
+([Id], [Descripcion], [FechaCreacion], [UltimaEdicion], [Id_Estado]) 
+VALUES
+(1, 'Proyector Epson X-40', GETDATE(), GETDATE(), 23),          -- Disponible
+(2, 'Computadora Dell OptiPlex 7090', GETDATE(), GETDATE(), 24), -- En Uso
+(3, 'Pizarra Acrílica 2x1m', GETDATE(), GETDATE(), 23),          -- Disponible
+(4, 'Escritorio para profesor', GETDATE(), GETDATE(), 23),       -- Disponible
+(5, 'Sillas de estudiante con paleta', GETDATE(), GETDATE(), 23),-- Disponible
+(6, 'Laboratorio de Electrónica Kit Básico', GETDATE(), GETDATE(), 24), -- En Uso
+(7, 'Microscopio Binocular', GETDATE(), GETDATE(), 25),          -- En Mantenimiento
+(8, 'Equipo de Redes Cisco 2900', GETDATE(), GETDATE(), 23),     -- Disponible
+(9, 'Impresora HP LaserJet Pro', GETDATE(), GETDATE(), 25),      -- En Mantenimiento
+(10, 'Equipo de Realidad Virtual Oculus Rift', GETDATE(), GETDATE(), 24), -- En Uso
+(11, 'Set de Instrumentos Odontológicos', GETDATE(), GETDATE(), 24), -- En Uso
+(12, 'Sistema de Audio Logitech Z623', GETDATE(), GETDATE(), 23); -- Disponible
+
+-- Datos de prueba para objeto_aula
+INSERT INTO [dbo].[objeto_aula] 
+([Id_Objeto], [Id_Aula], [Cantidad]) 
+VALUES
+-- Aulas en EP
+(1, 1, 1), -- Proyector Epson X-40 en EP-101
+(5, 1, 30), -- Sillas de estudiante
+(4, 1, 1), -- Escritorio para profesor
+(2, 2, 10), -- PC Dell en EP-102
+(3, 2, 1), -- Pizarra Acrílica
+(5, 2, 25),
+(6, 3, 15), -- Lab Electrónica Kit en Lab Automatización EP
+-- LME
+(6, 4, 10), -- Lab Electrónica Kit
+(3, 4, 1),
+-- DP
+(2, 5, 20), -- PC Dell en DP-201
+(1, 5, 1),
+(5, 5, 25),
+(10, 6, 5), -- VR Oculus Rift en MakerSpace
+(2, 6, 5),
+-- GC
+(1, 7, 1), -- Proyector
+(5, 7, 20),
+(4, 7, 1),
+(8, 8, 3), -- Cisco 2900 en Auditorio GC
+(9, 8, 1),
+-- EL
+(1, 9, 1), -- Proyector
+(5, 9, 15),
+(3, 10, 1), -- Pizarra en Sala de Conferencias EL
+(5, 10, 10),
+-- FD
+(7, 11, 10), -- Microscopios en Lab Biología
+(3, 11, 1),
+(7, 12, 8), -- Microscopios en Lab Microbiología
+(9, 12, 1),
+-- AH
+(1, 13, 1), -- Proyector en Salón Múltiple AH
+(5, 13, 40),
+(4, 14, 1), -- Escritorio en Salón OSES
+(5, 14, 30),
+-- ER
+(11, 15, 10), -- Set de Instrumentos Odontológicos
+(9, 15, 1),
+(11, 16, 5), -- LAB INTEC
+(2, 16, 10),
+-- PB
+(11, 17, 10), -- Clínica Odontológica
+(3, 17, 1),
+(1, 18, 1),
+(12, 18, 2), -- Audio Logitech
+-- AJ
+(2, 19, 25), -- PCs en AJ-701
+(1, 19, 1),
+(2, 20, 20), -- Lab Matemática Aplicada
+(3, 20, 1),
+-- LF
+(1, 21, 1),
+(5, 21, 20),
+(9, 22, 1), -- Videoconferencia
+(3, 22, 1),
+-- LFA
+(11, 23, 8), -- Genética
+(2, 23, 10),
+(11, 24, 10),
+(7, 24, 5); -- Microscopios en Genética
+
+-- Datos de prueba para contacto
+INSERT INTO [dbo].[contacto] 
+([Id], [NumeroContacto], [Id_Usuario]) 
+VALUES
+-- profesor1
+(1, '8095550101', 1),
+(2, '8095550102', 1),
+-- profesor2
+(3, '8295550201', 2),
+-- profesor3
+(4, '8495550202', 3),
+(5, '8095550301', 3),
+-- profesor4
+(6, '8095550401', 4),
+-- admin1
+(7, '8295550501', 5),
+-- coordinador1
+(8, '8495550601', 6),
+(9, '8095550602', 6),
+-- supervisor1
+(10, '8095550701', 7),
+-- auxiliar1
+(11, '8095550801', 8),
+(12, '8295550802', 8),
+-- prueba1
+(13, '8095550901', 9),
+-- admin2
+(14, '8095551001', 10);
+
+
+-- Datos de prueba para evidencia
+INSERT INTO [dbo].[evidencia] 
+([Id], [Id_Rubrica], [Nombre], [Ruta], [FechaCreacion]) 
+VALUES
+-- Rubrica 1 (Informe Final de Proyecto)
+(1, 1, 'Informe Final - Grupo 1', 'https://evidencias.intec.edu.do/rubrica1/grupo1_informe_final.pdf', GETDATE()),
+(2, 1, 'Informe Final - Grupo 2', 'https://evidencias.intec.edu.do/rubrica1/grupo2_informe_final.pdf', GETDATE()),
+(3, 1, 'Informe Final - Grupo 3', 'https://evidencias.intec.edu.do/rubrica1/grupo3_informe_final.pdf', GETDATE()),
+-- Rubrica 2 (Prototipo Funcional)
+(4, 2, 'Prototipo Funcional - Grupo A', 'https://evidencias.intec.edu.do/rubrica2/grupoA_prototipo.zip', GETDATE()),
+(5, 2, 'Prototipo Funcional - Grupo B', 'https://evidencias.intec.edu.do/rubrica2/grupoB_prototipo.zip', GETDATE()),
+(6, 2, 'Prototipo Funcional - Grupo C', 'https://evidencias.intec.edu.do/rubrica2/grupoC_prototipo.zip', GETDATE()),
+-- Rubrica 3 (Video Presentación)
+(7, 3, 'Video Presentación - Estudiante Ana', 'https://evidencias.intec.edu.do/rubrica3/ana_presentacion.mp4', GETDATE()),
+(8, 3, 'Video Presentación - Estudiante Juan', 'https://evidencias.intec.edu.do/rubrica3/juan_presentacion.mp4', GETDATE()),
+(9, 3, 'Video Presentación - Estudiante Luis', 'https://evidencias.intec.edu.do/rubrica3/luis_presentacion.mp4', GETDATE()),
+-- Rubrica 4 (Informe de Prácticas)
+(10, 4, 'Informe de Prácticas - Grupo Delta', 'https://evidencias.intec.edu.do/rubrica4/grupo_delta_practicas.pdf', GETDATE()),
+(11, 4, 'Informe de Prácticas - Grupo Epsilon', 'https://evidencias.intec.edu.do/rubrica4/grupo_epsilon_practicas.pdf', GETDATE()),
+(12, 4, 'Informe de Prácticas - Grupo Zeta', 'https://evidencias.intec.edu.do/rubrica4/grupo_zeta_practicas.pdf', GETDATE()),
+-- Rubrica 5 (Caso de Estudio)
+(13, 5, 'Caso de Estudio - Grupo 1', 'https://evidencias.intec.edu.do/rubrica5/grupo1_caso_estudio.pdf', GETDATE()),
+(14, 5, 'Caso de Estudio - Grupo 2', 'https://evidencias.intec.edu.do/rubrica5/grupo2_caso_estudio.pdf', GETDATE()),
+(15, 5, 'Caso de Estudio - Grupo 3', 'https://evidencias.intec.edu.do/rubrica5/grupo3_caso_estudio.pdf', GETDATE()),
+-- Rubrica 6 (Video Explicativo)
+(16, 6, 'Video Explicativo - Estudiante Pedro', 'https://evidencias.intec.edu.do/rubrica6/pedro_video.mp4', GETDATE()),
+(17, 6, 'Video Explicativo - Estudiante María', 'https://evidencias.intec.edu.do/rubrica6/maria_video.mp4', GETDATE()),
+(18, 6, 'Video Explicativo - Estudiante José', 'https://evidencias.intec.edu.do/rubrica6/jose_video.mp4', GETDATE()),
+-- Rubrica 7 (Ensayo Técnico)
+(19, 7, 'Ensayo Técnico - Grupo Omega', 'https://evidencias.intec.edu.do/rubrica7/grupo_omega_ensayo.pdf', GETDATE()),
+(20, 7, 'Ensayo Técnico - Grupo Sigma', 'https://evidencias.intec.edu.do/rubrica7/grupo_sigma_ensayo.pdf', GETDATE()),
+(21, 7, 'Ensayo Técnico - Grupo Lambda', 'https://evidencias.intec.edu.do/rubrica7/grupo_lambda_ensayo.pdf', GETDATE()),
+-- Rubrica 8 (Proyecto Programación)
+(22, 8, 'Proyecto Programación - Grupo Red', 'https://evidencias.intec.edu.do/rubrica8/grupo_red_proyecto.zip', GETDATE()),
+(23, 8, 'Proyecto Programación - Grupo Blue', 'https://evidencias.intec.edu.do/rubrica8/grupo_blue_proyecto.zip', GETDATE()),
+(24, 8, 'Proyecto Programación - Grupo Green', 'https://evidencias.intec.edu.do/rubrica8/grupo_green_proyecto.zip', GETDATE()),
+-- Rubrica 9 (Ejercicios de Depuración)
+(25, 9, 'Ejercicio Depuración - Estudiante Julia', 'https://evidencias.intec.edu.do/rubrica9/julia_depuracion.pdf', GETDATE()),
+(26, 9, 'Ejercicio Depuración - Estudiante Ernesto', 'https://evidencias.intec.edu.do/rubrica9/ernesto_depuracion.pdf', GETDATE()),
+(27, 9, 'Ejercicio Depuración - Estudiante Camila', 'https://evidencias.intec.edu.do/rubrica9/camila_depuracion.pdf', GETDATE()),
+-- Rubrica 10 (Examen Abierto)
+(28, 10, 'Examen Abierto - Grupo 1', 'https://evidencias.intec.edu.do/rubrica10/grupo1_examen.pdf', GETDATE()),
+(29, 10, 'Examen Abierto - Grupo 2', 'https://evidencias.intec.edu.do/rubrica10/grupo2_examen.pdf', GETDATE()),
+(30, 10, 'Examen Abierto - Grupo 3', 'https://evidencias.intec.edu.do/rubrica10/grupo3_examen.pdf', GETDATE());
+
+
+-- Datos de prueba para historial_incumplimiento
+INSERT INTO [dbo].[historial_incumplimiento] 
+([Id], [Descripcion], [Fecha], [Id_Usuario]) 
+VALUES
+-- profesor1
+(1, 'No entregó la rúbrica correspondiente al periodo 1-2024.', '2024-04-10', 1),
+(2, 'Entregó documentación incompleta del proyecto final.', '2024-05-15', 1),
+-- profesor2
+(3, 'No participó en la reunión de coordinación docente.', '2024-03-20', 2),
+-- profesor3
+(4, 'Retraso en la entrega de calificaciones del segundo trimestre.', '2024-06-05', 3),
+(5, 'No actualizó el syllabus en el sistema académico.', '2024-01-18', 3),
+-- profesor4
+(6, 'Faltó a la evaluación de desempeño sin justificación.', '2024-07-12', 4),
+-- supervisor1
+(7, 'Falta de seguimiento en la revisión de rúbricas entregadas.', '2024-03-25', 7);
+
+/* Los informes sera mejor generarlos desde el API para las pruebas
+
+INSERT INTO [dbo].[informe] 
+([Id], [Ruta], [FechaCreacion], [Nombre], [Tipo_Id], [Carrera_Id], [Año], [Trimestre], [Periodo]) 
+VALUES
+(1, '/informes/informe1.pdf', GETDATE(), 'Informe Anual Ingeniería', 1, 1, 2024, '1', 'Enero-Marzo'),
+(2, '/informes/informe2.pdf', GETDATE(), 'Informe Evaluación Software', 2, 2, 2024, '2', 'Abril-Junio');
+*/
+
+-- Datos de prueba para profesor_carrera
+INSERT INTO [dbo].[profesor_carrera] 
+([Profesor_Id], [Carrera_Id]) 
+VALUES
+-- Juan Pérez (profesor1) -> Ingeniería de Software
+(1, 1),
+-- Carlos Ruiz (profesor2) -> Ingeniería en Sistemas
+(2, 2),
+-- Sofía Gómez (profesor3) -> Ambas carreras
+(3, 1),
+(3, 2),
+-- Diego Núñez (profesor4) -> Ingeniería en Sistemas
+(4, 2);
+
 -- Datos de prueba para tipo_informe
 INSERT INTO [dbo].[tipo_informe] 
 ([Id], [Descripcion]) 
 VALUES
-(1, 'Informe Semestral'),
-(2, 'Reporte Anual');
+(1, 'Informe de Desempeño');
 
--- Datos de prueba para usuario
 INSERT INTO [dbo].[usuario] 
 ([Id], [Username], [Email], [HashedPassword], [Salt], [FechaCreacion], [UltimaEdicion], [FechaEliminacion], [Nombre], [Apellido], [Foto], [CV], [IdSO], [IdEstado], [IdArea], [IdRol], [RolId]) 
-VALUES
-(1, 'jdoe', 'jdoe@email.com', 'hashedpassword123', 'salt123', GETDATE(), NULL, NULL, 'John', 'Doe', '/images/jdoe.jpg', '/cv/jdoe.pdf', 1, 1, 1, 1, 1),
-(2, 'asmith', 'asmith@email.com', 'hashedpassword456', 'salt456', GETDATE(), NULL, NULL, 'Alice', 'Smith', '/images/asmith.jpg', '/cv/asmith.pdf', 2, 1, 2, 2, 2),
-(3, 'prof_01', 'prof01@email.com', 'pass01', 'salt01', GETDATE(), NULL, NULL, 'Carlos', 'Gómez', '/images/prof01.jpg', '/cv/prof01.pdf', 1, 1, 1, 1, 1),
-(4, 'prof_02', 'prof02@email.com', 'pass02', 'salt02', GETDATE(), NULL, NULL, 'Laura', 'Fernández', '/images/prof02.jpg', '/cv/prof02.pdf', 2, 1, 2, 1, 1),
-(5, 'prof_03', 'prof03@email.com', 'pass03', 'salt03', GETDATE(), NULL, NULL, 'María', 'López', '/images/prof03.jpg', '/cv/prof03.pdf', 3, 1, 3, 1, 1),
-(6, 'prof_04', 'prof04@email.com', 'pass04', 'salt04', GETDATE(), NULL, NULL, 'Javier', 'Pérez', '/images/prof04.jpg', '/cv/prof04.pdf', 4, 1, 4, 1, 1),
-(7, 'prof_05', 'prof05@email.com', 'pass05', 'salt05', GETDATE(), NULL, NULL, 'Ana', 'Ramírez', '/images/prof05.jpg', '/cv/prof05.pdf', 5, 1, 5, 1, 1);
+VALUES 
+(1, 'profesor1', 'profesor1@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'Juan', 'Pérez', NULL, NULL, 1, 1, 1, 1, 1),
+(2, 'profesor2', 'profesor2@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'Carlos', 'Ruiz', NULL, NULL, 1, 1, 1, 1, 1),
+(3, 'profesor3', 'profesor3@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'Sofía', 'Gómez', NULL, NULL, 1, 1, 1, 1, 1),
+(4, 'profesor4', 'profesor4@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'Diego', 'Núñez', NULL, NULL, 1, 1, 1, 1, 1),
+(5, 'admin1', 'admin1@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'Ana', 'García', NULL, NULL, 1, 1, 1, 2, 2),
+(6, 'coordinador1', 'coordinador1@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'Luis', 'Martínez', NULL, NULL, 1, 1, 1, 3, 3),
+(7, 'supervisor1', 'supervisor1@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'María', 'Fernández', NULL, NULL, 1, 1, 1, 4, 4),
+(8, 'auxiliar1', 'auxiliar1@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'Pedro', 'Ramírez', NULL, NULL, 1, 1, 1, 5, 5),
+(9, 'prueba1', 'prueba1@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'Laura', 'Santos', NULL, NULL, 1, 1, 1, 6, 6),
+(10, 'admin2', 'admin2@correo.com', 'hashed_pw', 'salt', GETDATE(), NULL, NULL, 'Marta', 'López', NULL, NULL, 1, 1, 1, 2, 2);
 
 
--- Datos de prueba para ConfiguracionEvaluaciones
+-- Datos de prueba para ConfiguracionEvaluaciones (Falta confirma si esta data esta correcta)
 INSERT INTO [dbo].[ConfiguracionEvaluaciones] 
 ([Id], [Descripcion], [FechaInicio], [FechaCierre], [Id_Estado]) 
 VALUES
-(1, 'Evaluación de Medio Término', '2024-03-01', '2024-03-31', 1),
-(2, 'Evaluación Final', '2024-06-01', '2024-06-30', 1);
-
+-- AÑO 2024
+(1, 'Evaluación Trimestral 1 - 2024', '2024-01-15', '2024-02-15', 13),  -- Activa
+(2, 'Evaluación Trimestral 2 - 2024', '2024-04-15', '2024-05-15', 14),  -- Desactivada
+(3, 'Evaluación Trimestral 3 - 2024', '2024-07-15', '2024-08-15', 14),  -- Desactivada
+(4, 'Evaluación Trimestral 4 - 2024', '2024-10-15', '2024-11-15', 14),  -- Desactivada
+-- AÑO 2025
+(5, 'Evaluación Trimestral 1 - 2025', '2025-01-15', '2025-02-15', 13),  -- Activa
+(6, 'Evaluación Trimestral 2 - 2025', '2025-04-15', '2025-05-15', 14),  -- Desactivada
+(7, 'Evaluación Trimestral 3 - 2025', '2025-07-15', '2025-08-15', 14),  -- Desactivada
+(8, 'Evaluación Trimestral 4 - 2025', '2025-10-15', '2025-11-15', 14);  -- Desactivada
 
 -- Datos de prueba para carrera_rubrica 
 INSERT INTO [dbo].[carrera_rubrica] 
 ([Id_Rubrica], [Id_Carrera]) 
 VALUES
+-- Rubrica 1 (Asignatura 5 → Carrera 1)
 (1, 1),
-(2, 2);
+-- Rubrica 2 (Asignatura 8 → Carrera 1)
+(2, 1),
+-- Rubrica 3 (Asignatura 12 → Carreras 1 y 2)
+(3, 1),
+(3, 2),
+-- Rubrica 4 (Asignatura 15 → Carreras 1 y 2)
+(4, 1),
+(4, 2),
+-- Rubrica 5 (Asignatura 18 → Carrera 1)
+(5, 1),
+-- Rubrica 6 (Asignatura 20 → Carrera 1)
+(6, 1),
+-- Rubrica 7 (Asignatura 21 → Carreras 1 y 2)
+(7, 1),
+(7, 2),
+-- Rubrica 8 (Asignatura 23 → Carreras 1 y 2)
+(8, 1),
+(8, 2),
+-- Rubrica 9 (Asignatura 25 → Carrera 1)
+(9, 1),
+-- Rubrica 10 (Asignatura 26 → Carrera 1)
+(10, 1);
