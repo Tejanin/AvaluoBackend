@@ -94,26 +94,55 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
         {
             using var connection = _dapperContext.CreateConnection();
             var query = @"
-                            SELECT 
-                                u.Id,
-                                u.Username,
-                                u.Email,
-                                u.Nombre,
-                                u.Apellido,
-                                u.CV,
-                                u.Foto,
-                                e.Descripcion AS Estado,
-                                a.Descripcion AS Area,
-                                COALESCE(r.Descripcion, 'No asignado') AS Rol,
-                                COALESCE(c.Nombre, 'N/A') AS SO
-                            FROM usuario u
-                            LEFT JOIN estado e ON u.IdEstado = e.Id
-                            LEFT JOIN areas a ON u.IdArea = a.Id
-                            LEFT JOIN roles r ON u.IdRol = r.Id
-                            LEFT JOIN competencia c ON u.IdSO = c.Id
-                            WHERE u.Id = @Id";
+        SELECT 
+            u.Id,
+            u.Username,
+            u.Email,
+            u.Nombre,
+            u.Apellido,
+            u.CV,
+            u.Foto,
+            e.Descripcion AS Estado,
+            a.Descripcion AS Area,
+            COALESCE(r.Descripcion, 'No asignado') AS Rol,
+            COALESCE(c.Nombre, 'N/A') AS SO,
+            c2.Id,
+            c2.NumeroContacto AS NumeroContacto
+        FROM usuario u
+        LEFT JOIN estado e ON u.IdEstado = e.Id
+        LEFT JOIN areas a ON u.IdArea = a.Id
+        LEFT JOIN roles r ON u.IdRol = r.Id
+        LEFT JOIN competencia c ON u.IdSO = c.Id
+        LEFT JOIN contacto c2 ON u.Id = c2.Id_Usuario
+        WHERE u.Id = @Id";
+
             var parametros = new { Id = id };
-            return await connection.QuerySingleOrDefaultAsync<UsuarioViewModel>(query, parametros);
+
+            var usuarioDict = new Dictionary<int, UsuarioViewModel>();
+
+            var resultado = await connection.QueryAsync<UsuarioViewModel, ContactoViewModel, UsuarioViewModel>(
+                query,
+                (usuario, contacto) =>
+                {
+                    if (!usuarioDict.TryGetValue(usuario.Id, out var usuarioEntry))
+                    {
+                        usuarioEntry = usuario;
+                        usuarioEntry.Contactos = new List<ContactoViewModel>();
+                        usuarioDict.Add(usuario.Id, usuarioEntry);
+                    }
+
+                    if (contacto != null && !string.IsNullOrEmpty(contacto.NumeroContacto))
+                    {
+                        usuarioEntry.Contactos.Add(contacto);
+                    }
+
+                    return usuarioEntry;
+                },
+                parametros,
+                splitOn: "Id"
+            );
+
+            return usuarioDict.Values.FirstOrDefault();
         }
 
         public async Task<bool> EmailExists(string email)
@@ -131,16 +160,16 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
             using var connection = _dapperContext.CreateConnection();
 
             var countQuery = @"
-        SELECT COUNT(*)
-        FROM usuario u
-        LEFT JOIN estado e ON u.IdEstado = e.Id
-        LEFT JOIN areas a ON u.IdArea = a.Id
-        LEFT JOIN roles r ON u.IdRol = r.Id
-        LEFT JOIN competencia c ON u.IdSO = c.Id
-        LEFT JOIN contacto con ON u.Id = con.Id_Usuario
-        WHERE (@IdEstado IS NULL OR u.IdEstado = @IdEstado)
-          AND (@IdArea IS NULL OR u.IdArea = @IdArea)
-          AND (@IdRol IS NULL OR u.IdRol = @IdRol)";
+                    SELECT COUNT(*)
+                    FROM usuario u
+                    LEFT JOIN estado e ON u.IdEstado = e.Id
+                    LEFT JOIN areas a ON u.IdArea = a.Id
+                    LEFT JOIN roles r ON u.IdRol = r.Id
+                    LEFT JOIN competencia c ON u.IdSO = c.Id
+                    LEFT JOIN contacto con ON u.Id = con.Id_Usuario
+                    WHERE (@IdEstado IS NULL OR u.IdEstado = @IdEstado)
+                      AND (@IdArea IS NULL OR u.IdArea = @IdArea)
+                      AND (@IdRol IS NULL OR u.IdRol = @IdRol)";
 
             int totalRecords = await connection.ExecuteScalarAsync<int>(countQuery, new
             {

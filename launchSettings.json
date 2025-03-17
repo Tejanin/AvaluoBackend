@@ -1,5 +1,14 @@
 {
   "profiles": {
+    "HttpsProfile": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:8000", // Puerto HTTPS
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",

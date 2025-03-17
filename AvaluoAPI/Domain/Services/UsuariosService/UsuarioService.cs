@@ -84,7 +84,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
                 string fileName = Path.GetFileName(user.Foto);
 
                 // Construir la URL relativa para la API
-                user.Foto = $"/files/profile-photos/{fileName}";
+                user.Foto = $"/AvaluoFiles/Usuarios/{user.Username}_{user.Id}/{fileName}";
             }
 
             return user;

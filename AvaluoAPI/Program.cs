@@ -107,6 +107,8 @@ builder.Services.AddSwaggerGen(c =>
     
 });
 
+builder.WebHost.UseUrls( "https://localhost:8000");
+
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 builder.Services.AddDbContext<AvaluoDbContext>(options =>
 {
