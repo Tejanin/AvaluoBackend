@@ -7,6 +7,6 @@ namespace AvaluoAPI.Presentation.DTOs.UserDTOs
         [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
         public string Username { get; set; } = null!;
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
-        public string Password { get; set; } = null!;
+        public string Contraseña { get; set; } = null!;
     }
 }

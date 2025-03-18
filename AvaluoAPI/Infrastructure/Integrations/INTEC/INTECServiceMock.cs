@@ -20,7 +20,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
         {
             new SeccionModel
             {
-                Numero = "001",
+                Numero = "1",
                 Asignatura = "IDS340 - DESARROLLO DE SOFTWARE I",
                 Estudiantes = new List<PersonModel>
                 {
@@ -33,7 +33,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "002",
+                Numero = "2",
                 Asignatura = "IDS343L - LABORATORIO ESTRUCTURAS DE DATOS Y ALGORITMOS I",
                 Estudiantes = new List<PersonModel>
                 {
@@ -46,8 +46,8 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "003",
-                Asignatura = "IDS323",
+                Numero = "1",
+                Asignatura = "IDS323 - TECNICAS FUNDAMENTALES DE INGENIERIA DE SOFTWARE",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088011", Nombre = "Diego", Apellido = "Fernández", Cargo = "Estudiante" },
@@ -59,7 +59,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "004",
+                Numero = "1",
                 Asignatura = "IDS341 - DESARROLLO DE SOFTWARE II",
                 Estudiantes = new List<PersonModel>
                 {
@@ -72,8 +72,8 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "005",
-                Asignatura = "IDS344",
+                Numero = "2",
+                Asignatura = "IDS344 - ESTRUCTURA DE DATOS Y ALGORITMOS II",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088021", Nombre = "Leonardo", Apellido = "Navarro", Cargo = "Estudiante" },
@@ -85,8 +85,8 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "006",
-                Asignatura = "IDS345L",
+                Numero = "1",
+                Asignatura = "IDS345L - LABORATORIO DE DESARROLLO DE SOFTWARE III",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088026", Nombre = "Emilio", Apellido = "Guzmán", Cargo = "Estudiante" },
@@ -98,8 +98,8 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "007",
-                Asignatura = "IDS345L",
+                Numero = "1",
+                Asignatura = "IDS345L - LABORATORIO DE DESARROLLO DE SOFTWARE III",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088031", Nombre = "Isabel", Apellido = "Ochoa", Cargo = "Estudiante" },
@@ -111,8 +111,8 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "008",
-                Asignatura = "IDS345",
+                Numero = "8",
+                Asignatura = "IDS345 - DESARROLLO DE SOFTWARE III",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088036", Nombre = "Gustavo", Apellido = "Aguirre", Cargo = "Estudiante" },
@@ -124,7 +124,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "009",
+                Numero = "9",
                 Asignatura = "INS377L - LABORATORIO BASES DE DATOS I",
                 Estudiantes = new List<PersonModel>
                 {
@@ -137,7 +137,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "010",
+                Numero = "7",
                 Asignatura = "INS377 - BASES DE DATOS I",
                 Estudiantes = new List<PersonModel>
                 {
@@ -150,8 +150,8 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "011",
-                Asignatura = "IDS324",
+                Numero = "6",
+                Asignatura = "IDS324 - INGENIERIA DE REQUERIMIENTOS DE SOFTWARE",
                 Estudiantes = new List<PersonModel>
                 {
                     new EstudianteModel { Id = "1088051", Nombre = "Beatriz", Apellido = "Barrios", Cargo = "Estudiante" },
@@ -163,7 +163,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "012",
+                Numero = "1",
                 Asignatura = "IDS208 - TEAM BUILDING",
                 Estudiantes = new List<PersonModel>
                 {
@@ -176,7 +176,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "013",
+                Numero = "2",
                 Asignatura = "IDS208 - TEAM BUILDING",
                 Estudiantes = new List<PersonModel>
                 {
@@ -189,7 +189,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "014",
+                Numero = "1",
                 Asignatura = "IDS311 - PROCESO DE SOFTWARE",
                 Estudiantes = new List<PersonModel>
                 {
@@ -202,7 +202,20 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new SeccionModel
             {
-                Numero = "015",
+                Numero = "2",
+                Asignatura = "IDS311 - PROCESO DE SOFTWARE",
+                Estudiantes = new List<PersonModel>
+                {
+                    new EstudianteModel { Id = "1088071", Nombre = "Alicia", Apellido = "Rosales", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088072", Nombre = "Ramón", Apellido = "Carrillo", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088073", Nombre = "Claudia", Apellido = "Montes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088074", Nombre = "Ernesto", Apellido = "Bravo", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088075", Nombre = "Rocío", Apellido = "Pineda", Cargo = "Estudiante" }
+                }
+            },
+            new SeccionModel
+            {
+                Numero = "3",
                 Asignatura = "IDS311 - PROCESO DE SOFTWARE",
                 Estudiantes = new List<PersonModel>
                 {
@@ -213,13 +226,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088075", Nombre = "Rocío", Apellido = "Pineda", Cargo = "Estudiante" }
                 }
             }
-                    };
+            };
 
             _profesores = new List<ProfesorModel>
         {
             new ProfesorModel
             {
-                Id = "P001",
+                Id = "1",
                 Nombre = "Roberto",
                 Apellido = "Martínez",
                 Email = "rmartinez@gmail.com",
@@ -228,7 +241,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new ProfesorModel
             {
-                Id = "P002",
+                Id = "2",
                 Nombre = "Carmen",
                 Apellido = "Vásquez",
                 Email = "cvaquez@gmail.com",
@@ -237,7 +250,7 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new ProfesorModel
             {
-                Id = "P003",
+                Id = "3",
                 Nombre = "José",
                 Apellido = "García",
                 Email = "jgarcia@gmail.com",
@@ -246,23 +259,23 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             },
             new ProfesorModel
             {
-                Id = "P004",
+                Id = "4",
                 Nombre = "Ana",
                 Apellido = "Ramírez",
                 Email = "aramirez@gmail.com",
                 Cargo = "Profesor",
-                Secciones = new List<SeccionModel> { _secciones[5], _secciones[6] }  // IDS345L (ambas secciones)
+                Secciones = new List<SeccionModel> { _secciones[5], _secciones[6], _secciones[15] }  // IDS345L (ambas secciones)
             },
             new ProfesorModel
             {
-                Id = "P005",
+                Id = "5",
                 Nombre = "Miguel",
                 Apellido = "Torres",
                 Email = "mtorres@gmail.com",
                 Cargo = "Profesor",
                 Secciones = new List<SeccionModel> { _secciones[7], _secciones[13], _secciones[14] }  // IDS345, IDS311 (ambas secciones)
             }
-                    };
+          };
         }
 
         public async Task<List<ProfesorModel>> GetProfesores(string? seccion, string? asignatura )

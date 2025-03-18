@@ -13,6 +13,7 @@
     <PackageReference Include="Azure.Identity" Version="1.13.2" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="IronPdf" Version="2025.3.6" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
@@ -45,6 +46,7 @@
     <Folder Include="Domain\Services\MapaCompetenciaService\" />
     <Folder Include="Domain\Services\SOEvaluacionesService\" />
     <Folder Include="Presentation\ViewModels\InformeViewModels\" />
+    <Folder Include="wwwroot\AvaluoFiles\usuarios\profe1_1\" />
   </ItemGroup>
 
 </Project>

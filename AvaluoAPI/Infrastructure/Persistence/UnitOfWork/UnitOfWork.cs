@@ -34,8 +34,10 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.InformesRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.RolRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.ContactoRepositories;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.PIRepositories;
 using Microsoft.Graph.Models;
+
 
 
 
@@ -61,29 +63,25 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
             Competencias = new CompetenciaRepository(_context, _dapperContext);
             Estados = new EstadoRepository(_context);
             Usuarios = new UsuarioRepository(_context, _dapperContext);
+            Inventario = new InventarioRepository(_context, _dapperContext);
             PIs = new PIRepository(_context);
             Edificios = new EdificioRepository(_context, _dapperContext);
-
             CarrerasRubricas = new CarreraRubricaRepository(_context);
             Edificios = new EdificioRepository(_context, _dapperContext);
-
             HistorialIncumplimientos = new HistorialIncumplimientoRepository(_context, _dapperContext);
             Resumenes = new ResumenRepository(_context, _dapperContext);
             Evidencias = new EvidenciaRepository(_context);
             MetodoEvaluacion = new MetodoEvaluacionRepository(_context);
             Asignaturas = new AsignaturaRepository(_context, _dapperContext);
-
             Informes = new InformeRepository(_context, _dapperContext);
             Areas = new AreaRepository(_context,_dapperContext);
             ProfesoresCarreras = new ProfesorCarreraRepository(_context,_dapperContext);
-
             Desempeños = new DesempeñoRepository(_context, _dapperContext);
             Aulas = new AulaRepository(_context, _dapperContext);
             Carreras = new CarreraRepository(_context, _dapperContext);
             AsignaturasCarreras = new AsignaturaCarreraRepository(_context, _dapperContext);
             Roles = new RolRepository(_context, _dapperContext);
             Contactos = new ContactoRepository(_context, _dapperContext);
-
         }
 
         // props
@@ -110,6 +108,7 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         public IAsignaturaRepository Asignaturas { get; private set; }
         public IAreaRepository Areas { get; private set; }
         public IRolRepository Roles { get; private set; }
+        public IInventarioRepository Inventario { get; private set; }
         public IPIRepository PIs { get; private set; }
         public IAulaRepository Aulas { get; private set; }
         public ICarreraRepository Carreras { get; private set; }

@@ -47,14 +47,14 @@ namespace AvaluoAPI.Presentation.Controllers
         [HttpGet("supervisor")]
         public async Task<IActionResult> GetRubricasBySupervisor()
         {
-            await _rubricaService.GetRubricasBySupervisor();
-            return Ok();
+            
+            return Ok(new {data = await _rubricaService.GetRubricasBySupervisor() , message = "Operacion Exitosa"});
         }
 
         [HttpGet("secciones")]
         public async Task<IActionResult> GetSeccionesByProfesor()
         {
-            return Ok(await _rubricaService.GetProfesorSecciones());
+            return Ok(new { data = await _rubricaService.GetProfesorSecciones(), mensaje = "Operacion Exitosa" });
         }
 
         [HttpPost("insert")]

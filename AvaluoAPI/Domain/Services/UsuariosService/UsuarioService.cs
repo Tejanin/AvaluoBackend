@@ -75,6 +75,18 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         {
             var user = await _unitOfWork.Usuarios.GetUsuarioById(id);
             if (user == null) throw new KeyNotFoundException("El usuario no existe");
+
+            // Verificar si el usuario tiene una foto y convertir la ruta a una URL accesible
+            if (!string.IsNullOrEmpty(user.Foto))
+            {
+                // Modificar la ruta del archivo para que sea una URL de API
+                // Extraer solo el nombre del archivo de la ruta completa
+                string fileName = Path.GetFileName(user.Foto);
+
+                // Construir la URL relativa para la API
+                user.Foto = $"/AvaluoFiles/Usuarios/{user.Username}_{user.Id}/{fileName}";
+            }
+
             return user;
 
         }
@@ -113,7 +125,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         {
             var userDB = await _unitOfWork.Usuarios.GetUsuarioWithRol(user.Username); 
             if (userDB == null) throw new KeyNotFoundException("El usuario no existe");
-            if (Hasher.Verify(user.Password, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
+            if (Hasher.Verify(user.Contraseña, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
 
             _tokens = _jwtService.GenerateTokens(userDB, userDB.Rol);
 
@@ -125,7 +137,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
 
         public async Task Register(UsuarioDTO userDTO)
         {   
-            userDTO.Password = Hasher.Hash(userDTO.Password, userDTO.Salt);
+            userDTO.Contraseña = Hasher.Hash(userDTO.Contraseña, userDTO.Salt);
             var user = _mapper.Map<Usuario>(userDTO);
             if (await _unitOfWork.Usuarios.EmailExists(userDTO.Email))
             {
