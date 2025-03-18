@@ -592,6 +592,7 @@ VALUES
 -- admin2
 (14, '8095551001', 10);
 
+ALTER SEQUENCE ContactoSequence RESTART WITH 15; -- Agregue esto porque tuve un pequeño error con la sequence no se que mas alla que arreglar
 
 -- Datos de prueba para evidencia
 INSERT INTO [dbo].[evidencia] 
