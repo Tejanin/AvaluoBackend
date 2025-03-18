@@ -167,11 +167,11 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
                 usuario.Apellido = usuarioDTO.Apellido;
 
             // Para las relaciones, verificamos si el valor es diferente de null y diferente del valor actual
-            if (usuarioDTO.IdArea.HasValue && usuarioDTO.IdArea != 0 && usuario.IdArea != usuarioDTO.IdArea)
-                usuario.IdArea = usuarioDTO.IdArea;
+            if (usuarioDTO.Area.HasValue && usuarioDTO.Area != 0 && usuario.IdArea != usuarioDTO.Area)
+                usuario.IdArea = usuarioDTO.Area;
 
-            if (usuarioDTO.IdRol.HasValue && usuarioDTO.IdRol != 0 && usuario.IdRol != usuarioDTO.IdRol)
-                usuario.IdRol = usuarioDTO.IdRol;
+            if (usuarioDTO.Rol.HasValue && usuarioDTO.Rol != 0 && usuario.IdRol != usuarioDTO.Rol)
+                usuario.IdRol = usuarioDTO.Rol;
 
 
             // Actualizamos la fecha de última edición

@@ -94,14 +94,14 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
         [HttpPut("desactivate/{id}")]
-        public async Task<ActionResult> Desactivate([FromBody] int id)
+        public async Task<ActionResult> Desactivate(int id)
         {
             await _usuarioService.Desactivate(id);
             return Accepted(new { message = "Usuario desactivado exitosamente" });
         }
 
         [HttpPut("activate/{id}")]
-        public async Task<ActionResult> Activate([FromBody] int id)
+        public async Task<ActionResult> Activate(int id)
         {
             await _usuarioService.Activate(id);
             return Accepted(new { message = "Usuario activado exitosamente" });
