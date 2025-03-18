@@ -49,7 +49,7 @@ namespace AvaluoAPI.Presentation.Controllers
             await _unitOfWork.Contactos.Update(contacto);
             _unitOfWork.SaveChanges();
 
-            return NoContent();
+            return Ok(new { mensaje = "Contacto actualizado correctamente." });
         }
 
         [HttpDelete("{id}")]
@@ -62,7 +62,7 @@ namespace AvaluoAPI.Presentation.Controllers
             _unitOfWork.Contactos.Delete(contacto);
             _unitOfWork.SaveChanges();
 
-            return NoContent();
+            return Ok(new { mensaje = "Contacto eliminado correctamente." });
         }
     }
 }

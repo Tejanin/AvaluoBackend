@@ -25,12 +25,12 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.ContactoRepositories
             using var connection = _dapperContext.CreateConnection();
 
             var query = @"
-            SELECT 
-                c.Id, 
-                c.NumeroContacto, 
-                c.IdUsuario
-            FROM contactos c
-            WHERE c.IdUsuario = @UserId";
+             SELECT 
+                 c.Id, 
+                 c.NumeroContacto, 
+                 c.Id_Usuario
+             FROM contacto c
+            WHERE c.Id_Usuario = @UserId";
 
             return await connection.QueryAsync<ContactoViewModel>(query, new { UserId = userId });
         }
@@ -40,11 +40,11 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.ContactoRepositories
             using var connection = _dapperContext.CreateConnection();
 
             var query = @"
-            SELECT 
-                c.Id, 
-                c.NumeroContacto, 
-                c.IdUsuario
-            FROM contactos c
+             SELECT 
+                 c.Id, 
+                 c.NumeroContacto, 
+                 c.Id_Usuario
+             FROM contacto c
             WHERE c.Id = @Id";
 
             return await connection.QueryFirstOrDefaultAsync<ContactoViewModel>(query, new { Id = id });

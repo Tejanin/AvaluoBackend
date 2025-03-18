@@ -22,13 +22,13 @@ namespace AvaluoAPI.Domain.Services.ContactoService
 
         public async Task<IEnumerable<ContactoViewModel>> GetAllByUserId(int userId)
         {
-            var contactos = await _unitOfWork.Contacto.GetAllAsync(c => c.IdUsuario == userId);
+            var contactos = await _unitOfWork.Contactos.GetContactosByUserId(userId);
             return _mapper.Map<IEnumerable<ContactoViewModel>>(contactos);
         }
 
         public async Task<ContactoViewModel> GetById(int id)
         {
-            var contacto = await _unitOfWork.Contacto.GetByIdAsync(id);
+            var contacto = await _unitOfWork.Contactos.GetByIdAsync(id);
             if (contacto == null)
                 throw new KeyNotFoundException("Contacto no encontrado.");
 
@@ -38,28 +38,28 @@ namespace AvaluoAPI.Domain.Services.ContactoService
         public async Task Register(ContactoDTO contactoDTO)
         {
             var contacto = _mapper.Map<Contacto>(contactoDTO);
-            await _unitOfWork.Contacto.AddAsync(contacto);
+            await _unitOfWork.Contactos.AddAsync(contacto);
             _unitOfWork.SaveChanges();
         }
 
         public async Task Update(int id, ContactoDTO contactoDTO)
         {
-            var contacto = await _unitOfWork.Contacto.GetByIdAsync(id);
+            var contacto = await _unitOfWork.Contactos.GetByIdAsync(id);
             if (contacto == null)
                 throw new KeyNotFoundException("Contacto no encontrado.");
 
             _mapper.Map(contactoDTO, contacto);
-            await _unitOfWork.Contacto.Update(contacto);
+            await _unitOfWork.Contactos.Update(contacto);
             _unitOfWork.SaveChanges();
         }
 
         public async Task Delete(int id)
         {
-            var contacto = await _unitOfWork.Contacto.GetByIdAsync(id);
+            var contacto = await _unitOfWork.Contactos.GetByIdAsync(id);
             if (contacto == null)
                 throw new KeyNotFoundException("Contacto no encontrado.");
 
-            _unitOfWork.Contacto.Delete(contacto);
+            _unitOfWork.Contactos.Delete(contacto);
             _unitOfWork.SaveChanges();
         }
     }
