@@ -125,7 +125,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         {
             var userDB = await _unitOfWork.Usuarios.GetUsuarioWithRol(user.Username); 
             if (userDB == null) throw new KeyNotFoundException("El usuario no existe");
-            if (Hasher.Verify(user.Password, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
+            if (Hasher.Verify(user.Contraseña, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
 
             _tokens = _jwtService.GenerateTokens(userDB, userDB.Rol);
 
@@ -137,7 +137,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
 
         public async Task Register(UsuarioDTO userDTO)
         {   
-            userDTO.Password = Hasher.Hash(userDTO.Password, userDTO.Salt);
+            userDTO.Contraseña = Hasher.Hash(userDTO.Contraseña, userDTO.Salt);
             var user = _mapper.Map<Usuario>(userDTO);
             if (await _unitOfWork.Usuarios.EmailExists(userDTO.Email))
             {
