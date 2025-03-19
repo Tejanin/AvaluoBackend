@@ -52,7 +52,9 @@ namespace AvaluoAPI.Application.Handlers
                 await GuardarArchivo(archivo, rutaCompleta);
                 string rutaRelativa = Path.Combine(carpetaDestino, nombreArchivo);
 
-                return (true, "Archivo subido exitosamente", rutaCompleta, nombreArchivo);
+                string rutaRelativaWeb = Path.Combine("AvaluoFiles", carpetaDestino, nombreArchivo).Replace("\\", "/");
+
+                return (true, "Archivo subido exitosamente", rutaRelativaWeb, nombreArchivo);
             }
             catch (Exception ex)
             {
