@@ -8,9 +8,11 @@ namespace AvaluoAPI.Application.Handlers
         private readonly long MaxSize = 1024 * 1024 * 10;
         private readonly string BasePath;
 
-        public FileHandler()
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public FileHandler(IWebHostEnvironment hostEnvironment)
         {
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            _hostEnvironment = hostEnvironment;
+            string desktopPath =_hostEnvironment.WebRootPath;
             string baseFolder = "AvaluoFiles";
 
             // Convertimos las backslashes a forward slashes para evitar problemas con JSON
@@ -20,6 +22,8 @@ namespace AvaluoAPI.Application.Handlers
             {
                 Directory.CreateDirectory(BasePath);
             }
+
+            
         }
 
         public async Task<(bool exitoso, string mensaje, string ruta, string nombreArchivo)> Upload(
@@ -48,7 +52,9 @@ namespace AvaluoAPI.Application.Handlers
                 await GuardarArchivo(archivo, rutaCompleta);
                 string rutaRelativa = Path.Combine(carpetaDestino, nombreArchivo);
 
-                return (true, "Archivo subido exitosamente", rutaCompleta, nombreArchivo);
+                string rutaRelativaWeb = Path.Combine("AvaluoFiles", carpetaDestino, nombreArchivo).Replace("\\", "/");
+
+                return (true, "Archivo subido exitosamente", rutaRelativaWeb, nombreArchivo);
             }
             catch (Exception ex)
             {

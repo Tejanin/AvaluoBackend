@@ -19,7 +19,7 @@ namespace AvaluoAPI.Utilities
 
             // Configuración personalizada para Usuario -> UsuarioDto
             config.NewConfig<UsuarioDTO, Usuario>()
-                .Map(dest => dest.HashedPassword, src => src.Password);
+                .Map(dest => dest.HashedPassword, src => src.Contraseña);
 
 
             // Configuración personalizada para Usuario -> UsuarioDto

@@ -76,3 +76,6 @@ secrets.json
 
 # Docker
 docker-compose.override.yml
+
+# wwwroot
+wwwroot/

@@ -2,6 +2,7 @@
 using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Application.Handlers;
+using AvaluoAPI.Presentation.DTOs.CarreraDTOs;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using AvaluoAPI.Utilities;
@@ -75,6 +76,18 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         {
             var user = await _unitOfWork.Usuarios.GetUsuarioById(id);
             if (user == null) throw new KeyNotFoundException("El usuario no existe");
+
+            // Verificar si el usuario tiene una foto y convertir la ruta a una URL accesible
+            if (!string.IsNullOrEmpty(user.Foto))
+            {
+                // Modificar la ruta del archivo para que sea una URL de API
+                // Extraer solo el nombre del archivo de la ruta completa
+                string fileName = Path.GetFileName(user.Foto);
+
+                // Construir la URL relativa para la API
+                user.Foto = $"/AvaluoFiles/Usuarios/{user.Username}_{user.Id}/{fileName}";
+            }
+
             return user;
 
         }
@@ -113,7 +126,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         {
             var userDB = await _unitOfWork.Usuarios.GetUsuarioWithRol(user.Username); 
             if (userDB == null) throw new KeyNotFoundException("El usuario no existe");
-            if (Hasher.Verify(user.Password, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
+            if (Hasher.Verify(user.Contraseña, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
 
             _tokens = _jwtService.GenerateTokens(userDB, userDB.Rol);
 
@@ -125,7 +138,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
 
         public async Task Register(UsuarioDTO userDTO)
         {   
-            userDTO.Password = Hasher.Hash(userDTO.Password, userDTO.Salt);
+            userDTO.Contraseña = Hasher.Hash(userDTO.Contraseña, userDTO.Salt);
             var user = _mapper.Map<Usuario>(userDTO);
             if (await _unitOfWork.Usuarios.EmailExists(userDTO.Email))
             {
@@ -155,11 +168,11 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
                 usuario.Apellido = usuarioDTO.Apellido;
 
             // Para las relaciones, verificamos si el valor es diferente de null y diferente del valor actual
-            if (usuarioDTO.IdArea.HasValue && usuarioDTO.IdArea != 0 && usuario.IdArea != usuarioDTO.IdArea)
-                usuario.IdArea = usuarioDTO.IdArea;
+            if (usuarioDTO.Area.HasValue && usuarioDTO.Area != 0 && usuario.IdArea != usuarioDTO.Area)
+                usuario.IdArea = usuarioDTO.Area;
 
-            if (usuarioDTO.IdRol.HasValue && usuarioDTO.IdRol != 0 && usuario.IdRol != usuarioDTO.IdRol)
-                usuario.IdRol = usuarioDTO.IdRol;
+            if (usuarioDTO.Rol.HasValue && usuarioDTO.Rol != 0 && usuario.IdRol != usuarioDTO.Rol)
+                usuario.IdRol = usuarioDTO.Rol;
 
 
             // Actualizamos la fecha de última edición
@@ -196,12 +209,13 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
 
         public async Task UpdateCv(int id, IFormFile file)
         {
-            var usuarioTask = _unitOfWork.Usuarios.GetByIdAsync(id);
+            var usuarioTask = await _unitOfWork.Usuarios.GetUsuarioWithRolById(id);
             if (await _unitOfWork.Usuarios.Exists(id) != true) throw new KeyNotFoundException("El usuario no existe");
 
-            if(await _unitOfWork.Usuarios.EsProfesor(id) != true) throw new Exception("No es profesor");
+            if (usuarioTask?.Rol?.EsProfesor != true && usuarioTask?.Rol?.EsSupervisor != true)
+                throw new KeyNotFoundException("El usuario especificado no tiene el rol de profesor para subir CV");
 
-            var usuario = await usuarioTask;
+            var usuario = usuarioTask;
 
             // Guardar el archivo
             RutaUsuarioBuilder rutaBuilder = new RutaUsuarioBuilder($"{usuario.Username}_{usuario.Id}");

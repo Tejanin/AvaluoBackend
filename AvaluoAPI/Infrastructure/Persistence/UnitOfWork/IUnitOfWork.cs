@@ -26,9 +26,8 @@ using AvaluoAPI.Infrastructure.Persistence.Repositories.HistorialIncumplimientoR
 using AvaluoAPI.Infrastructure.Persistence.Repositories.InformesRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.RolRepositories;
-
+using AvaluoAPI.Infrastructure.Persistence.Repositories.ContactoRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
-
 using AvaluoAPI.Infrastructure.Persistence.Repositories.PIRepositories;
 
 
@@ -57,9 +56,8 @@ namespace Avaluo.Infrastructure.Persistence.UnitOfWork
         IEvidenciaRepository Evidencias { get; }
         IResumenRepository Resumenes { get; }
         IRolRepository Roles { get; }
+        IContactoRepository Contactos { get; }
         IInventarioRepository Inventario { get; }
-
-
         IPIRepository PIs { get; }
         IHistorialIncumplimientoRepository HistorialIncumplimientos { get; }
         IAsignaturaRepository Asignaturas { get;}
