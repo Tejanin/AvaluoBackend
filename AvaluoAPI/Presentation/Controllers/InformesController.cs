@@ -78,15 +78,15 @@ namespace AvaluoAPI.Presentation.Controllers
             return View("InformeDesempeño", informe);
         }
 
-        [HttpGet("informe/generarInforme")]
+        [HttpGet("informe/generarInforme/{anio?}/{periodo?}/{idAsignatura?}/{idSO?}")]
         public async Task<IActionResult> GenerarInformeDesempeñoPdf(
-            [FromQuery] int? año,
-            [FromQuery] string? periodo,
-            [FromQuery] int? idAsignatura,
-            [FromQuery] int? idSO)
+            [FromRoute] int? anio,
+            [FromRoute] string? periodo,
+            [FromRoute] int? idAsignatura,
+            [FromRoute] int? idSO)
         {
-            var informes = await _desempeñoService.GenerarInformeDesempeño(año, periodo, idAsignatura, idSO);
-            string pdfPath = await _desempeñoService.GenerarYGuardarPdfInforme(informes, año, periodo, idAsignatura, idSO);
+            var informes = await _desempeñoService.GenerarInformeDesempeño(anio, periodo, idAsignatura, idSO);
+            string pdfPath = await _desempeñoService.GenerarYGuardarPdfInforme(informes, anio, periodo, idAsignatura, idSO);
             pdfPath = pdfPath.Replace("\\", "/");
 
             foreach (var informe in informes)
@@ -94,7 +94,7 @@ namespace AvaluoAPI.Presentation.Controllers
                 await _informeService.RegistrarInformeGenerado(informe, pdfPath);
             }
 
-            return Ok(new { mensaje = "Informe generado y guardado exitosamente", ruta = pdfPath});
+            return Ok(new { mensaje = "Informe generado y guardado exitosamente", ruta = pdfPath });
         }
 
 

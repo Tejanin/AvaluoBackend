@@ -227,6 +227,9 @@ builder.Services.AddControllersWithViews(); //Para poder ver las views de los in
 
 builder.Services.AddScoped<PdfHelper>(); // Registra PdfHelper como un servicio
 
+// Llave para poder usar ironPdf
+IronPdf.License.LicenseKey = builder.Configuration["IronPdf:LicenseKey"];
+
 var app = builder.Build();
 
 
@@ -246,6 +249,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthMiddleware();
 // En Program.cs
 app.UseStaticFiles(); // Esto habilita servir archivos desde wwwroot
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
