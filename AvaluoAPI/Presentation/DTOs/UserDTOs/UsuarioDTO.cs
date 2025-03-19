@@ -18,9 +18,12 @@ namespace AvaluoAPI.Presentation.DTOs.UserDTOs
         public string Nombre { get; set; } = null!;
         [Required(ErrorMessage = "El apellido es obligatorio.")]
         public string Apellido { get; set; } = null!;
- 
+
+        [JsonPropertyName("Estado")]
         public int IdEstado { get; private set; } = 5;
+        [JsonPropertyName("Area")]
         public int? IdArea { get; set; }
+        [JsonPropertyName("Rol")]
         public int? IdRol { get; set; }
     }
 }
