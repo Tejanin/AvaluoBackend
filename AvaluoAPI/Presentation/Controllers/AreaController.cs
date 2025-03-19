@@ -9,11 +9,11 @@ namespace AvaluoAPI.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AreaController: ControllerBase
+    public class AreasController: ControllerBase
     {
         private readonly IAreaService _areaService;
 
-        public AreaController(IAreaService areaService)
+        public AreasController(IAreaService areaService)
         {
             _areaService = areaService;
         }

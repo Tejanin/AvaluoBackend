@@ -125,7 +125,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         {
             var userDB = await _unitOfWork.Usuarios.GetUsuarioWithRol(user.Username); 
             if (userDB == null) throw new KeyNotFoundException("El usuario no existe");
-            if (Hasher.Verify(user.Password, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
+            if (Hasher.Verify(user.Contraseña, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
 
             _tokens = _jwtService.GenerateTokens(userDB, userDB.Rol);
 
@@ -137,7 +137,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
 
         public async Task Register(UsuarioDTO userDTO)
         {   
-            userDTO.Password = Hasher.Hash(userDTO.Password, userDTO.Salt);
+            userDTO.Contraseña = Hasher.Hash(userDTO.Contraseña, userDTO.Salt);
             var user = _mapper.Map<Usuario>(userDTO);
             if (await _unitOfWork.Usuarios.EmailExists(userDTO.Email))
             {
@@ -167,11 +167,11 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
                 usuario.Apellido = usuarioDTO.Apellido;
 
             // Para las relaciones, verificamos si el valor es diferente de null y diferente del valor actual
-            if (usuarioDTO.IdArea.HasValue && usuarioDTO.IdArea != 0 && usuario.IdArea != usuarioDTO.IdArea)
-                usuario.IdArea = usuarioDTO.IdArea;
+            if (usuarioDTO.Area.HasValue && usuarioDTO.Area != 0 && usuario.IdArea != usuarioDTO.Area)
+                usuario.IdArea = usuarioDTO.Area;
 
-            if (usuarioDTO.IdRol.HasValue && usuarioDTO.IdRol != 0 && usuario.IdRol != usuarioDTO.IdRol)
-                usuario.IdRol = usuarioDTO.IdRol;
+            if (usuarioDTO.Rol.HasValue && usuarioDTO.Rol != 0 && usuario.IdRol != usuarioDTO.Rol)
+                usuario.IdRol = usuarioDTO.Rol;
 
 
             // Actualizamos la fecha de última edición

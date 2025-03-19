@@ -11,8 +11,8 @@
    
         public string? Apellido { get; set; } 
 
-        public int? IdEstado { get; private set; } 
-        public int? IdArea { get; set; }
-        public int? IdRol { get; set; }
+        public int? Estado { get; private set; } 
+        public int? Area { get; set; }
+        public int? Rol { get; set; }
     }
 }
