@@ -45,7 +45,7 @@ namespace AvaluoAPI.Domain.Services.DesempeñoService
             string fileName = $"Informe_Desempeño_{añoStr}_{periodo ?? "Todos"}_{idAsignatura ?? 0}_{idSO ?? 0}";
 
             // 3. Generar y guardar el PDF
-            return await _pdfHelper.GenerarYGuardarPdfAsync("Desempeno/InformeDesempeño", informe, rutaBuilder, fileName);
+            return await _pdfHelper.GenerarYGuardarPdfAsync("Informes/InformeDesempeño", informe, rutaBuilder, fileName);
         }
 
 

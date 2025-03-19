@@ -31,10 +31,10 @@ public class PdfHelper
         _tempDataProvider = tempDataProvider;
         _httpContextAccessor = httpContextAccessor;
 
-        // Establece el path base en el escritorio
-        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        // Establece el path base en el wwwroot
         string baseFolder = "AvaluoFiles";
-        _basePath = Path.Combine(desktopPath, baseFolder);
+        _basePath = Path.Combine(webHostEnvironment.WebRootPath, baseFolder);
+
 
         // Crea la carpeta base si no existe
         if (!Directory.Exists(_basePath))
@@ -77,14 +77,15 @@ public class PdfHelper
         var renderer = new HtmlToPdf();
         var pdfDocument = renderer.RenderHtmlAsPdf(htmlContent);
 
-        // 3. Construir la ruta final 
-        string relativePath = rutaBuilder.Construir();
+        // 3. Construir la ruta relativa y absoluta
+        string relativePath = rutaBuilder.Construir(); // usuarios/prueba_32
 
         if (string.IsNullOrWhiteSpace(relativePath))
         {
             throw new InvalidOperationException("La ruta generada es inválida.");
         }
 
+        // Ruta completa en el sistema de archivos
         string fullPath = Path.Combine(_basePath, relativePath);
 
         // 4. Crear el directorio si no existe
@@ -93,11 +94,19 @@ public class PdfHelper
             Directory.CreateDirectory(fullPath);
         }
 
-        // 5. Guardar el PDF
-        string filePath = Path.Combine(fullPath, $"{fileName}.pdf");
+        // 5. Nombre del archivo
+        string fileNameWithExtension = $"{fileName}.pdf";
 
+        // 6. Ruta completa en disco
+        string filePath = Path.Combine(fullPath, fileNameWithExtension);
+
+        // 7. Guardar el PDF físicamente
         pdfDocument.SaveAs(filePath);
 
-        return filePath;
+        // 8. Esta es la ruta relativa que se expone al frontend
+        string relativeWebPath = Path.Combine("AvaluoFiles", relativePath, fileNameWithExtension)
+            .Replace("\\", "/");
+
+        return relativeWebPath;
     }
 }

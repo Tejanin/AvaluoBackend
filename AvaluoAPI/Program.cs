@@ -33,18 +33,14 @@ using AvaluoAPI.Domain.Services.CarreraService;
 using AvaluoAPI.Domain.Services.DesempeñoService;
 using StackExchange.Redis;
 using AvaluoAPI.Domain.Services.RolService;
-
+using AvaluoAPI.Domain.Services.ContactoService;
+using AvaluoAPI.Domain.Services.DashboardService;
+using AvaluoAPI.Infrastructure.Persistence.Repositories.ContactoRepositories;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.RolRepositories;
 using AvaluoAPI.Domain.Services.InventarioService;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
-
-using AvaluoAPI.Domain.Services.DashboardService;
 using AvaluoAPI.Domain.Services.PIService;
 using AvaluoAPI.Domain.Services.InformeService;
-
-
-
-
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -153,14 +149,13 @@ builder.Services.AddScoped<IDesempeñoService, DesempeñoService>();
 
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IContactoRepository, ContactoRepository>();
 
 builder.Services.AddScoped<IInventarioService, InventarioService>();
 
 builder.Services.AddScoped<IInventarioRepository, InventarioRepository>();
 
 builder.Services.AddScoped<IInformeService, InformeService>();
-
-
 
 
 
@@ -232,6 +227,9 @@ builder.Services.AddControllersWithViews(); //Para poder ver las views de los in
 
 builder.Services.AddScoped<PdfHelper>(); // Registra PdfHelper como un servicio
 
+// Llave para poder usar ironPdf
+IronPdf.License.LicenseKey = builder.Configuration["IronPdf:LicenseKey"];
+
 var app = builder.Build();
 
 
@@ -251,6 +249,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthMiddleware();
 // En Program.cs
 app.UseStaticFiles(); // Esto habilita servir archivos desde wwwroot
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

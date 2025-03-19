@@ -2,6 +2,7 @@
 using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Application.Handlers;
+using AvaluoAPI.Presentation.DTOs.CarreraDTOs;
 using AvaluoAPI.Presentation.DTOs.UserDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using AvaluoAPI.Utilities;
@@ -208,12 +209,13 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
 
         public async Task UpdateCv(int id, IFormFile file)
         {
-            var usuarioTask = _unitOfWork.Usuarios.GetByIdAsync(id);
+            var usuarioTask = await _unitOfWork.Usuarios.GetUsuarioWithRolById(id);
             if (await _unitOfWork.Usuarios.Exists(id) != true) throw new KeyNotFoundException("El usuario no existe");
 
-            if(await _unitOfWork.Usuarios.EsProfesor(id) != true) throw new Exception("No es profesor");
+            if (usuarioTask?.Rol?.EsProfesor != true && usuarioTask?.Rol?.EsSupervisor != true)
+                throw new KeyNotFoundException("El usuario especificado no tiene el rol de profesor para subir CV");
 
-            var usuario = await usuarioTask;
+            var usuario = usuarioTask;
 
             // Guardar el archivo
             RutaUsuarioBuilder rutaBuilder = new RutaUsuarioBuilder($"{usuario.Username}_{usuario.Id}");
