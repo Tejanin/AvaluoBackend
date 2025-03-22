@@ -125,7 +125,7 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok(new
             {
                 message = "Permisos obtenidos exitosamente",
-                data = new
+                data = new 
                 {
                     Headers = headers,
                     Cookies = cookies,
