@@ -11,7 +11,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         Task Register(UsuarioDTO userDTO);
         Task Update(int id, ModifyUsuarioDTO user);
         Task Desactivate(int id);
-        Task RequestPasswordChange();
+        Task RequestPasswordChange(string email);
         Task ChangePassword(string newPassword);
         Task UpdatePfp(int id, IFormFile file);
         Task UpdateCv(int id, IFormFile file);

@@ -236,11 +236,12 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             _unitOfWork.SaveChanges();
         }
 
-        public async Task RequestPasswordChange()
+        public async Task RequestPasswordChange(string email)
         {
-            string email = _jwtService.GetClaimValue( "Email")!;
-            string nombre = _jwtService.GetClaimValue( "Name")!;
-            string apellido = _jwtService.GetClaimValue( "Lname")!;
+            var user = await _unitOfWork.Usuarios.FindAsync(u => u.Email == email);
+
+            if (user == null) throw new ArgumentNullException("El email enviado no corresponde a ningun usuario");
+            
             await _emailService.SendEmailAsync(email,"Cuenta Avalúo - Solicitud de cambio de contraseña","",true);
         }
     }
