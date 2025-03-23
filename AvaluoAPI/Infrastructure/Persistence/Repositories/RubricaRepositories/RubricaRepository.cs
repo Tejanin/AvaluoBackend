@@ -383,7 +383,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                     INNER JOIN 
                         carreras car ON ac.Id_Carrera = car.Id
                     WHERE 
-                        r.IdEstado = 2
+                        r.IdEstado = 3
                         AND r.Año = @Año
                         AND r.Periodo = @Periodo
                         AND ac.Id_Carrera = @IdCarrera
@@ -468,7 +468,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
         public async Task<List<ReporteSOViewModel>> ObtenerTableroDeSOPorArea(int area, int año, string periodo)
         {
             // Consulta para obtener los IDs de carreras que pertenecen a un área específica
-            var query = "SELECT Id FROM carreras WHERE IdArea = @Area AND IdEstado = 1"; // Asumiendo IdEstado = 1 para carreras activas
+            var query = "SELECT Id FROM carreras WHERE IdArea = @Area AND IdEstado = 15"; // Asumiendo IdEstado = 1 para carreras activas
 
             // Obtener los IDs de carreras usando el DapperContext inyectado
             using (var connection = _dapperContext.CreateConnection())

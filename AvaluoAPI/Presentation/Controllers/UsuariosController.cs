@@ -154,6 +154,7 @@ namespace AvaluoAPI.Presentation.Controllers
         [HttpPost("request-password-change")]
         public async Task<ActionResult> RequestPasswordChange([FromBody] string email)
         {
+            await _usuarioService.RequestPasswordChange(email);
             return Ok(new { message = "Solicitud de cambio de contraseña enviada" });
         }
 

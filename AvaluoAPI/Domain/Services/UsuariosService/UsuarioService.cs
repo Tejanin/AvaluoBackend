@@ -11,6 +11,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using static System.Net.WebRequestMethods;
 
 namespace AvaluoAPI.Domain.Services.UsuariosService
 {
@@ -128,7 +129,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             if (userDB == null) throw new KeyNotFoundException("El usuario no existe");
             if (Hasher.Verify(user.Contraseña, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
 
-            _tokens = _jwtService.GenerateTokens(userDB, userDB.Rol);
+            _tokens = _jwtService.GenerateAuthTokens(userDB, userDB.Rol);
 
             return _tokens;
 
@@ -241,8 +242,9 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             var user = await _unitOfWork.Usuarios.FindAsync(u => u.Email == email);
 
             if (user == null) throw new ArgumentNullException("El email enviado no corresponde a ningun usuario");
-            
-            await _emailService.SendEmailAsync(email,"Cuenta Avalúo - Solicitud de cambio de contraseña","",true);
+            var token = _jwtService.GenerateEmailToken(user);
+            string url = $"http://localhost:3000/auth/email-recover-password/{token.JwtToken}";
+            await _emailService.SendEmailAsync(email,"Cuenta Avalúo - Solicitud de cambio de contraseña",url,true);
         }
     }
 }
