@@ -63,5 +63,12 @@ namespace AvaluoAPI.Presentation.Controllers
             await _rubricaService.InsertRubricas();
             return Ok();
         }
+
+        [HttpPut("desactivate")]
+        public async Task<IActionResult> DesactivateRubricas()
+        {
+            await _rubricaService.DesactivateRubricas();
+            return Ok();
+        }
     }
 }

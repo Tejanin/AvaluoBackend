@@ -12,7 +12,7 @@ namespace AvaluoAPI.Utilities.JWT
     {
         public string JwtToken { get; set; } = null!;
         // Podemos mantener esta propiedad para compatibilidad, pero ya no la usaremos como cookie
-        public string PermissionToken { get; set; } = null!;
+        public string PermissionToken { get; set; }
     }
 
     public class JwtUserInfo
@@ -33,7 +33,8 @@ namespace AvaluoAPI.Utilities.JWT
 
     public interface IJwtService
     {
-        TokenConfig GenerateTokens(Usuario user, Rol rol, bool includeSOClaim = false);
+        TokenConfig GenerateAuthTokens(Usuario user, Rol rol, bool includeSOClaim = false);
+        TokenConfig GenerateEmailToken(Usuario user);
         bool ValidateToken(string token);
         ClaimsPrincipal? GetClaimsPrincipal(string token);
         UserPermissions? ValidatePermissionCookie(string permissionToken);
@@ -67,12 +68,17 @@ namespace AvaluoAPI.Utilities.JWT
             _claimsFactory = claimsFactory;
         }
 
-        public TokenConfig GenerateTokens(Usuario user, Rol rol, bool includeSOClaim = false)
+        public TokenConfig GenerateAuthTokens(Usuario user, Rol rol, bool includeSOClaim = false)
         {
             // JWT con info no sensitiva
             var jwtClaims = _claimsFactory.CreateClaims(user, includeSOClaim);
 
             // Crear diccionario con todos los permisos
+
+            if(rol != null)
+            {
+
+            }
             var permissionsDict = new Dictionary<string, bool>
             {
                 { "EsProfesor", rol.EsProfesor },
@@ -237,5 +243,25 @@ namespace AvaluoAPI.Utilities.JWT
                 return new List<string>();
             }
         }
+
+        public TokenConfig GenerateEmailToken(Usuario user)
+        {
+            var jwtClaims = _claimsFactory.CreateClaims(user, false);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var jwtToken = new JwtSecurityToken(
+                _issuer,
+                _audience,
+                jwtClaims,
+                expires: DateTime.UtcNow.AddHours(2),
+                signingCredentials: creds
+            );
+
+            return new TokenConfig
+            {
+                JwtToken = new JwtSecurityTokenHandler().WriteToken(jwtToken)
+            };
+        }
+           
     }
 }
