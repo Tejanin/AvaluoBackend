@@ -15,6 +15,7 @@ namespace AvaluoAPI.Presentation.ViewModels.RubricaViewModels
         [JsonIgnore]
         public string AsignaturaNombre { get; set; }  // Nombre de la asignatura
         public string Estado { get; set; }
+        public MetodoEvaluacionViewModel MetodoEvaluacion { get; set; }
         public string Comentario { get; set; }
         public string Problematica { get; set; }
         public string Solucion { get; set; }

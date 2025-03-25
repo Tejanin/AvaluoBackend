@@ -3,6 +3,6 @@
     public class MetodoEvaluacionViewModel
     {
         public int Id { get; set; }
-        public string Descripcion { get; set; }
+        public string DescripcionES { get; set; }
     }
 }
