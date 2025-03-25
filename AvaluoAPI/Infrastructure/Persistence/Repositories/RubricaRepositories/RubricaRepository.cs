@@ -33,26 +33,29 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
 
             // Obtener rúbricas básicas
             var rubricasQuery = @"
-                        SELECT 
-                            r.Id,
-                            r.IdSO,
-                            r.Seccion,
-                            r.IdAsignatura,
-                            a.Codigo AS AsignaturaCodigo,
-                            a.Nombre AS AsignaturaNombre,
-                            e.Descripcion AS Estado,
-                            r.Comentario,
-                            r.Problematica,
-                            r.Solucion,
-                            r.Evidencia,
-                            r.EvaluacionesFormativas,
-                            r.Estrategias
-                        FROM rubricas r
-                        INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
-                        INNER JOIN estado e ON r.IdEstado = e.Id
-                        WHERE r.IdProfesor = @IdProfesor
-                          AND r.IdEstado IN (@IdEstado1, @IdEstado2)
-                        ORDER BY r.IdAsignatura, r.Seccion";
+    SELECT 
+        r.Id,
+        r.IdSO,
+        r.Seccion,
+        r.IdAsignatura,
+        a.Codigo AS AsignaturaCodigo,
+        a.Nombre AS AsignaturaNombre,
+        e.Descripcion AS Estado,
+        r.Comentario,
+        r.Problematica,
+        r.Solucion,
+        r.Evidencia,
+        r.EvaluacionesFormativas,
+        r.Estrategias,
+        me.Id,
+        me.DescripcionES 
+    FROM rubricas r
+    INNER JOIN asignaturas a ON r.IdAsignatura = a.Id
+    INNER JOIN estado e ON r.IdEstado = e.Id
+    LEFT JOIN metodo_evaluacion me ON r.IdMetodoEvaluacion = me.Id
+    WHERE r.IdProfesor = @IdProfesor
+      AND r.IdEstado IN (@IdEstado1, @IdEstado2)
+    ORDER BY r.IdAsignatura, r.Seccion";
 
             var parameters = new
             {
@@ -61,26 +64,34 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                 IdEstado2 = activoSinEntregar
             };
 
-            var rubricas = (await connection.QueryAsync<RubricaDashboardViewModel>(rubricasQuery, parameters)).ToList();
+            var rubricas = (await connection.QueryAsync<RubricaDashboardViewModel, MetodoEvaluacionViewModel, RubricaDashboardViewModel>(
+                    rubricasQuery,
+                    (rubrica, metodoEvaluacion) => {
+                        rubrica.MetodoEvaluacion = metodoEvaluacion;
+                        return rubrica;
+                    },
+                    parameters,
+                    splitOn: "Id"
+                )).ToList();
 
             if (rubricas.Any())
             {
                 // Obtener SO y PIs para cada rúbrica
                 var soIds = rubricas.Select(r => r.Id).Distinct().ToList();
                 var soQuery = @"
-            SELECT 
-                c.Id,
-                c.Nombre,
-                c.Acron,
-                c.DescripcionES,
-                p.Id AS PI_Id,
-                p.Nombre AS PI_Nombre,
-                p.DescripcionES AS PI_DescripcionES,
-                p.DescripcionEN AS PI_DescripcionEN
-            FROM rubricas r
-            INNER JOIN competencia c ON r.IdSO = c.Id
-            LEFT JOIN pi p ON c.Id = p.SO_Id
-            WHERE r.Id IN @RubricaIds";
+    SELECT 
+        c.Id,
+        c.Nombre,
+        c.Acron,
+        c.DescripcionES,
+        p.Id AS PI_Id,
+        p.Nombre AS PI_Nombre,
+        p.DescripcionES AS PI_DescripcionES,
+        p.DescripcionEN AS PI_DescripcionEN
+    FROM rubricas r
+    INNER JOIN competencia c ON r.IdSO = c.Id
+    LEFT JOIN pi p ON c.Id = p.SO_Id
+    WHERE r.Id IN @RubricaIds";
 
                 // Diccionario para mapear rúbricas a sus SOs
                 var soDictionary = new Dictionary<int, SOwithPIsViewModel>();
@@ -88,7 +99,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
 
                 // Obtener relación entre rúbricas y SOs
                 var rubricaSoQuery = @"
-            SELECT Id, IdSO FROM rubricas WHERE Id IN @RubricaIds";
+    SELECT Id, IdSO FROM rubricas WHERE Id IN @RubricaIds";
                 var rubricaSoRelations = await connection.QueryAsync(rubricaSoQuery, new { RubricaIds = soIds });
 
                 foreach (var relation in rubricaSoRelations)
@@ -155,15 +166,15 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.RubricaRepositories
                 // Obtener resúmenes para cada rúbrica
                 var rubricaIds = rubricas.Select(r => r.Id).ToList();
                 var resumenQuery = @"
-            SELECT 
-                Id_PI AS IdPI,
-                Id_Rubrica,
-                CantExperto,
-                CantSatisfactorio,
-                CantPrincipiante,
-                CantDesarrollo
-            FROM resumen
-            WHERE Id_Rubrica IN @RubricaIds";
+    SELECT 
+        Id_PI AS IdPI,
+        Id_Rubrica,
+        CantExperto,
+        CantSatisfactorio,
+        CantPrincipiante,
+        CantDesarrollo
+    FROM resumen
+    WHERE Id_Rubrica IN @RubricaIds";
 
                 var resumenes = await connection.QueryAsync(resumenQuery, new { RubricaIds = rubricaIds });
 
