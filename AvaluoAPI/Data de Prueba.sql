@@ -239,6 +239,12 @@ INSERT INTO [dbo].[asignatura_carrera] ([Id_Asignatura],[Id_Carrera])
 
 
 
+-- Datos de prueba para edificios
+INSERT INTO [dbo].[edificios] 
+( [Id_Area], [Nombre], [FechaCreacion], [UltimaEdicion], [Acron], [Id_Estado], [Ubicacion]) 
+VALUES
+( 1, 'Edificio de Ingeniería', GETDATE(), NULL, 'ING', 1, 'Campus Norte'),
+( 2, 'Edificio de Ciencias', GETDATE(), NULL, 'SCI', 1, 'Campus Central');
 
 
 -- Datos de prueba para aula
@@ -248,36 +254,11 @@ VALUES
 ( 'GC301', GETDATE(), NULL, 1, 1),
 ( 'GC311', GETDATE(), NULL, 2, 1);
 
--- Datos de prueba para contacto
-INSERT INTO [dbo].[contacto] 
-([NumeroContacto], [Id_Usuario]) 
-VALUES
-( '809-555-1234', 1),
-( '809-555-5678', 2);
-
--- Datos de prueba para edificios
-INSERT INTO [dbo].[edificios] 
-( [Id_Area], [Nombre], [FechaCreacion], [UltimaEdicion], [Acron], [Id_Estado], [Ubicacion]) 
-VALUES
-( 1, 'Edificio de Ingeniería', GETDATE(), NULL, 'ING', 1, 'Campus Norte'),
-( 2, 'Edificio de Ciencias', GETDATE(), NULL, 'SCI', 1, 'Campus Central');
-
-
--- Datos de prueba para inventario
-INSERT INTO [dbo].[inventario] 
-( [Descripcion], [FechaCreacion], [UltimaEdicion], [Id_Estado]) 
-VALUES
-( 'Computadoras portátiles', GETDATE(), NULL, 1),
-( 'Proyectores multimedia', GETDATE(), NULL, 1);
 
 
 
--- Datos de prueba para profesor_carrera
-INSERT INTO [dbo].[profesor_carrera] 
-([Profesor_Id], [Carrera_Id]) 
-VALUES
-(1, 1),
-(1, 2);
+
+
 
 
 -- Datos de prueba para tipo_informe
