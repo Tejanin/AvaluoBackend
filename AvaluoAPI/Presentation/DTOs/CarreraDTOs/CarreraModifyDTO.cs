@@ -15,8 +15,7 @@ namespace AvaluoAPI.Presentation.DTOs.CarreraDTOs
         [Required(ErrorMessage = "La descripción de PEOs es requerida.")]
         public string PEOs { get; set; }
 
-        [Required(ErrorMessage = "El ID del estado es requerido.")]
-        public int IdEstado { get; set; }
+
 
         [Required(ErrorMessage = "El ID del área es requerido.")]
         public int IdArea { get; set; }

@@ -46,7 +46,7 @@ namespace AvaluoAPI.Presentation.Controllers
         public async Task<ActionResult> Post([FromBody] CarreraDTO carreraDTO)
         {
             await _carreraService.Register(carreraDTO);
-            return CreatedAtAction(nameof(Get), new { mensaje = "Carrera creada exitosamente." });
+            return CreatedAtAction(nameof(Post), new { mensaje = "Carrera creada exitosamente." });
         }
 
         // PUT: api/Carreras/{id}

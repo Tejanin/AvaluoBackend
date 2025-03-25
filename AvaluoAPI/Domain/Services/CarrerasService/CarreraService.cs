@@ -78,11 +78,7 @@ namespace AvaluoAPI.Domain.Services.CarreraService
             if (area == null)
                 throw new KeyNotFoundException("El área especificada no existe.");
 
-            var estado = await _unitOfWork.Estados.GetByIdAsync(carreraDTO.IdEstado);
-            if (estado == null)
-                throw new KeyNotFoundException("El estado especificado no existe.");
-            if (estado.IdTabla != "Carrera")
-                throw new ValidationException("El estado especificado no pertenece a 'Carrera'.");
+            
 
             var coordinador = await _unitOfWork.Usuarios.GetUsuarioWithRolById(carreraDTO.IdCoordinadorCarrera);
             if (coordinador == null)
