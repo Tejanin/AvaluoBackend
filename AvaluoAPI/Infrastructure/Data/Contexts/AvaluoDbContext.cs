@@ -472,7 +472,7 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.Ruta).IsRequired().HasMaxLength(int.MaxValue);
                 entity.Property(e => e.Nombre).IsRequired();
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETDATE()");
-                entity.Property(e => e.Año).HasColumnType("smallint");
+                entity.Property(e => e.Año);
                 entity.Property(e => e.Trimestre).HasColumnType("char(1)");
                 entity.Property(e => e.Periodo).IsRequired();
                 entity.HasOne(d => d.TipoInforme).WithMany(p => p.Informes)

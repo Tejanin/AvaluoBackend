@@ -237,45 +237,40 @@ INSERT INTO [dbo].[asignatura_carrera] ([Id_Asignatura],[Id_Carrera])
            (24,2)
 
 
--- Datos de prueba para desempeno
+
 
 
 
 -- Datos de prueba para aula
 INSERT INTO [dbo].[aula] 
-([Id], [Descripcion], [FechaCreacion], [UltimaEdicion], [Id_Edificio], [Id_Estado]) 
+( [Descripcion], [FechaCreacion], [UltimaEdicion], [Id_Edificio], [Id_Estado]) 
 VALUES
-(1, 'GC301', GETDATE(), NULL, 1, 1),
-(2, 'GC311', GETDATE(), NULL, 2, 1);
+( 'GC301', GETDATE(), NULL, 1, 1),
+( 'GC311', GETDATE(), NULL, 2, 1);
 
 -- Datos de prueba para contacto
 INSERT INTO [dbo].[contacto] 
-([Id], [NumeroContacto], [Id_Usuario]) 
+([NumeroContacto], [Id_Usuario]) 
 VALUES
-(1, '809-555-1234', 1),
-(2, '809-555-5678', 2);
+( '809-555-1234', 1),
+( '809-555-5678', 2);
 
 -- Datos de prueba para edificios
 INSERT INTO [dbo].[edificios] 
-([Id], [Id_Area], [Nombre], [FechaCreacion], [UltimaEdicion], [Acron], [Id_Estado], [Ubicacion]) 
+( [Id_Area], [Nombre], [FechaCreacion], [UltimaEdicion], [Acron], [Id_Estado], [Ubicacion]) 
 VALUES
-(1, 1, 'Edificio de Ingeniería', GETDATE(), NULL, 'ING', 1, 'Campus Norte'),
-(2, 2, 'Edificio de Ciencias', GETDATE(), NULL, 'SCI', 1, 'Campus Central');
+( 1, 'Edificio de Ingeniería', GETDATE(), NULL, 'ING', 1, 'Campus Norte'),
+( 2, 'Edificio de Ciencias', GETDATE(), NULL, 'SCI', 1, 'Campus Central');
 
 
 -- Datos de prueba para inventario
 INSERT INTO [dbo].[inventario] 
-([Id], [Descripcion], [FechaCreacion], [UltimaEdicion], [Id_Estado]) 
+( [Descripcion], [FechaCreacion], [UltimaEdicion], [Id_Estado]) 
 VALUES
-(1, 'Computadoras portátiles', GETDATE(), NULL, 1),
-(2, 'Proyectores multimedia', GETDATE(), NULL, 1);
+( 'Computadoras portátiles', GETDATE(), NULL, 1),
+( 'Proyectores multimedia', GETDATE(), NULL, 1);
 
--- Datos de prueba para objeto_aula
-INSERT INTO [dbo].[objeto_aula] 
-([Id_Objeto], [Id_Aula], [Cantidad]) 
-VALUES
-(1, 1, 10),
-(2, 2, 5);
+
 
 -- Datos de prueba para profesor_carrera
 INSERT INTO [dbo].[profesor_carrera] 
@@ -284,44 +279,16 @@ VALUES
 (1, 1),
 (1, 2);
 
--- Datos de prueba para tarea
-INSERT INTO [dbo].[tarea] 
-([Id], [Id_ActionPlan], [Id_Auxiliar], [Id_EstadoTarea], [FechaCreacion], [UltimaEdicion], [Descripcion]) 
-VALUES
-(1, 1, 1, 1, GETDATE(), NULL, 'Revisión de informes de desempeño'),
-(2, 2, 2, 2, GETDATE(), NULL, 'Implementación de mejoras en evaluación');
 
 -- Datos de prueba para tipo_informe
 INSERT INTO [dbo].[tipo_informe] 
-([Id], [Descripcion]) 
+( [Descripcion]) 
 VALUES
-(1, 'Informe Semestral'),
-(2, 'Reporte Anual');
-
--- Datos de prueba para usuario
-INSERT INTO [dbo].[usuario] 
-([Id], [Username], [Email], [HashedPassword], [Salt], [FechaCreacion], [UltimaEdicion], [FechaEliminacion], [Nombre], [Apellido], [Foto], [CV], [IdSO], [IdEstado], [IdArea], [IdRol], [RolId]) 
-VALUES
-( 'jdoe', 'jdoe@email.com', 'hashedpassword123', 'salt123', GETDATE(), NULL, NULL, 'John', 'Doe', '/images/jdoe.jpg', '/cv/jdoe.pdf', 1, 1, 1, 1, 1),
-( 'asmith', 'asmith@email.com', 'hashedpassword456', 'salt456', GETDATE(), NULL, NULL, 'Alice', 'Smith', '/images/asmith.jpg', '/cv/asmith.pdf', 2, 1, 2, 2, 2),
-( 'prof_01', 'prof01@email.com', 'pass01', 'salt01', GETDATE(), NULL, NULL, 'Carlos', 'Gómez', '/images/prof01.jpg', '/cv/prof01.pdf', 1, 1, 1, 1, 1),
-( 'prof_02', 'prof02@email.com', 'pass02', 'salt02', GETDATE(), NULL, NULL, 'Laura', 'Fernández', '/images/prof02.jpg', '/cv/prof02.pdf', 2, 1, 2, 1, 1),
-( 'prof_03', 'prof03@email.com', 'pass03', 'salt03', GETDATE(), NULL, NULL, 'María', 'López', '/images/prof03.jpg', '/cv/prof03.pdf', 3, 1, 3, 1, 1),
-( 'prof_04', 'prof04@email.com', 'pass04', 'salt04', GETDATE(), NULL, NULL, 'Javier', 'Pérez', '/images/prof04.jpg', '/cv/prof04.pdf', 4, 1, 4, 1, 1),
-( 'prof_05', 'prof05@email.com', 'pass05', 'salt05', GETDATE(), NULL, NULL, 'Ana', 'Ramírez', '/images/prof05.jpg', '/cv/prof05.pdf', 5, 1, 5, 1, 1);
+('Desempeño de SO'),
+( 'Reporte Anual');
 
 
--- Datos de prueba para ConfiguracionEvaluaciones
-INSERT INTO [dbo].[ConfiguracionEvaluaciones] 
-([Id], [Descripcion], [FechaInicio], [FechaCierre], [Id_Estado]) 
-VALUES
-(1, 'Evaluación de Medio Término', '2024-03-01', '2024-03-31', 1),
-(2, 'Evaluación Final', '2024-06-01', '2024-06-30', 1);
 
 
--- Datos de prueba para carrera_rubrica 
-INSERT INTO [dbo].[carrera_rubrica] 
-([Id_Rubrica], [Id_Carrera]) 
-VALUES
-(1, 1),
-(2, 2);
+
+
