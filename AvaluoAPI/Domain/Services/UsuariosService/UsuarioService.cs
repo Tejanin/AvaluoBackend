@@ -86,7 +86,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
                 string fileName = Path.GetFileName(user.Foto);
 
                 // Construir la URL relativa para la API
-                user.Foto = $"/AvaluoFiles/Usuarios/{user.Username}_{user.Id}/{fileName}";
+                user.Foto = $"AvaluoFiles/Usuarios/{user.Id}/{fileName}";
             }
 
             return user;
@@ -190,7 +190,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             var usuario = await _unitOfWork.Usuarios.GetByIdAsync(id);
 
             // Guardar el archivo
-            RutaUsuarioBuilder rutaBuilder = new RutaUsuarioBuilder($"{usuario.Username}_{usuario.Id}");
+            RutaUsuarioBuilder rutaBuilder = new RutaUsuarioBuilder($"{usuario.Id}");
 
             (bool exito, string mensaje, string ruta, _) = await _fileHandler.Upload(
                 file,
@@ -219,7 +219,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             var usuario = usuarioTask;
 
             // Guardar el archivo
-            RutaUsuarioBuilder rutaBuilder = new RutaUsuarioBuilder($"{usuario.Username}_{usuario.Id}");
+            RutaUsuarioBuilder rutaBuilder = new RutaUsuarioBuilder($"{usuario.Id}");
 
             (bool exito, string mensaje, string ruta, _) = await _fileHandler.Upload(
                 file,
