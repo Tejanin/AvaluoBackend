@@ -88,8 +88,9 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositor
         private (bool satisfactorio, decimal porcentaje) GetDesempeño(DesempeñoDTO resumen)
         {
             int total = resumen.CantDesarrollo + resumen.CantExperto + resumen.CantPrincipiante + resumen.CantSatisfactorio;
-            var satisfactorio = resumen.CantSatisfactorio / total >= 0.8;
-            var porcentaje = resumen.CantSatisfactorio / total;
+            decimal porcentaje = (decimal)(resumen.CantSatisfactorio + resumen.CantExperto) / total;
+            bool satisfactorio = porcentaje >= 0.8m;
+
             return (satisfactorio, porcentaje);
         }
 
