@@ -31,7 +31,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             _mapper = mapper;
             _intecService = intecService;
             _redisService = redisService;
-            _redisService = redisService;
+            
         }
 
         public async Task CompleteRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile>? evidenciasExtras)
@@ -100,6 +100,8 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             );
 
            _unitOfWork.SaveChanges();
+
+            // Inserta informe y generalos por cada SO en desempeno
 
         }
 

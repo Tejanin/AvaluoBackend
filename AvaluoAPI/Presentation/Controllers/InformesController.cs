@@ -23,23 +23,10 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllInformes(
-            [FromQuery] int? año,
-            [FromQuery] int? trimestre,
-            [FromQuery] string? periodo,
-            [FromQuery] int? idTipo,
-            [FromQuery] int? idCarrera,
-            [FromQuery] int? page,
-            [FromQuery] int? recordsPerPage
-        )
+        public async Task<IActionResult> GetAllInformes([FromQuery] int? año, [FromQuery] char? trimestre, [FromQuery] string? periodo, [FromQuery] int? idTipo, [FromQuery] int? idCarrera, [FromQuery] string? nombre, [FromQuery] int? page, [FromQuery] int? recordsPerPage)
         {
-            var informes = await _informeService.GetAll(idTipo, idCarrera, año, trimestre, periodo, page, recordsPerPage);
-
-            return Ok(new
-            {
-                mensaje = "Informes obtenidos exitosamente.",
-                data = informes
-            });
+            var informes = await _informeService.GetAll(idTipo, idCarrera, nombre, año, trimestre, periodo, page, recordsPerPage);
+            return Ok(new { mensaje = "Informes obtenidos exitosamente.", data = informes});
         }
 
 

@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using AvaluoAPI.Domain.Helper;
+using Microsoft.EntityFrameworkCore;
 
 namespace AvaluoAPI.Domain.Services.InformeService
 {
@@ -23,33 +24,14 @@ namespace AvaluoAPI.Domain.Services.InformeService
             _mapper = mapper;
         }
 
-
-        public async Task<PaginatedResult<InformeViewModel>> GetAll(
-            int? idTipo,
-            int? idCarrera,
-            int? año,
-            int? trimestre,
-            string? periodo,
-            int? page,
-            int? recordsPerPage
-        )
+        public async Task<PaginatedResult<InformeViewModel>> GetAll(int? idTipo, int? idCarrera, string? nombre, int? año, char? trimestre, string? periodo, int? page, int? recordsPerPage)
         {
-            Expression<Func<Informe, bool>> filter = e =>
-                (!idTipo.HasValue || e.IdTipo == idTipo.Value) &&
-                (!idCarrera.HasValue || e.IdCarrera == idCarrera.Value) &&
-                (!año.HasValue || e.Año == año.Value) &&
-                (!trimestre.HasValue || e.Trimestre == trimestre.Value) &&
-                (string.IsNullOrEmpty(periodo) || e.Periodo.Contains(periodo));
-
-            IQueryable<Informe> query = _unitOfWork.Informes.FindAllQuery(filter);
-            var paginatedResult = await _unitOfWork.Informes.PaginateWithQuery(query, page, recordsPerPage);
-            return paginatedResult.Convert(i => _mapper.Map<InformeViewModel>(i));
+            return await _unitOfWork.Informes.GetAllInformesAsync(idTipo, idCarrera, nombre, año, trimestre, periodo, page, recordsPerPage);
         }
-
 
         public async Task<InformeViewModel> GetById(int id)
         {
-            var Informe = await _unitOfWork.Informes.GetByIdAsync(id);
+            var Informe = await _unitOfWork.Informes.GetInformeByIdAsync(id);
             if (Informe == null)
                 throw new KeyNotFoundException("Informe no encontrado.");
 

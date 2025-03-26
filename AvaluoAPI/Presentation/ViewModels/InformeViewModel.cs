@@ -8,8 +8,8 @@ namespace AvaluoAPI.Presentation.ViewModels
         public string Ruta { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string Nombre { get; set; }
-        public int IdTipo { get; set; }
-        public int IdCarrera { get; set; }
+        public string Tipo { get; set; }
+        public string Carrera { get; set; }
         public int Año { get; set; }
         public char Trimestre { get; set; }
         public string Periodo { get; set; }
