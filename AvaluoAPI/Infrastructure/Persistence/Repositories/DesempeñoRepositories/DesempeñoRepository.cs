@@ -94,6 +94,19 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.IDesempeñoRepositor
             return (satisfactorio, porcentaje);
         }
 
+        public async Task<List<int>> ObtenerIdSOPorAsignaturasAsync(int año, string periodo, int idAsignatura)
+        {
+            using var connection = _dapperContext.CreateConnection();
+            string query = "SELECT DISTINCT Id_SO FROM desempeno WHERE Id_Asignatura = @IdAsignatura AND Trimestre = @Trimestre AND Año = @Año;";
+            var asignaturas = await connection.QueryAsync<int>(query, new
+            {
+                IdAsignatura = idAsignatura,
+                Trimestre = periodo,
+                Año = año
+            });
+            return asignaturas.ToList();
+        }
+
         public async Task<IEnumerable<InformeDesempeñoViewModel>> GenerarInformeDesempeño(
     int? año = null, string? periodo = null, int? idAsignatura = null, int? idSO = null)
         {

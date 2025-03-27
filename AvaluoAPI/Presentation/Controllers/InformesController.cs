@@ -42,7 +42,7 @@ namespace AvaluoAPI.Presentation.Controllers
             });
         }
 
-        [HttpGet("informe/vistaPreviaJSON")]
+        [HttpGet("informeDesempeño/vistaPreviaJSON")]
         public async Task<IActionResult> GenerarInformeDesempeño(
             [FromQuery] int? año,
             [FromQuery] string? periodo,
@@ -53,7 +53,7 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok(new { mensaje = "Informe generado exitosamente", data = informe });
         }
 
-        [HttpGet("informe/vistaPreviaHTML")]
+        [HttpGet("informeDesempeño/vistaPreviaHTML")]
         public async Task<IActionResult> GenerarInformeDesempeñoHtml(
             [FromQuery] int? año,
             [FromQuery] string? periodo,
@@ -65,7 +65,7 @@ namespace AvaluoAPI.Presentation.Controllers
             return View("InformeDesempeño", informe);
         }
 
-        [HttpGet("informe/generarInforme/{anio?}/{periodo?}/{idAsignatura?}/{idSO?}")]
+        [HttpGet("informeDesempeño/generarInforme/{anio?}/{periodo?}/{idAsignatura?}/{idSO?}")]
         public async Task<IActionResult> GenerarInformeDesempeñoPdf(
             [FromRoute] int? anio,
             [FromRoute] string? periodo,
