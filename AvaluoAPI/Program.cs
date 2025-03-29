@@ -41,6 +41,7 @@ using AvaluoAPI.Domain.Services.InventarioService;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.InventarioRepositories;
 using AvaluoAPI.Domain.Services.PIService;
 using AvaluoAPI.Domain.Services.InformeService;
+using AvaluoAPI.Domain.Services.HistorialIncumplimientoService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -156,6 +157,8 @@ builder.Services.AddScoped<IInventarioService, InventarioService>();
 builder.Services.AddScoped<IInventarioRepository, InventarioRepository>();
 
 builder.Services.AddScoped<IInformeService, InformeService>();
+
+builder.Services.AddScoped<IHistorialIncumplimientoService, HistorialIncumplimientoService>();
 
 
 
