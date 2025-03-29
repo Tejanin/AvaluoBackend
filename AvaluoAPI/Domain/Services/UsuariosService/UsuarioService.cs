@@ -128,8 +128,15 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             var userDB = await _unitOfWork.Usuarios.GetUsuarioWithRol(user.Username); 
             if (userDB == null) throw new KeyNotFoundException("El usuario no existe");
             if (Hasher.Verify(user.Contraseña, userDB.Salt, userDB.HashedPassword) != true) throw new ValidationException("Contraseña incorrecta");
+            
+            var (IsCoordinadorCarrera, carrera) = await _unitOfWork.Carreras.IsCoordinador(userDB.Id);
+            
+            bool IsCoordinadorArea =await _unitOfWork.Areas.IsCoordinador(userDB.Id);
+            bool IsSupervisor = false;
+      
+            if (userDB.IdSO != null && await _unitOfWork.Usuarios.EsSupervisor(userDB.Id)) IsSupervisor = true;
 
-            _tokens = _jwtService.GenerateAuthTokens(userDB, userDB.Rol);
+            _tokens = _jwtService.GenerateAuthTokens(user: userDB, rol: userDB.Rol, includeSOClaim: IsSupervisor, includeAreaClaim:IsCoordinadorArea,includeCarreraClaim:IsCoordinadorCarrera,carrera: carrera);
 
             return _tokens;
 
@@ -240,11 +247,71 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         public async Task RequestPasswordChange(string email)
         {
             var user = await _unitOfWork.Usuarios.FindAsync(u => u.Email == email);
-
             if (user == null) throw new ArgumentNullException("El email enviado no corresponde a ningun usuario");
             var token = _jwtService.GenerateEmailToken(user);
             string url = $"http://localhost:3000/auth/email-recover-password/{token.JwtToken}";
-            await _emailService.SendEmailAsync(email,"Cuenta Avalúo - Solicitud de cambio de contraseña",url,true);
+
+            // Crear el cuerpo HTML del correo reemplazando el placeholder {{LINK}} con la URL
+            string htmlBody = @"<!DOCTYPE html>
+<html lang=""es"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>Recuperación de Contraseña</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class=""container"">
+        <img class=""logo"" src=""https://yourdomain.com/logo.png"" alt=""Logo"">
+        <h2>Restablecimiento de Contraseña</h2>
+        <p>Has solicitado restablecer tu contraseña. Haz clic en el siguiente botón para continuar con el proceso:</p>
+        <a class=""button"" href=""" + url + @""">Restablecer Contraseña</a>
+        <p>Si no solicitaste este cambio, ignora este mensaje.</p>
+        <p class=""footer"">© 2024 Tu Empresa. Todos los derechos reservados.</p>
+    </div>
+</body>
+</html>";
+
+            // Enviar el correo con el cuerpo HTML y estableciendo isHtml en true
+            await _emailService.SendEmailAsync(email, "Cuenta Avalúo - Solicitud de cambio de contraseña", htmlBody, true);
         }
     }
 }

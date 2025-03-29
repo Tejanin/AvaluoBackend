@@ -9,6 +9,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreaRepositories
 
         Task<AreaViewModel> GetAreaById(int id);
         Task<PaginatedResult<AreaViewModel>> GetAreas(string? descripcion, int? idCoordinador, int? page, int? recordsPerPage);
-
+        Task<bool> IsCoordinador(int userId);
     }
 }

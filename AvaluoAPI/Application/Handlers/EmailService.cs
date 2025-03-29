@@ -26,6 +26,7 @@ namespace AvaluoAPI.Application.Handlers
 
         public async Task SendEmailAsync(string toEmail, string subject, string body, bool isHtml = false)
         {
+            
             var message = new MailMessage
             {
                 From = new MailAddress(_fromEmail),

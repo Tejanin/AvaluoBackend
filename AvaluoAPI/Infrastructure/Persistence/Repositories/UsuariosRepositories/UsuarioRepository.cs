@@ -256,6 +256,21 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
             return usuario.Rol.EsProfesor;
         }
 
-        
+        public async Task<bool> EsSupervisor(int id)
+        {
+            var usuario = await _context.Set<Usuario>()
+                 .Include(u => u.Rol)
+                 .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (usuario == null)
+                throw new KeyNotFoundException($"No se encontró el usuario con ID {id}");
+
+            if (usuario.IdRol == null || usuario.Rol == null)
+                return false;
+
+            return usuario.Rol.EsSupervisor;
+        }
+
+
     }
 }
