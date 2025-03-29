@@ -20,6 +20,19 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AreasRepositories
             _dapperContext = dapperContext;
         }
 
+        public async Task<bool> IsCoordinador(int userId)
+        {
+            var area = await _context.Set<Area>()
+                                      .FirstOrDefaultAsync(a => a.IdCoordinador == userId);
+
+            if (area == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public AvaluoDbContext? AvaluoDbContext
         {
             get { return _context as AvaluoDbContext; }

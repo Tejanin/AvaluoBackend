@@ -11,6 +11,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
         void Desactivate(int id);
         
         Task<bool> EsProfesor(int id);
+        Task<bool> EsSupervisor(int id);
+        
         Task<Usuario> GetUsuarioWithRol(string username);
         Task<Usuario> GetUsuarioWithRolById(int usuarioId);
         Task<UsuarioViewModel> GetUsuarioById(int id);

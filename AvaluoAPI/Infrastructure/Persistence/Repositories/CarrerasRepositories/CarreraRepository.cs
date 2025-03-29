@@ -4,6 +4,7 @@ using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Infrastructure.Data.Contexts;
 using AvaluoAPI.Presentation.ViewModels;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories
@@ -22,6 +23,19 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories
             get { return _context as AvaluoDbContext; }
         }
 
+
+        public async Task<(bool,string)> IsCoordinador(int userId)
+        {
+            var carrera = await _context.Set<Carrera>()
+                                      .FirstOrDefaultAsync(c => c.IdCoordinadorCarrera == userId);
+
+            if (carrera == null)
+            {
+                return (false,null);
+            }
+
+            return (true,carrera.Id.ToString());
+        }
         // Obtener una carrera por ID con su Estado, Área y Coordinador
         public async Task<CarreraViewModel?> GetCarreraById(int id)
         {

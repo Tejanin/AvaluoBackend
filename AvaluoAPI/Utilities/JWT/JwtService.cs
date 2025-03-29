@@ -33,7 +33,7 @@ namespace AvaluoAPI.Utilities.JWT
 
     public interface IJwtService
     {
-        TokenConfig GenerateAuthTokens(Usuario user, Rol rol, bool includeSOClaim = false);
+        TokenConfig GenerateAuthTokens(Usuario user, Rol rol, string? carrera, bool includeSOClaim = false, bool includeCarreraClaim = false,bool includeAreaClaim = false );
         TokenConfig GenerateEmailToken(Usuario user);
         bool ValidateToken(string token);
         ClaimsPrincipal? GetClaimsPrincipal(string token);
@@ -68,10 +68,10 @@ namespace AvaluoAPI.Utilities.JWT
             _claimsFactory = claimsFactory;
         }
 
-        public TokenConfig GenerateAuthTokens(Usuario user, Rol rol, bool includeSOClaim = false)
+        public TokenConfig GenerateAuthTokens(Usuario user, Rol rol, string? carrera, bool includeSOClaim = false, bool includeCarreraClaim = false, bool includeAreaClaim = false)
         {
             // JWT con info no sensitiva
-            var jwtClaims = _claimsFactory.CreateClaims(user, includeSOClaim);
+            var jwtClaims = _claimsFactory.CreateClaims(user:user, includeSOClaim: includeSOClaim, includeCarreraClaim: includeCarreraClaim, includeAreaClaim: includeAreaClaim,carrera: carrera);
 
             // Crear diccionario con todos los permisos
 
@@ -246,7 +246,7 @@ namespace AvaluoAPI.Utilities.JWT
 
         public TokenConfig GenerateEmailToken(Usuario user)
         {
-            var jwtClaims = _claimsFactory.CreateClaims(user, false);
+            var jwtClaims = _claimsFactory.CreateClaims(user:user, carrera: null);
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var jwtToken = new JwtSecurityToken(
