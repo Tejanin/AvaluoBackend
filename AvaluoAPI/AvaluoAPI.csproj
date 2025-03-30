@@ -46,7 +46,7 @@
     <Folder Include="Domain\Services\MapaCompetenciaService\" />
     <Folder Include="Domain\Services\SOEvaluacionesService\" />
     <Folder Include="Presentation\ViewModels\InformeViewModels\" />
-    <Folder Include="wwwroot\AvaluoFiles\usuarios\profe1_1\" />
+    <Folder Include="wwwroot\AvaluoFiles\" />
   </ItemGroup>
 
 </Project>

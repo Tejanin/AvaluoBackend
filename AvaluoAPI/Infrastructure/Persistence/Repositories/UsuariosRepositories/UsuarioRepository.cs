@@ -258,12 +258,12 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
 
         public async Task<bool> EsSupervisor(int id)
         {
-            var usuario = await _context.Set<Usuario>()
-                 .Include(u => u.Rol)
-                 .FirstOrDefaultAsync(u => u.Id == id);
+            var usuario = await GetUsuarioWithRolById(id);
 
+           
             if (usuario == null)
                 throw new KeyNotFoundException($"No se encontró el usuario con ID {id}");
+ 
 
             if (usuario.IdRol == null || usuario.Rol == null)
                 return false;
