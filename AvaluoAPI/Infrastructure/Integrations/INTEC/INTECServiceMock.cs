@@ -28,7 +28,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088002", Nombre = "María", Apellido = "González", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088003", Nombre = "Carlos", Apellido = "Rodríguez", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088004", Nombre = "Ana", Apellido = "Martínez", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088005", Nombre = "Luis", Apellido = "Sánchez", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088005", Nombre = "Luis", Apellido = "Sánchez", Cargo = "Estudiante" },
+                                        new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -41,7 +47,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088007", Nombre = "Pedro", Apellido = "López", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088008", Nombre = "Sofia", Apellido = "Torres", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088009", Nombre = "Miguel", Apellido = "Ramírez", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088010", Nombre = "Isabella", Apellido = "Morales", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088010", Nombre = "Isabella", Apellido = "Morales", Cargo = "Estudiante" },
+                                        new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -54,7 +66,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088012", Nombre = "Valentina", Apellido = "Castro", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088013", Nombre = "Andrés", Apellido = "Herrera", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088014", Nombre = "Camila", Apellido = "Vargas", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088015", Nombre = "Gabriel", Apellido = "Silva", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088015", Nombre = "Gabriel", Apellido = "Silva", Cargo = "Estudiante" },
+                                        new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -67,7 +85,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088017", Nombre = "Mateo", Apellido = "Ríos", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088018", Nombre = "Daniela", Apellido = "Ortiz", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088019", Nombre = "Samuel", Apellido = "Cruz", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088020", Nombre = "Victoria", Apellido = "Reyes", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088020", Nombre = "Victoria", Apellido = "Reyes", Cargo = "Estudiante" },
+                                        new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -80,7 +104,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088022", Nombre = "Valeria", Apellido = "Acosta", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088023", Nombre = "Alejandro", Apellido = "Medina", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088024", Nombre = "Mariana", Apellido = "Flores", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088025", Nombre = "Eduardo", Apellido = "Rojas", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088025", Nombre = "Eduardo", Apellido = "Rojas", Cargo = "Estudiante" },
+                                        new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -93,7 +123,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088027", Nombre = "Regina", Apellido = "Palacios", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088028", Nombre = "Fernando", Apellido = "Quintero", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088029", Nombre = "Carolina", Apellido = "Jiménez", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088030", Nombre = "Ricardo", Apellido = "Beltrán", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088030", Nombre = "Ricardo", Apellido = "Beltrán", Cargo = "Estudiante" },
+                                        new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -106,7 +142,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088032", Nombre = "Héctor", Apellido = "Velázquez", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088033", Nombre = "Lucía", Apellido = "Delgado", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088034", Nombre = "Roberto", Apellido = "Zamora", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088035", Nombre = "Patricia", Apellido = "Molina", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088035", Nombre = "Patricia", Apellido = "Molina", Cargo = "Estudiante" },
+                                        new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -119,7 +161,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088037", Nombre = "Natalia", Apellido = "Espinoza", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088038", Nombre = "Francisco", Apellido = "Luna", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088039", Nombre = "Andrea", Apellido = "Cordero", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088040", Nombre = "Javier", Apellido = "Soto", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088040", Nombre = "Javier", Apellido = "Soto", Cargo = "Estudiante" },
+                                        new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -132,7 +180,13 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088042", Nombre = "Antonio", Apellido = "Cabrera", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088043", Nombre = "Cristina", Apellido = "Durán", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088044", Nombre = "Raúl", Apellido = "Campos", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088045", Nombre = "Adriana", Apellido = "Mora", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088045", Nombre = "Adriana", Apellido = "Mora", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -158,7 +212,22 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088052", Nombre = "Manuel", Apellido = "Contreras", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088053", Nombre = "Cecilia", Apellido = "Méndez", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088054", Nombre = "Hugo", Apellido = "Zavala", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088055", Nombre = "Elena", Apellido = "Fuentes", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088055", Nombre = "Elena", Apellido = "Fuentes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088076", Nombre = "Fernando", Apellido = "Mendoza", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088077", Nombre = "Valeria", Apellido = "Ortega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088078", Nombre = "Gabriel", Apellido = "Torres", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088079", Nombre = "Lucía", Apellido = "Jiménez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088080", Nombre = "Martín", Apellido = "Vega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088081", Nombre = "Carolina", Apellido = "Ruiz", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088082", Nombre = "Javier", Apellido = "Morales", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088083", Nombre = "Daniela", Apellido = "Castro", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088084", Nombre = "Alejandro", Apellido = "Silva", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -171,7 +240,22 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088057", Nombre = "Silvia", Apellido = "Arenas", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088058", Nombre = "Ignacio", Apellido = "Ponce", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088059", Nombre = "Rosa", Apellido = "Villanueva", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088060", Nombre = "Felipe", Apellido = "Escobar", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088060", Nombre = "Felipe", Apellido = "Escobar", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088076", Nombre = "Fernando", Apellido = "Mendoza", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088077", Nombre = "Valeria", Apellido = "Ortega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088078", Nombre = "Gabriel", Apellido = "Torres", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088079", Nombre = "Lucía", Apellido = "Jiménez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088080", Nombre = "Martín", Apellido = "Vega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088081", Nombre = "Carolina", Apellido = "Ruiz", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088082", Nombre = "Javier", Apellido = "Morales", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088083", Nombre = "Daniela", Apellido = "Castro", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088084", Nombre = "Alejandro", Apellido = "Silva", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -184,7 +268,22 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088062", Nombre = "Rodrigo", Apellido = "Núñez", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088063", Nombre = "Lorena", Apellido = "Estrada", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088064", Nombre = "Alberto", Apellido = "Salazar", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088065", Nombre = "Martha", Apellido = "Varela", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088065", Nombre = "Martha", Apellido = "Varela", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088076", Nombre = "Fernando", Apellido = "Mendoza", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088077", Nombre = "Valeria", Apellido = "Ortega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088078", Nombre = "Gabriel", Apellido = "Torres", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088079", Nombre = "Lucía", Apellido = "Jiménez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088080", Nombre = "Martín", Apellido = "Vega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088081", Nombre = "Carolina", Apellido = "Ruiz", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088082", Nombre = "Javier", Apellido = "Morales", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088083", Nombre = "Daniela", Apellido = "Castro", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088084", Nombre = "Alejandro", Apellido = "Silva", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -197,7 +296,22 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088067", Nombre = "Teresa", Apellido = "Pacheco", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088068", Nombre = "Marcos", Apellido = "Vega", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088069", Nombre = "Gloria", Apellido = "Miranda", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088070", Nombre = "Salvador", Apellido = "Maldonado", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088070", Nombre = "Salvador", Apellido = "Maldonado", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088076", Nombre = "Fernando", Apellido = "Mendoza", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088077", Nombre = "Valeria", Apellido = "Ortega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088078", Nombre = "Gabriel", Apellido = "Torres", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088079", Nombre = "Lucía", Apellido = "Jiménez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088080", Nombre = "Martín", Apellido = "Vega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088081", Nombre = "Carolina", Apellido = "Ruiz", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088082", Nombre = "Javier", Apellido = "Morales", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088083", Nombre = "Daniela", Apellido = "Castro", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088084", Nombre = "Alejandro", Apellido = "Silva", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -210,7 +324,22 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088072", Nombre = "Ramón", Apellido = "Carrillo", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088073", Nombre = "Claudia", Apellido = "Montes", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088074", Nombre = "Ernesto", Apellido = "Bravo", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088075", Nombre = "Rocío", Apellido = "Pineda", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088075", Nombre = "Rocío", Apellido = "Pineda", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088076", Nombre = "Fernando", Apellido = "Mendoza", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088077", Nombre = "Valeria", Apellido = "Ortega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088078", Nombre = "Gabriel", Apellido = "Torres", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088079", Nombre = "Lucía", Apellido = "Jiménez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088080", Nombre = "Martín", Apellido = "Vega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088081", Nombre = "Carolina", Apellido = "Ruiz", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088082", Nombre = "Javier", Apellido = "Morales", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088083", Nombre = "Daniela", Apellido = "Castro", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088084", Nombre = "Alejandro", Apellido = "Silva", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             },
             new SeccionModel
@@ -223,7 +352,22 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
                     new EstudianteModel { Id = "1088072", Nombre = "Ramón", Apellido = "Carrillo", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088073", Nombre = "Claudia", Apellido = "Montes", Cargo = "Estudiante" },
                     new EstudianteModel { Id = "1088074", Nombre = "Ernesto", Apellido = "Bravo", Cargo = "Estudiante" },
-                    new EstudianteModel { Id = "1088075", Nombre = "Rocío", Apellido = "Pineda", Cargo = "Estudiante" }
+                    new EstudianteModel { Id = "1088075", Nombre = "Rocío", Apellido = "Pineda", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088076", Nombre = "Fernando", Apellido = "Mendoza", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088077", Nombre = "Valeria", Apellido = "Ortega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088078", Nombre = "Gabriel", Apellido = "Torres", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088079", Nombre = "Lucía", Apellido = "Jiménez", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088080", Nombre = "Martín", Apellido = "Vega", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088081", Nombre = "Carolina", Apellido = "Ruiz", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088082", Nombre = "Javier", Apellido = "Morales", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088083", Nombre = "Daniela", Apellido = "Castro", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088084", Nombre = "Alejandro", Apellido = "Silva", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088085", Nombre = "Sofía", Apellido = "Reyes", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088086", Nombre = "David", Apellido = "Flores", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088087", Nombre = "Natalia", Apellido = "Vargas", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088088", Nombre = "Roberto", Apellido = "Molina", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088089", Nombre = "Isabel", Apellido = "Guzmán", Cargo = "Estudiante" },
+                    new EstudianteModel { Id = "1088090", Nombre = "Carlos", Apellido = "Soto", Cargo = "Estudiante" }
                 }
             }
             };

@@ -39,7 +39,7 @@ INSERT INTO roles (
 ('Profesor', 1, 0, 0, 0, 0, 0, 1, 1, 0, 1),
 ('Administrador', 0, 0, 0, 0, 1, 0, 1, 1, 1, 1),
 ('Coordinador de Carrera', 0, 0, 0, 1, 0, 0, 1, 1, 1, 1),
-('Supervisor', 0, 1, 0, 0, 0, 0, 1, 1, 1, 1),
+('Supervisor', 1, 1, 0, 0, 0, 0, 1, 1, 1, 1),
 ('Auxiliar', 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 ('Prueba', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 ('Coordinador de Area',0,0,1,0,0,0,1,1,1,1),
