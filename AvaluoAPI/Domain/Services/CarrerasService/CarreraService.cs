@@ -115,6 +115,9 @@ namespace AvaluoAPI.Domain.Services.CarreraService
             _unitOfWork.Carreras.Delete(carrera);
             _unitOfWork.SaveChanges();
         }
-
+        public async Task<IEnumerable<CarreraViewModel>> GetCarrerasByArea(int idArea)
+        {
+            return await _unitOfWork.Carreras.GetCarrerasByArea(idArea);
+        }
     }
 }
