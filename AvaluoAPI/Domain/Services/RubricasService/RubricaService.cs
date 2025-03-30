@@ -83,8 +83,8 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var asignaturas = await _unitOfWork.Rubricas.ObtenerIdAsignaturasPorEstadoAsync(activoEntregado.Id);
             var rubricasActivasEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activoEntregado.Id);
             var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.GetAllIncluding<Rubrica>(r => r.IdEstado == activo.Id, r => r.Asignatura, r => r.Profesor);
-            string trimestre = rubricasActivasEntregadas.FirstOrDefault()!.Periodo;
-            int año = rubricasActivasEntregadas.FirstOrDefault()!.Año;
+            (int trimestre, int año) = PeriodoExtensions.ObtenerTrimestreActual();
+            
 
             foreach (var rubrica in rubricasActivasEntregadas)
             {
@@ -97,7 +97,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             }
 
             await Task.WhenAll(
-                _unitOfWork.Desempeños.InsertDesempeños(asignaturas, año, trimestre, entregado.Id),
+                _unitOfWork.Desempeños.InsertDesempeños(asignaturas, año, trimestre.ToString(), entregado.Id),
                 _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasNoEntregadas),
                 _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas),
                 _unitOfWork.HistorialIncumplimientos.InsertIncumplimientos(rubricasActivasNoEntregadas)
@@ -106,11 +106,11 @@ namespace AvaluoAPI.Domain.Services.RubricasService
            _unitOfWork.SaveChanges();
             foreach (int idAsignatura in asignaturas)
             {
-                var SO = await _unitOfWork.Desempeños.ObtenerIdSOPorAsignaturasAsync(año, trimestre, idAsignatura);
+                var SO = await _unitOfWork.Desempeños.ObtenerIdSOPorAsignaturasAsync(año, trimestre.ToString(), idAsignatura);
                 foreach (int idSO in SO)
                 {
                     // Inserta informe y generalos por cada SO en desempeno
-                    await GenerarInforme(año, trimestre, idAsignatura, idSO);
+                    await GenerarInforme(año, trimestre.ToString(), idAsignatura, idSO);
                 }
             }
 
