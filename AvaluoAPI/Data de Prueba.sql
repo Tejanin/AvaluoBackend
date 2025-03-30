@@ -38,10 +38,15 @@ INSERT INTO roles (
 ) VALUES
 ('Profesor', 1, 0, 0, 0, 0, 0, 1, 1, 0, 1),
 ('Administrador', 0, 0, 0, 0, 1, 0, 1, 1, 1, 1),
-('Coordinador', 0, 0, 1, 1, 0, 0, 1, 1, 1, 1),
+('Coordinador de Carrera', 0, 0, 0, 1, 0, 0, 1, 1, 1, 1),
 ('Supervisor', 0, 1, 0, 0, 0, 0, 1, 1, 1, 1),
 ('Auxiliar', 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-('Prueba', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+('Prueba', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+('Coordinador de Area',0,0,1,0,0,0,1,1,1,1),
+('Coordinador de Carrera y Profesor', 1, 0,0,1,0,0,1,1,1,1),
+('Coordinador de Area y Profesor', 1, 0,0,1,0,0,1,1,1,1),
+('Coordinador de Carrera y Supervisor', 1, 1,0,1,0,0,1,1,1,1),
+('Coordinador de Area y Supervisor', 1, 1,1,0,0,0,1,1,1,1)
 
 INSERT INTO tipo_competencia (Nombre) VALUES
 ('Específica'),

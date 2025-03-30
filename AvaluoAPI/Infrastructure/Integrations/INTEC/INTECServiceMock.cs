@@ -233,45 +233,45 @@ namespace AvaluoAPI.Infrastructure.Integrations.INTEC
             new ProfesorModel
             {
                 Id = "1",
-                Nombre = "Roberto",
-                Apellido = "Martínez",
-                Email = "rmartinez@gmail.com",
+                Nombre = "Francia",
+                Apellido = "Mejía",
+                Email = "Francia.Mejia@intec.edu.do",
                 Cargo = "Profesor",
                 Secciones = new List<SeccionModel> { _secciones[0], _secciones[1], _secciones[8], _secciones[9] }  // IDS340, IDS343, INS377L, INS377
             },
             new ProfesorModel
             {
                 Id = "2",
-                Nombre = "Carmen",
-                Apellido = "Vásquez",
-                Email = "cvaquez@gmail.com",
+                Nombre = "Edwin",
+                Apellido = "López",
+                Email = "edwin.lopez@intec.edu.do",
                 Cargo = "Profesor",
                 Secciones = new List<SeccionModel> { _secciones[2], _secciones[3], _secciones[10] }  // IDS323, IDS341, IDS324
             },
             new ProfesorModel
             {
                 Id = "3",
-                Nombre = "José",
-                Apellido = "García",
-                Email = "jgarcia@gmail.com",
+                Nombre = "Mario",
+                Apellido = "Luciano",
+                Email = "mario.luciano@intec.edu.do",
                 Cargo = "Profesor",
                 Secciones = new List<SeccionModel> { _secciones[4], _secciones[11], _secciones[12] }  // IDS344, IDS208 (ambas secciones)
             },
             new ProfesorModel
             {
                 Id = "4",
-                Nombre = "Ana",
+                Nombre = "Pedro",
                 Apellido = "Ramírez",
-                Email = "aramirez@gmail.com",
+                Email = "pedro.ramirez@intec.edu.do",
                 Cargo = "Profesor",
                 Secciones = new List<SeccionModel> { _secciones[5], _secciones[6], _secciones[15] }  // IDS345L (ambas secciones)
             },
             new ProfesorModel
             {
                 Id = "5",
-                Nombre = "Miguel",
-                Apellido = "Torres",
-                Email = "mtorres@gmail.com",
+                Nombre = "Casimiro",
+                Apellido = "Cordero",
+                Email = "casimiro.cordero@intec.edu.do",
                 Cargo = "Profesor",
                 Secciones = new List<SeccionModel> { _secciones[7], _secciones[13], _secciones[14] }  // IDS345, IDS311 (ambas secciones)
             }

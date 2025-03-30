@@ -1,45 +1,56 @@
-{
-  "Username": "profe1",
-  "Email": "rmartinez@gmail.com",
-  "Contraseña": "12345",
-  "Nombre": "Roberto",
-  "Apellido": "Martinez",
-  "Area": 1,
-  "Rol": 1
-},
-{
-  "Username": "profe2",
-  "Email": "cvaquez@gmail.com",
-  "Contraseña": "12345",
-  "Nombre": "Carmen",
-  "Apellido": "Vásquez",
-  "Area": 1,
-  "Rol": 1
-},
-{
-  "Username": "profe3",
-  "Email": "jgarcia@gmail.com",
-  "Contraseña": "12345",
-  "Nombre": "Jose",
-  "Apellido": "Garcia",
-  "Area": 1,
-  "Rol": 1
-},
-{
-  "Username": "profe4",
-  "Email": "aramirez@gmail.com",
-  "Contraseña": "12345",
-  "Nombre": "Ana",
-  "Apellido": "Ramirez",
-  "Area": 1,
-  "Rol": 1
-},
-{
-  "Username": "profe5",
-  "Email": "mtorres@gmail.com",
-  "Contraseña": "12345",
-  "Nombre": "Miguel",
-  "Apellido": "Torres",
-  "Area": 1,
-  "Rol": 1
-}
+[
+  {
+    "Username": "profe1",
+    "Email": "rmartinez@gmail.com",
+    "Contraseña": "12345",
+    "Nombre": "Francia",
+    "Apellido": "Mejía",
+    "Area": 1,
+    "Rol": 7
+  },
+  {
+    "Username": "profe2",
+    "Email": "edwin.lopez@intec.edu.do",
+    "Contraseña": "12345",
+    "Nombre": "Edwin",
+    "Apellido": "López",
+    "Area": 1,
+    "Rol": 10
+  },
+  {
+    "Username": "profe3",
+    "Email": "mario.luciano@intec.edu.do",
+    "Contraseña": "12345",
+    "Nombre": "Mario",
+    "Apellido": "Luciano",
+    "Area": 1,
+    "Rol": 1
+  },
+  {
+    "Username": "profe4",
+    "Email": "pedro.ramirez@intec.edu.do",
+    "Contraseña": "12345",
+    "Nombre": "Pedro",
+    "Apellido": "Ramirez",
+    "Area": 1,
+    "Rol": 4
+  },
+  {
+    "Username": "profe5",
+    "Email": "casimiro.cordero@intec.edu.do",
+    "Contraseña": "12345",
+    "Nombre": "Casimiro",
+    "Apellido": "Cordero",
+    "Area": 1,
+    "Rol": 1
+  },
+  {
+    "Username": "admin",
+    "Email": "1106278@est.intec.edu.do",
+    "Contraseña": "12345",
+    "Nombre": "Mario",
+    "Apellido": "Lora",
+    "Area": 1,
+    "Rol": 2
+  }
+]
