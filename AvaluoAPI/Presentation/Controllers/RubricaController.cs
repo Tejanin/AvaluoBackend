@@ -45,10 +45,10 @@ namespace AvaluoAPI.Presentation.Controllers
         }
 
         [HttpGet("supervisor")]
-        public async Task<IActionResult> GetRubricasBySupervisor()
+        public async Task<IActionResult> GetRubricasBySupervisor(int? page = null, [FromQuery] int? recordsPerPage = null)
         {
             
-            return Ok(new {data = await _rubricaService.GetRubricasBySupervisor() , message = "Operacion Exitosa"});
+            return Ok(new {data = await _rubricaService.GetRubricasBySupervisor(page, recordsPerPage) , message = "Operacion Exitosa"});
         }
 
         [HttpGet("secciones")]

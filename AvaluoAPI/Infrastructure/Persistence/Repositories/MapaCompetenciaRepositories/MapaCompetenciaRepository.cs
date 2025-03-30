@@ -40,7 +40,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.MapaCompetenciaRepos
                                     INNER JOIN estado ec ON c.Id_Estado = ec.Id
                                     INNER JOIN estado em ON mc.Id_Estado = em.Id
                                     INNER JOIN tipo_competencia tc ON c.Id_Tipo = tc.Id
-                                    WHERE em.Descripcion = 'Evaluando'
+                                    WHERE em.Descripcion = 'Activa y Evaluando'
                                     AND tc.Nombre = N'Específica'";
 
             var lookup = new List<AsignaturaConCompetenciasViewModel>();

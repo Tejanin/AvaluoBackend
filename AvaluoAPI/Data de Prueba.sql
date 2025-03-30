@@ -10,12 +10,13 @@ INSERT INTO Estado (idtabla, descripcion) VALUES
 ('Asignatura', 'Desactivada'),
 ('Competencia', 'Activa'),
 ('Competencia', 'Desactivada'),
-('MapaCompetencia','Evaluando'),
-('MapaCompetencia','No Evaluando'),
+('MapaCompetencia','Activa y Evaluando'),
+('MapaCompetencia','Activa y No Evaluando'),
 ('Configuracion','Activa'),
 ('Configuracion','Desactivada'),
 ('Carrera', 'Activa'),
-('Carrera', 'Desactivada')
+('Carrera', 'Desactivada'),
+('MapaCompetencia','Desactivada')
 
 INSERT INTO metodo_evaluacion (descripcionES, descripcionEN) VALUES
 ('Examen', 'Exam'),
