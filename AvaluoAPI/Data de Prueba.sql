@@ -37,10 +37,10 @@ INSERT INTO roles (
     ConfigurarFechas, 
     VerManejoCurriculum
 ) VALUES
-('Profesor', 1, 0, 0, 0, 0, 0, 1, 1, 0, 1),
+('Profesor', 1, 0, 0, 0, 0, 0, 0, 0, 0,0 ),
 ('Administrador', 0, 0, 0, 0, 1, 0, 1, 1, 1, 1),
 ('Coordinador de Carrera', 0, 0, 0, 1, 0, 0, 1, 1, 1, 1),
-('Supervisor', 1, 1, 0, 0, 0, 0, 1, 1, 1, 1),
+('Supervisor', 1, 1, 0, 0, 0, 0, 0, 0, 0, 0),
 ('Auxiliar', 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 ('Prueba', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 ('Coordinador de Area',0,0,1,0,0,0,1,1,1,1),
@@ -278,4 +278,21 @@ VALUES
 
 
 
-
+INSERT INTO mapa_competencias (Id_Asignatura, Id_Competencia, Id_Estado)
+SELECT 
+    ac.Id_Asignatura,
+    comp.Id_Competencia,
+    17 AS Id_Estado
+FROM (
+    SELECT DISTINCT Id_Asignatura FROM asignatura_carrera
+) ac
+CROSS JOIN (
+    SELECT v.number AS Id_Competencia
+    FROM (VALUES (1), (2), (3), (4), (5), (6), (7)) AS v(number)
+) comp
+WHERE NOT EXISTS (
+    SELECT 1 
+    FROM mapa_competencias mc
+    WHERE mc.Id_Asignatura = ac.Id_Asignatura
+      AND mc.Id_Competencia = comp.Id_Competencia
+);
