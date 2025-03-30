@@ -212,6 +212,65 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CarrerasRepositories
 
             return new PaginatedResult<CarreraViewModel>(carrerasDictionary.Values, currentPage, currentRecordsPerPage, totalRecords);
         }
+        public async Task<IEnumerable<CarreraViewModel>> GetCarrerasByArea(int idArea)
+        {
+            using var connection = _dapperContext.CreateConnection();
 
+            var query = @"
+    SELECT 
+        c.Id, 
+        c.Año, 
+        c.NombreCarrera, 
+        c.PEOs, 
+        c.FechaCreacion, 
+        c.UltimaEdicion, 
+        c.IdEstado, 
+        c.IdArea, 
+        c.IdCoordinadorCarrera,
+
+        e.Id,
+        e.Descripcion,
+        e.IdTabla,
+
+        ar.Id,
+        ar.Descripcion,
+        ar.IdCoordinador,
+        ar.FechaCreacion,
+        ar.UltimaEdicion,
+
+        u.Id,
+        u.Nombre,
+        u.Apellido,
+        u.Email,
+        u.Username
+    FROM dbo.carreras c
+    LEFT JOIN dbo.estado e ON c.IdEstado = e.Id
+    LEFT JOIN dbo.areas ar ON c.IdArea = ar.Id
+    LEFT JOIN dbo.usuario u ON c.IdCoordinadorCarrera = u.Id
+    WHERE c.IdArea = @IdArea";
+
+            var carrerasDictionary = new Dictionary<int, CarreraViewModel>();
+
+            var carreras = await connection.QueryAsync<CarreraViewModel, EstadoViewModel, AreaViewModel, UsuarioViewModel, CarreraViewModel>(
+                query,
+                (carrera, estado, area, usuario) =>
+                {
+                    if (!carrerasDictionary.TryGetValue(carrera.Id, out var carreraEntry))
+                    {
+                        carreraEntry = carrera;
+                        carreraEntry.Estado = estado;
+                        carreraEntry.Area = area;
+                        carreraEntry.CoordinadorCarrera = usuario;
+                        carrerasDictionary.Add(carrera.Id, carreraEntry);
+                    }
+
+                    return carreraEntry;
+                },
+                new { IdArea = idArea },
+                splitOn: "Id"
+            );
+
+            return carrerasDictionary.Values;
+        }
     }
 }
