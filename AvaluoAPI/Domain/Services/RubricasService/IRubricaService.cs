@@ -12,7 +12,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
         Task<PaginatedResult<RubricaViewModel>> GetAllRubricas(int? idSO = null, List<int>? carreras = null, List<int>? estado = null, int? idAsignatura = null, int? page = null, int? recordsPerPage = null);
         Task EditRubricas(CompleteRubricaDTO rubricaDTO, List<IFormFile> evidenciasExtras);
         Task<(DateTime inicio, DateTime cierre)> GetFechasCriticas();
-        Task<PaginatedResult<RubricaViewModel>> GetRubricasBySupervisor();
+        Task<PaginatedResult<RubricaViewModel>> GetRubricasBySupervisor(int? page, int? recordsPerPage);
         Task<List<SeccionRubricasViewModel>> GetProfesorSecciones();
 
     }

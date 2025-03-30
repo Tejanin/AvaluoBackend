@@ -364,7 +364,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             return (config.FechaInicio, config.FechaCierre);
         }
 
-        public async Task<PaginatedResult<RubricaViewModel>> GetRubricasBySupervisor()
+        public async Task<PaginatedResult<RubricaViewModel>> GetRubricasBySupervisor(int? page, int? recordsPerPage)
         {
             int id = int.Parse(_jwtService.GetClaimValue("Id")!);
             var activaSinEntrega = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
@@ -372,7 +372,7 @@ namespace AvaluoAPI.Domain.Services.RubricasService
             var supervisor = await _unitOfWork.Usuarios.FindAsync(u=> u.Id == id);
             var carrerasDelSupervisor = await _unitOfWork.ProfesoresCarreras.GetProfesorWithCarreras(id);
 
-            var rubricas = await _unitOfWork.Rubricas.GetRubricasFiltered(idSO: supervisor.IdSO,carrerasIds: carrerasDelSupervisor.CarrerasIds, estadosIds: new List<int>{ activaEntregada.Id, activaSinEntrega.Id});
+            var rubricas = await _unitOfWork.Rubricas.GetRubricasFiltered(idSO: supervisor.IdSO,carrerasIds: carrerasDelSupervisor.CarrerasIds, estadosIds: new List<int>{ activaEntregada.Id, activaSinEntrega.Id}, page: page, recordsPerPage: recordsPerPage);
 
             return rubricas;
         }
