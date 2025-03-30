@@ -74,6 +74,12 @@ namespace AvaluoAPI.Presentation.Controllers
             await _carreraService.Delete(id);
             return Ok(new { mensaje = "La carrera ha sido eliminada con éxito." });
         }
+        [HttpGet("area/{idArea}")]
+        public async Task<ActionResult<IEnumerable<CarreraViewModel>>> GetCarrerasPorArea(int idArea)
+        {
+            var carreras = await _carreraService.GetCarrerasByArea(idArea);
+            return Ok(new { mensaje = "Carreras por área obtenidas exitosamente.", data = carreras });
+        }
 
     }
 }
