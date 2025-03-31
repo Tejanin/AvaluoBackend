@@ -11,7 +11,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using static System.Net.WebRequestMethods;
+
 
 namespace AvaluoAPI.Domain.Services.UsuariosService
 {
