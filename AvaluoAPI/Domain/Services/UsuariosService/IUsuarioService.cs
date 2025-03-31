@@ -18,7 +18,7 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
         Task ChangePassword(ChangePasswordDTO changePasswordDTO);
         Task Activate(int id);
         Task<UsuarioViewModel> GetById(int id);
-        Task<PaginatedResult<UsuarioViewModel>> GetAll(int? estado, int? area, int? rol, int? page, int? recordsPerPage);
+        Task<PaginatedResult<UsuarioViewModel>> GetAll(int? estado, int? area, List<int>? roles, int? page, int? recordsPerPage);
         Task<UsuarioViewModel> Find();
         Task RegisterRange(List<UsuarioDTO> usuarios);
 

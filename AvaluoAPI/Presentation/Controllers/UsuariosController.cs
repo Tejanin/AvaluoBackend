@@ -33,9 +33,9 @@ namespace AvaluoAPI.Presentation.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> Get(int? estado, int? area, int? rol, int? page, int? recordsPerPage)
+        public async Task<ActionResult> Get(int? estado, int? area, [FromQuery]List<int>? roles, int? page, int? recordsPerPage)
         {
-            return Ok(new { message = "Operación exitosa", data = await _usuarioService.GetAll(estado, area, rol, page, recordsPerPage) });
+            return Ok(new { message = "Operación exitosa", data = await _usuarioService.GetAll(estado, area, roles, page, recordsPerPage) });
         }
 
         [HttpGet("{id}")]

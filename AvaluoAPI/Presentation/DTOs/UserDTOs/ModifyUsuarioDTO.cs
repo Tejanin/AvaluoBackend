@@ -14,5 +14,7 @@
         public int? Estado { get; private set; } 
         public int? Area { get; set; }
         public int? Rol { get; set; }
+
+        public int? SO { get; set; }
     }
 }
