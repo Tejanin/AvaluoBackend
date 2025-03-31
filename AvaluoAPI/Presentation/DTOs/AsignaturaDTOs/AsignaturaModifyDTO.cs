@@ -16,14 +16,6 @@ namespace AvaluoAPI.Presentation.DTOs.AsignaturaDTOs
         [StringLength(255, ErrorMessage = "El nombre no puede tener más de 255 caracteres.")]
         public string Nombre { get; set; }
 
-        [Required(ErrorMessage = "El programa de la asignatura es requerido.")]
-        [StringLength(1000, ErrorMessage = "El programa de la asignatura no puede tener más de 1000 caracteres.")]
-        public string ProgramaAsignatura { get; set; }
-
-        [Required(ErrorMessage = "El syllabus de la asignatura es requerido.")]
-        [StringLength(1000, ErrorMessage = "El syllabus no puede tener más de 1000 caracteres.")]
-        public string Syllabus { get; set; }
-
         [JsonIgnore]
         public DateTime FechaCreacion { get; set; }
 

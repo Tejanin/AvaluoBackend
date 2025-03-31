@@ -240,8 +240,8 @@ namespace Avaluo.Infrastructure.Data
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UltimaEdicion).IsRequired(false);
-                entity.Property(e => e.ProgramaAsignatura).IsRequired().HasMaxLength(500);
-                entity.Property(e => e.Syllabus).IsRequired().HasMaxLength(500);
+                entity.Property(e => e.ProgramaAsignatura).IsRequired(false).HasMaxLength(500);
+                entity.Property(e => e.Syllabus).IsRequired(false).HasMaxLength(500);
 
                 entity.HasOne(d => d.Estado)
                     .WithMany(p => p.Asignaturas)
