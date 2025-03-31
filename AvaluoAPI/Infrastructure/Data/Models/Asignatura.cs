@@ -15,8 +15,8 @@ namespace Avaluo.Infrastructure.Data.Models
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public DateTime? UltimaEdicion { get; set; }
         public int IdEstado { get; set; }
-        public string ProgramaAsignatura { get; set; }
-        public string Syllabus { get; set; }
+        public string? ProgramaAsignatura { get; set; }
+        public string? Syllabus { get; set; }
         public int IdArea { get; set; }
         public virtual Area Area { get; set; } = null!;
         public virtual Estado Estado { get; set; } = null!;
