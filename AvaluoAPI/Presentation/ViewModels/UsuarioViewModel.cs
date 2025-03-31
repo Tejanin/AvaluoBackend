@@ -10,7 +10,8 @@
         public string Estado { get; set; } = null!;
         public string Area { get; set; } = null!;
         public string Rol { get; set; } = "No asignado";
-        public string? SO { get; set; }
+        public int? SO { get; set; }
+        
         public string? CV { get; set; }
         public string? Foto { get; set; }
         public List<ContactoViewModel>? Contactos { get; set; }

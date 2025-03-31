@@ -38,9 +38,10 @@ public class ExceptionMiddleware
             _logger.LogError(ex, "Ocurrió un error no manejado.");
 
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError; // 500
-            var response = new { StatusCode = 500, Message = "Error interno del servidor." };
+            var response = new { StatusCode = 500, Message = ex.Message };
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
+        
     }
 
 }

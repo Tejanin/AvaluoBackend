@@ -68,9 +68,9 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             throw new NotImplementedException();
         }
 
-        public async Task<PaginatedResult<UsuarioViewModel>> GetAll(int? estado, int? area, int? rol, int? page, int? recordsPerPage)
+        public async Task<PaginatedResult<UsuarioViewModel>> GetAll(int? estado, int? area, List<int>? roles, int? page, int? recordsPerPage)
         {
-            return await _unitOfWork.Usuarios.GetAllUsuarios(estado, area, rol, page, recordsPerPage);
+            return await _unitOfWork.Usuarios.GetAllUsuarios(estado, area, roles, page, recordsPerPage);
         }
 
         public async Task<UsuarioViewModel> GetById(int id)
@@ -162,6 +162,8 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
             var usuario = await _unitOfWork.Usuarios.GetByIdAsync(id) ??
                 throw new KeyNotFoundException($"No se encontró el usuario con ID {id}");
 
+            var rol = await _unitOfWork.Roles.FindAsync(r => r.Id == usuario.IdRol);
+
             // Actualizamos solo si hay cambios, manteniendo los valores originales si no hay modificación
             if (!string.IsNullOrWhiteSpace(usuarioDTO.Username) && usuario.Username != usuarioDTO.Username)
                 usuario.Username = usuarioDTO.Username;
@@ -181,7 +183,11 @@ namespace AvaluoAPI.Domain.Services.UsuariosService
 
             if (usuarioDTO.Rol.HasValue && usuarioDTO.Rol != 0 && usuario.IdRol != usuarioDTO.Rol)
                 usuario.IdRol = usuarioDTO.Rol;
-
+            if (usuarioDTO.SO.HasValue && usuarioDTO.SO != 0 && usuario.IdSO != usuarioDTO.SO)
+            {
+                if (rol.EsSupervisor == false) throw new InvalidOperationException("No se puede asignar un SO a un usuario sin permiso de Supervisor");
+                usuario.IdSO = usuarioDTO.SO;
+            }
 
             // Actualizamos la fecha de última edición
             usuario.UltimaEdicion = DateTime.Now;

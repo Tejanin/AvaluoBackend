@@ -21,7 +21,6 @@ using AvaluoAPI.Application.Handlers;
 using AvaluoAPI.Utilities.JWT;
 using AvaluoAPI.Domain.Services.EstadoService;
 using Swashbuckle.AspNetCore.Filters;
-using AvaluoAPI.Swagger;
 using AvaluoAPI.Infrastructure.Integrations.INTEC;
 using AvaluoAPI.Domain.Services.RubricasService;
 using Quartz;

@@ -7,7 +7,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.UsuariosRepositories
 {
     public interface IUsuarioRepository : IRepository<Usuario>
     {
-        Task<PaginatedResult<UsuarioViewModel>> GetAllUsuarios(int? estado, int? area, int? rol, int? page, int? recordsPerPage);
+        Task<PaginatedResult<UsuarioViewModel>> GetAllUsuarios(int? estado, int? area, List<int>? roles, int? page, int? recordsPerPage);
         void Desactivate(int id);
         
         Task<bool> EsProfesor(int id);
