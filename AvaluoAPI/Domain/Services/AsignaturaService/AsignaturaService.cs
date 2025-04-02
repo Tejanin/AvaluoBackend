@@ -1,10 +1,12 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
+using AvaluoAPI.Application.Handlers;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasRepositories;
 using AvaluoAPI.Presentation.DTOs.AsignaturaCarreraDTOs;
 using AvaluoAPI.Presentation.DTOs.AsignaturaDTOs;
 using AvaluoAPI.Presentation.DTOs.CompetenciaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
+using AvaluoAPI.Utilities;
 using MapsterMapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,11 +18,13 @@ namespace AvaluoAPI.Domain.Services.AsignaturaService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly FileHandler _fileHandler;
 
-        public AsignaturaService(IUnitOfWork unitOfWork, IMapper mapper)
+        public AsignaturaService(IUnitOfWork unitOfWork, IMapper mapper, FileHandler fileHandler)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _fileHandler = fileHandler;
         }
         public async Task<AsignaturaViewModel> GetById(int id)
         {
@@ -53,7 +57,7 @@ namespace AvaluoAPI.Domain.Services.AsignaturaService
 
             var asignatura = await _unitOfWork.Asignaturas.GetByIdAsync(asignaturaCarreraDTO.IdAsignatura);
             if (asignatura == null)
-                    throw new KeyNotFoundException("Carrera especificada no encontrada.");
+                    throw new KeyNotFoundException("Asignatura especificada no encontrada.");
 
             var existingRelation = await _unitOfWork.AsignaturasCarreras.GetByCarreraAsignaturaAsync(asignaturaCarreraDTO.IdCarrera, asignaturaCarreraDTO.IdAsignatura);
             if (existingRelation != null)
@@ -69,12 +73,47 @@ namespace AvaluoAPI.Domain.Services.AsignaturaService
         {
             var asignaturaCarrera = await _unitOfWork.AsignaturasCarreras.GetByCarreraAsignaturaAsync(asignaturaCarreraDTO.IdCarrera, asignaturaCarreraDTO.IdAsignatura); ;
             if (asignaturaCarrera == null)
-                throw new KeyNotFoundException("Asignatura no encontrada.");
+                throw new KeyNotFoundException("La asignatura y carrera no se fue encontrada relacionadas");
 
             _unitOfWork.AsignaturasCarreras.Delete(asignaturaCarrera);
             _unitOfWork.SaveChanges();
         }
 
+        public async Task UpdateDocument(int id, IFormFile file, string tipoDocumento)
+        {
+            var asignatura = await _unitOfWork.Asignaturas.GetByIdAsync(id)
+                ?? throw new KeyNotFoundException("Asignatura no encontrada.");
+
+            // Validar y obtener sufijo según tipo de documento
+            string sufijo = tipoDocumento switch
+            {
+                "Programa" => "Programa_Asignatura",
+                "Syllabus" => "Syllabus",
+                _ => throw new Exception("No se pudo identificar el documento que desea cargar")
+            };
+
+            // Guardar el archivo
+            RutaAsignaturaBuilder rutaBuilder = new RutaAsignaturaBuilder(asignatura.Codigo, tipoDocumento);
+            (bool exito, string mensaje, string ruta, _) = await _fileHandler.Upload(
+                file,
+                new List<string> { ".pdf" },
+                rutaBuilder,
+                nombre => $"{sufijo}_{asignatura.Codigo}"
+            );
+
+            if (!exito) throw new Exception(mensaje);
+
+            // Actualizar la ruta según el tipo de documento
+            if (tipoDocumento == "Programa")
+            { 
+                asignatura.ProgramaAsignatura = ruta;
+            } else { 
+                asignatura.Syllabus = ruta; 
+            }
+
+            await _unitOfWork.Asignaturas.Update(asignatura);
+            _unitOfWork.SaveChanges();
+        }
         public async Task Register(AsignaturaDTO asignaturaDTO)
         {  
             var area = await _unitOfWork.Areas.GetByIdAsync(asignaturaDTO.IdArea);

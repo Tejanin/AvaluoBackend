@@ -11,6 +11,7 @@ namespace AvaluoAPI.Domain.Services.AsignaturaService
         Task<PaginatedResult<AsignaturaViewModel>> GetSubjectByCareer(int idCarrera, int? page, int? recordsPerPage); // Obtiene una lista paginada de asignaturas asociadas a una carrera específica.
         Task RegisterSubjectByCareer(AsignaturaCarreraDTO asignaturaCarreraDTO);
         Task DeleteGetSubjectByCareer(AsignaturaCarreraDTO asignaturaCarreraDTO);
+        Task UpdateDocument(int id, IFormFile file, string tipoDocumento);
         Task Register(AsignaturaDTO asignaturaDTO); // Registra una nueva asignatura.
         Task Update(int id, AsignaturaModifyDTO asignaturaDTO); // Actualiza una asignatura existente con base en su ID.
         Task Delete(int id); // Elimina una asignatura por su ID.

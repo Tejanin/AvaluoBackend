@@ -58,6 +58,20 @@ namespace AvaluoAPI.Presentation.Controllers
             return Ok(new { mensaje = "Asignatura eliminada de la carrera exitosamente." });
         }
 
+        [HttpPut("change-pa/{id}")]
+        public async Task<ActionResult> ChangePa(int id, IFormFile file)
+        {
+            await _asignaturaService.UpdateDocument(id, file, "Programa");
+            return Accepted(new { message = "Programa de asignatura actualizado exitosamente" });
+        }
+
+        [HttpPut("change-syllabus/{id}")]
+        public async Task<ActionResult> ChangeSyllabus(int id, IFormFile file)
+        {
+            await _asignaturaService.UpdateDocument(id, file, "Syllabus");
+            return Accepted(new { message = "Syllabus actualizado exitosamente" });
+        }
+
         // GET: api/Asignaturas/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<AsignaturaViewModel>> Get(int id)
