@@ -1,6 +1,7 @@
 ﻿using Avaluo.Infrastructure.Data.Models;
 using Avaluo.Infrastructure.Persistence.UnitOfWork;
 using AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasRepositories;
+using AvaluoAPI.Presentation.DTOs.AsignaturaCarreraDTOs;
 using AvaluoAPI.Presentation.DTOs.AsignaturaDTOs;
 using AvaluoAPI.Presentation.DTOs.CompetenciaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
@@ -42,6 +43,36 @@ namespace AvaluoAPI.Domain.Services.AsignaturaService
                 throw new KeyNotFoundException("Carrera especificada no encontrada.");
 
             return await _unitOfWork.AsignaturasCarreras.GetAllByCareer(idCarrera, page, recordsPerPage);
+        }
+
+        public async Task RegisterSubjectByCareer(AsignaturaCarreraDTO asignaturaCarreraDTO)
+        {
+            var carrera = await _unitOfWork.Carreras.GetByIdAsync(asignaturaCarreraDTO.IdCarrera);
+            if (carrera == null)
+                throw new KeyNotFoundException("Carrera especificada no encontrada.");
+
+            var asignatura = await _unitOfWork.Asignaturas.GetByIdAsync(asignaturaCarreraDTO.IdAsignatura);
+            if (asignatura == null)
+                    throw new KeyNotFoundException("Carrera especificada no encontrada.");
+
+            var existingRelation = await _unitOfWork.AsignaturasCarreras.GetByCarreraAsignaturaAsync(asignaturaCarreraDTO.IdCarrera, asignaturaCarreraDTO.IdAsignatura);
+            if (existingRelation != null)
+                throw new InvalidOperationException("Esta asignatura ya está asignada a esta carrera.");
+
+            var asignaturaCarrera = _mapper.Map<AsignaturaCarrera>(asignaturaCarreraDTO);
+
+            await _unitOfWork.AsignaturasCarreras.AddAsync(asignaturaCarrera);
+            _unitOfWork.SaveChanges();
+        }
+
+        public async Task DeleteGetSubjectByCareer(AsignaturaCarreraDTO asignaturaCarreraDTO)
+        {
+            var asignaturaCarrera = await _unitOfWork.AsignaturasCarreras.GetByCarreraAsignaturaAsync(asignaturaCarreraDTO.IdCarrera, asignaturaCarreraDTO.IdAsignatura); ;
+            if (asignaturaCarrera == null)
+                throw new KeyNotFoundException("Asignatura no encontrada.");
+
+            _unitOfWork.AsignaturasCarreras.Delete(asignaturaCarrera);
+            _unitOfWork.SaveChanges();
         }
 
         public async Task Register(AsignaturaDTO asignaturaDTO)

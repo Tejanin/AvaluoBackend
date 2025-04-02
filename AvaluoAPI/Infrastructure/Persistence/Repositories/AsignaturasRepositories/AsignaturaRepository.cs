@@ -80,11 +80,13 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasRepositor
         {
             using var connection = _dapperContext.CreateConnection();
 
+            // Obtener el total de registros antes de la paginación
             var countQuery = @"
             SELECT COUNT(*)
             FROM dbo.asignaturas a
             LEFT JOIN dbo.estado e ON a.IdEstado = e.Id
             LEFT JOIN dbo.areas ar ON a.IdArea = ar.Id
+            LEFT JOIN dbo.asignatura_carrera ac ON a.Id = ac.Id_Asignatura
             WHERE (@Codigo IS NULL OR a.Codigo LIKE '%' + @Codigo + '%')
             AND (@Nombre IS NULL OR a.Nombre LIKE '%' + @Nombre + '%')
             AND (@IdEstado IS NULL OR a.IdEstado = @IdEstado)
@@ -107,6 +109,7 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasRepositor
             int currentPage = page.HasValue && page > 0 ? page.Value : 1;
             int offset = (currentPage - 1) * currentRecordsPerPage;
 
+            // Consulta con paginación, ahora incluyendo el nombre de la carrera
             var query = $@"
             SELECT 
                 a.Id, 
@@ -126,12 +129,17 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasRepositor
 
                 ar.Id,
                 ar.Descripcion,
-				ar.IdCoordinador,
-				ar.FechaCreacion,
-				ar.UltimaEdicion
+                ar.IdCoordinador,
+                ar.FechaCreacion,
+                ar.UltimaEdicion,
+
+                c.Id,
+                c.NombreCarrera 
             FROM dbo.asignaturas a
             LEFT JOIN dbo.estado e ON a.IdEstado = e.Id
             LEFT JOIN dbo.areas ar ON a.IdArea = ar.Id
+            LEFT JOIN dbo.asignatura_carrera ac ON a.Id = ac.Id_Asignatura
+            LEFT JOIN dbo.carreras c ON ac.Id_Carrera = c.Id  -- Unir con la tabla carreras para obtener el nombre
             WHERE (@Codigo IS NULL OR a.Codigo LIKE '%' + @Codigo + '%')
             AND (@Nombre IS NULL OR a.Nombre LIKE '%' + @Nombre + '%')
             AND (@IdEstado IS NULL OR a.IdEstado = @IdEstado)
@@ -151,22 +159,33 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasRepositor
 
             var asignaturasDictionary = new Dictionary<int, AsignaturaViewModel>();
 
-            var asignaturas = await connection.QueryAsync<AsignaturaViewModel, EstadoViewModel, AreaViewModel, AsignaturaViewModel>(
+            var asignaturas = await connection.QueryAsync<AsignaturaViewModel, EstadoViewModel, AreaViewModel, CarreraAsignaturaViewModel, AsignaturaViewModel>(
                 query,
-                (asignatura, estado, area) =>
+                (asignatura, estado, area, carrera) =>
                 {
                     if (!asignaturasDictionary.TryGetValue(asignatura.Id, out var asignaturaEntry))
                     {
                         asignaturaEntry = asignatura;
                         asignaturaEntry.Estado = estado;
                         asignaturaEntry.Area = area;
+                        asignaturaEntry.Carrera = new List<CarreraAsignaturaViewModel>();
                         asignaturasDictionary.Add(asignatura.Id, asignaturaEntry);
+                    }
+
+                    // Agregar la carrera a la lista si no es nula y tiene un ID válido
+                    if (carrera != null && carrera.Id != 0 && !string.IsNullOrEmpty(carrera.NombreCarrera))
+                    {
+                        // Verificar que esta carrera no esté ya en la lista
+                        if (!asignaturasDictionary[asignatura.Id].Carrera.Any(c => c.Id == carrera.Id))
+                        {
+                            asignaturasDictionary[asignatura.Id].Carrera.Add(carrera);
+                        }
                     }
 
                     return asignaturaEntry;
                 },
                 parametros,
-                splitOn: "Id" 
+                splitOn: "Id"
             );
 
             return new PaginatedResult<AsignaturaViewModel>(asignaturasDictionary.Values, currentPage, currentRecordsPerPage, totalRecords);
