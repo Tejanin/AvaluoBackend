@@ -181,6 +181,8 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.CompetenciasReposito
                 a.Id,
                 a.Codigo,
                 a.Nombre,
+			    a.ProgramaAsignatura,
+				a.Syllabus,
 
                 ea.Id, 
                 ea.IdTabla,

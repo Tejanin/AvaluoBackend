@@ -1,5 +1,6 @@
 ﻿using Avaluo.Infrastructure.Persistence.Repositories.Base;
 using AvaluoAPI.Domain.Services.AsignaturaService;
+using AvaluoAPI.Presentation.DTOs.AsignaturaCarreraDTOs;
 using AvaluoAPI.Presentation.DTOs.AsignaturaDTOs;
 using AvaluoAPI.Presentation.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,36 @@ namespace AvaluoAPI.Presentation.Controllers
         {
             var asignaturasCarreras = await _asignaturaService.GetSubjectByCareer(idCarrera, page, recordsPerPage);
             return Ok(new { mensaje = "Asignaturas por carrera obtenidas exitosamente.", data = asignaturasCarreras });
+        }
+
+        // POST: api/Asignaturas/carrera
+        [HttpPost("carrera")]
+        public async Task<IActionResult> RegisterSubjectByCareer([FromBody] AsignaturaCarreraDTO asignaturaCarreraDTO)
+        {
+            await _asignaturaService.RegisterSubjectByCareer(asignaturaCarreraDTO);
+            return Ok(new { mensaje = "Asignatura asociada a la carrera exitosamente." });
+        }
+
+        // DELETE: api/Asignaturas/carrera
+        [HttpDelete("carrera")]
+        public async Task<IActionResult> DeleteSubjectByCareer([FromBody] AsignaturaCarreraDTO asignaturaCarreraDTO)
+        {
+            await _asignaturaService.DeleteGetSubjectByCareer(asignaturaCarreraDTO);
+            return Ok(new { mensaje = "Asignatura eliminada de la carrera exitosamente." });
+        }
+
+        [HttpPut("change-pa/{id}")]
+        public async Task<ActionResult> ChangePa(int id, IFormFile file)
+        {
+            await _asignaturaService.UpdateDocument(id, file, "Programa");
+            return Accepted(new { message = "Programa de asignatura actualizado exitosamente" });
+        }
+
+        [HttpPut("change-syllabus/{id}")]
+        public async Task<ActionResult> ChangeSyllabus(int id, IFormFile file)
+        {
+            await _asignaturaService.UpdateDocument(id, file, "Syllabus");
+            return Accepted(new { message = "Syllabus actualizado exitosamente" });
         }
 
         // GET: api/Asignaturas/{id}

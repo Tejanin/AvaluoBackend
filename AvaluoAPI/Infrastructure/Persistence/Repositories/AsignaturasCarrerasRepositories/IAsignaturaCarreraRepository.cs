@@ -8,5 +8,6 @@ namespace AvaluoAPI.Infrastructure.Persistence.Repositories.AsignaturasCarrerasR
     {
         Task<PaginatedResult<AsignaturaViewModel>> GetAllByCareer(int idCarrera, int? page, int? recordsPerPage);
         Task<List<int>> GetCarrerasIdsByAsignaturaId(int asignatura);
+        Task<AsignaturaCarrera> GetByCarreraAsignaturaAsync(int idCarrera, int idAsignatura);
     }
 }
