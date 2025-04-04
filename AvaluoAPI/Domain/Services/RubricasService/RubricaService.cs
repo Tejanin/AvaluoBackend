@@ -75,45 +75,97 @@ namespace AvaluoAPI.Domain.Services.RubricasService
 
         public async Task DesactivateRubricas()
         {
-
-            var entregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Entregada");
-            var noEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "No entregada");
-            var activo = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
-            var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
-            var asignaturas = await _unitOfWork.Rubricas.ObtenerIdAsignaturasPorEstadoAsync(activoEntregado.Id);
-            var rubricasActivasEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activoEntregado.Id);
-            var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.GetAllIncluding<Rubrica>(r => r.IdEstado == activo.Id, r => r.Asignatura, r => r.Profesor);
-            (int trimestre, int año) = PeriodoExtensions.ObtenerTrimestreActual();
-            
-
-            foreach (var rubrica in rubricasActivasEntregadas)
+            try
             {
-                rubrica.IdEstado = entregado.Id;
-            }
+                Console.WriteLine("Inicio del método DesactivateRubricas");
 
-            foreach (var rubrica in rubricasActivasNoEntregadas)
-            {
-                rubrica.IdEstado = noEntregado.Id;
-            }
+                Console.WriteLine("Obteniendo estados desde la base de datos");
+                var entregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Entregada");
+                Console.WriteLine($"Estado 'Entregada' obtenido: ID = {entregado?.Id}");
 
-            await Task.WhenAll(
-                _unitOfWork.Desempeños.InsertDesempeños(asignaturas, año, trimestre.ToString(), entregado.Id),
-                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasNoEntregadas),
-                _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas),
-                _unitOfWork.HistorialIncumplimientos.InsertIncumplimientos(rubricasActivasNoEntregadas)
-            );
+                var noEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "No entregada");
+                Console.WriteLine($"Estado 'No entregada' obtenido: ID = {noEntregado?.Id}");
 
-           _unitOfWork.SaveChanges();
-            foreach (int idAsignatura in asignaturas)
-            {
-                var SO = await _unitOfWork.Desempeños.ObtenerIdSOPorAsignaturasAsync(año, trimestre.ToString(), idAsignatura);
-                foreach (int idSO in SO)
+                var activo = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y sin entregar");
+                Console.WriteLine($"Estado 'Activa y sin entregar' obtenido: ID = {activo?.Id}");
+
+                var activoEntregado = await _unitOfWork.Estados.GetEstadoByTablaName("Rubrica", "Activa y entregada");
+                Console.WriteLine($"Estado 'Activa y entregada' obtenido: ID = {activoEntregado?.Id}");
+
+                Console.WriteLine("Obteniendo asignaturas por estado");
+                var asignaturas = await _unitOfWork.Rubricas.ObtenerIdAsignaturasPorEstadoAsync(activoEntregado.Id);
+                Console.WriteLine($"Número de asignaturas obtenidas: {asignaturas?.Count() ?? 0}");
+
+                Console.WriteLine("Obteniendo rúbricas activas entregadas");
+                var rubricasActivasEntregadas = await _unitOfWork.Rubricas.FindAllAsync(r => r.IdEstado == activoEntregado.Id);
+                Console.WriteLine($"Número de rúbricas activas entregadas: {rubricasActivasEntregadas?.Count() ?? 0}");
+
+                Console.WriteLine("Obteniendo rúbricas activas no entregadas");
+                var rubricasActivasNoEntregadas = await _unitOfWork.Rubricas.GetAllIncluding<Rubrica>(r => r.IdEstado == activo.Id, r => r.Asignatura, r => r.Profesor);
+                Console.WriteLine($"Número de rúbricas activas no entregadas: {rubricasActivasNoEntregadas?.Count() ?? 0}");
+
+                Console.WriteLine("Obteniendo trimestre actual");
+                (int trimestre, int año) = PeriodoExtensions.ObtenerTrimestreActual();
+                Console.WriteLine($"Trimestre actual: {trimestre}, Año: {año}");
+
+                Console.WriteLine("Actualizando estado de rúbricas activas entregadas a 'Entregada'");
+                foreach (var rubrica in rubricasActivasEntregadas)
                 {
-                    // Inserta informe y generalos por cada SO en desempeno
-                    await GenerarInforme(año, trimestre.ToString(), idAsignatura, idSO);
+                    Console.WriteLine($"Actualizando rúbrica ID: {rubrica.Id} a estado 'Entregada'");
+                    rubrica.IdEstado = entregado.Id;
                 }
-            }
 
+                Console.WriteLine("Actualizando estado de rúbricas activas no entregadas a 'No entregada'");
+                foreach (var rubrica in rubricasActivasNoEntregadas)
+                {
+                    Console.WriteLine($"Actualizando rúbrica ID: {rubrica.Id} de profesor {rubrica.Profesor?.Nombre} a estado 'No entregada'");
+                    rubrica.IdEstado = noEntregado.Id;
+                }
+
+                Console.WriteLine("Actualizando rúbricas en la base de datos");
+                await _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasNoEntregadas);
+                await _unitOfWork.Rubricas.UpdateRangeAsync(rubricasActivasEntregadas);
+
+                Console.WriteLine("Insertando desempeños para asignaturas");
+                await _unitOfWork.Desempeños.InsertDesempeños(asignaturas, año, trimestre.ToString(), entregado.Id);
+
+                Console.WriteLine("Insertando historial de incumplimientos");
+                await _unitOfWork.HistorialIncumplimientos.InsertIncumplimientos(rubricasActivasNoEntregadas);
+
+                Console.WriteLine("Guardando cambios en la base de datos");
+                _unitOfWork.SaveChanges();
+
+                Console.WriteLine("Generando informes para cada asignatura y SO");
+                foreach (int idAsignatura in asignaturas)
+                {
+                    Console.WriteLine($"Procesando asignatura ID: {idAsignatura}");
+                    Console.WriteLine("Obteniendo IDs de SO por asignatura");
+                    var SO = await _unitOfWork.Desempeños.ObtenerIdSOPorAsignaturasAsync(año, trimestre.ToString(), idAsignatura);
+                    Console.WriteLine($"Número de SOs encontrados para asignatura {idAsignatura}: {SO?.Count() ?? 0}");
+
+                    foreach (int idSO in SO)
+                    {
+                        Console.WriteLine($"Generando informe para Asignatura ID: {idAsignatura}, SO ID: {idSO}");
+                        await GenerarInforme(año, trimestre.ToString(), idAsignatura, idSO);
+                        Console.WriteLine($"Informe generado para SO ID: {idSO}");
+                    }
+                }
+
+                Console.WriteLine("Proceso DesactivateRubricas completado con éxito");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en DesactivateRubricas: {ex.Message}");
+                Console.WriteLine($"StackTrace: {ex.StackTrace}");
+
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+
+                // Relanzar la excepción para que pueda ser manejada por el código que llama a este método
+                throw;
+            }
         }
         private async Task GenerarInforme(int? año, string? periodo, int? idAsignatura, int? idSO)
         {

@@ -18,8 +18,8 @@ namespace AvaluoAPI.Presentation.DTOs.CarreraDTOs
         [Required(ErrorMessage = "El ID del área es requerido.")]
         public int IdArea { get; set; }
 
-        [Required(ErrorMessage = "El ID del coordinador de la carrera es requerido.")]
-        public int IdCoordinadorCarrera { get; set; }
+        
+        public int? IdCoordinadorCarrera { get; set; }
 
         [JsonIgnore]
         public int IdEstado { get; set; }

@@ -53,12 +53,21 @@ namespace AvaluoAPI.Domain.Services.CarreraService
             if (estadoPorDefecto == null)
                 throw new KeyNotFoundException("No se encontró un estado por defecto para 'Carrera'.");
 
-            var coordinador = await _unitOfWork.Usuarios.GetUsuarioWithRolById(carreraDTO.IdCoordinadorCarrera);
-            if (coordinador == null)
-                throw new KeyNotFoundException("El usuario especificado no existe.");
 
-            if(coordinador?.Rol?.EsCoordinadorCarrera != true) 
-                throw new KeyNotFoundException("El usuario especificado no tiene el rol de Coordinador de Carrera");
+            if (carreraDTO.IdCoordinadorCarrera.HasValue)
+            {
+                var coordinador = await _unitOfWork.Usuarios.GetUsuarioWithRolById(carreraDTO.IdCoordinadorCarrera.Value);
+                if (coordinador == null)
+                    throw new KeyNotFoundException("El usuario especificado no existe.");
+                if (coordinador?.Rol?.EsCoordinadorCarrera != true)
+                    throw new KeyNotFoundException("El usuario especificado no tiene el rol de Coordinador de Carrera");
+            }
+
+
+
+
+
+
 
             var carrera = _mapper.Map<Carrera>(carreraDTO);
             carrera.UltimaEdicion = DateTime.UtcNow;
