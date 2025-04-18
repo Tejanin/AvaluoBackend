@@ -220,7 +220,7 @@ ORDER BY d.Año DESC, d.Trimestre DESC, a.Codigo, so.Nombre, pi.Id;
                     EsSatisfactorio = fila.EsSatisfactorio
                 });
 
-                informe.TotalEstudiantes += fila.CantExperto + fila.CantSatisfactorio + fila.CantPrincipiante + fila.CantDesarrollo;
+                informe.TotalEstudiantes = fila.CantExperto + fila.CantSatisfactorio + fila.CantPrincipiante + fila.CantDesarrollo;
             }
 
             return informeDict.Values;

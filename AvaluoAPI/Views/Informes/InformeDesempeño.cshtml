@@ -52,7 +52,7 @@
                             <div class="mb-4">
                                 <span class="font-bold text-blue-800 w-48 inline-block">¿Alcanzó nivel satisfactorio?</span>
                                 <span class="px-3 py-1 rounded-md @(indicador.EsSatisfactorio ? "bg-green-600" : "bg-red-600") text-white font-bold">
-                                    @(indicador.EsSatisfactorio ? "Sí" : "No") (@indicador.PorcentajeSatisfactorio%)
+                                    @(indicador.EsSatisfactorio ? "Sí" : "No") (@($"{indicador.PorcentajeSatisfactorio * 100:0}%"))
                                 </span>
                             </div>
 
